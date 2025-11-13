@@ -30,6 +30,20 @@ docker-compose.override.yml
 /mysql_data/
 /postgres_data/
 
+# Nginx 관련
+/nginx/
+/docker/nginx/
+/nginx/logs/
+/nginx/cache/
+/certs/
+*.crt
+*.key
+*.pem
+nginx.conf
+default.conf
+/run/nginx.pid
+/var/run/nginx.pid
+
 # IDE & 편집기
 .vscode/
 .idea/
