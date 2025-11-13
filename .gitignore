@@ -1,0 +1,53 @@
+# OS 별 불필요 파일
+.DS_Store
+Thumbs.db
+
+# PHP / Composer
+/vendor/
+/composer.lock
+
+# 환경변수
+.env
+.env.local
+.env.*.local
+
+# 캐시 / 로그
+/storage/
+logs/
+*.log
+
+# PHPUnit
+/phpunit.xml
+/phpunit.xml.cache
+/.phpunit.result.cache
+
+# Docker 관련
+docker-compose.override.yml
+*.pid
+*.seed
+/data/
+/db_data/
+/mysql_data/
+/postgres_data/
+
+# IDE & 편집기
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 기타 빌드 산출물
+/public/storage
+/public/hot
+/public/mix-manifest.json
+
+# Coverage & Reports
+coverage/
+.clover
+.php_cs.cache
+.php-cs-fixer.cache
+
+# composer 관련 파일
+composer.lock
+vendor/
+.phpunit.result.cache
