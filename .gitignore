@@ -54,6 +54,7 @@ default.conf
 /public/storage
 /public/hot
 /public/mix-manifest.json
+/storage/framework/views/*
 
 # Coverage & Reports
 coverage/
