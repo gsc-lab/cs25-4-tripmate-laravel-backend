@@ -2,17 +2,19 @@
 .DS_Store
 Thumbs.db
 
-# PHP / Composer
-/vendor/
-/composer.lock
+# PHP / Composer (라라벨은 backend 폴더 안)
+backend/vendor/
+backend/composer.lock
 
 # 환경변수
+backend/.env
+backend/.env.local
+backend/.env.*.local
 .env
-.env.local
-.env.*.local
 
 # 캐시 / 로그
-/storage/
+backend/storage/*
+!backend/storage/.gitignore
 logs/
 *.log
 
@@ -50,19 +52,14 @@ default.conf
 *.swp
 *.swo
 
-# 기타 빌드 산출물
-/public/storage
-/public/hot
-/public/mix-manifest.json
-/storage/framework/views/*
+# 기타 빌드 산출물 (라라벨 public)
+backend/public/storage
+backend/public/hot
+backend/public/mix-manifest.json
 
 # Coverage & Reports
 coverage/
 .clover
 .php_cs.cache
 .php-cs-fixer.cache
-
-# composer 관련 파일
-composer.lock
-vendor/
 .phpunit.result.cache
