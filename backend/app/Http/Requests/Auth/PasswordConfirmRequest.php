@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth; 
 
 class PasswordConfirmRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class PasswordConfirmRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**
@@ -22,7 +23,7 @@ class PasswordConfirmRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password'=> ['required', 'string']
+            'password'=> ['required', 'current_password']
         ];
     }
 
@@ -30,7 +31,7 @@ class PasswordConfirmRequest extends FormRequest
     {
         return [
             'password.required' => '비밀번호를 입력해주세요.',
-            'password.string'   => '비밀번호는 문자열이어야 합니다.'
+            'password.current_password'   => '현재 비밀번호가 일치하지 않습니다.'
         ];
     }
 }
