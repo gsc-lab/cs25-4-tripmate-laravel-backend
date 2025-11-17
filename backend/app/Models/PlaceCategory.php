@@ -32,7 +32,7 @@ class PlaceCategory extends Model
      * @var array
      */
     protected $casts = [
-        'place_category_id' => 'integer',
+        'category_id' => 'integer',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
