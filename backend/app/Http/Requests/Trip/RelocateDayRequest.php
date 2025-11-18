@@ -5,7 +5,7 @@ namespace App\Http\Requests\Trip;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateMemoRequest extends FormRequest
+class RelocateDayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,15 +23,16 @@ class UpdateMemoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'memo' => ['nullable', 'string', 'max:255']
+            "orders" => ['required', 'array', "min:1"],
+            "orders.*.day_no" => ["required", "integer", "distinct"],
+            "orders.*.new_day_no"=> ["required", "integer", "distinct"]
         ];
     }
 
     public function messages(): array
     {
         return [
-            'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
-            'memo.string' => '메모는 문자열이어야 합니다.'
+
         ];
     }
 }
