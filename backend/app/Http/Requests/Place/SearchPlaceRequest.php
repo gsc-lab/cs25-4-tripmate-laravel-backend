@@ -11,7 +11,7 @@ class SearchPlaceRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,18 @@ class SearchPlaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'place'     => ['sometimes', 'nullable', 'string'],
+            'pageToken' => ['sometimes', 'nullable', 'string'], 
+            'sort' => ['sometimes', 'string'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'place.string' => '장소이름은 문자열이여야 합니다.',
+            'pageToken.integer' => '페이지는 문자열이어야 합니다.',
+            'sort.string'  => '정렬 기준은 문자열이어야 합니다.',
         ];
     }
 }
