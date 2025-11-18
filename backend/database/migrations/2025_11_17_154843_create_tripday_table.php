@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trip_day', function (Blueprint $table) {
+        Schema::create('trip_days', function (Blueprint $table) {
             $table->bigIncrements('trip_day_id');
 
             $table->unsignedBigInteger('trip_id');
@@ -23,7 +23,7 @@ return new class extends Migration
 
             // FK: trip_id → Trip(trip_id)
             $table->foreign('trip_id', 'fk_trip_day_trip')
-                ->references('trip_id')->on('trip')
+                ->references('trip_id')->on('trips')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
@@ -40,6 +40,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trip_day');
+        Schema::dropIfExists('trip_days');
     }
 };

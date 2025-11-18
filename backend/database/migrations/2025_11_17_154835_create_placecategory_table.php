@@ -7,11 +7,11 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * place_category 테이블 migration 실행
+     * place_categories 테이블 migration 실행
      */
     public function up(): void
     {
-        Schema::create('place_category', function (Blueprint $table) {
+        Schema::create('place_categories', function (Blueprint $table) {
             $table->bigIncrements('category_id');
 
             $table->string('code', 64)->unique();
@@ -23,10 +23,10 @@ return new class extends Migration
     }
 
     /**
-     * DB에 place_category 테이블이 존재할 경우 삭제
+     * DB에 place_categories 테이블이 존재할 경우 삭제
      */
     public function down(): void
     {
-        Schema::dropIfExists('place_category');
+        Schema::dropIfExists('place_categories');
     }
 };
