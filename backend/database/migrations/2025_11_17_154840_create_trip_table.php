@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('trip', function (Blueprint $table) {
+        Schema::create('trips', function (Blueprint $table) {
             $table->bigIncrements('trip_id');
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('region_id')->nullable(); // region_id NULL 허용
@@ -34,7 +34,7 @@ return new class extends Migration
 
             // FK: region_id → Region(region_id)
             $table->foreign('region_id', 'fk_trip_region')
-                ->references('region_id')->on('region')
+                ->references('region_id')->on('regions')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
 
@@ -48,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trip');
+        Schema::dropIfExists('trips');
     }
 };

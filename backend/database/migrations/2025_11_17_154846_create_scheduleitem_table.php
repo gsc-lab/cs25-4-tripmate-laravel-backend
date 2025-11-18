@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('schedule_item', function (Blueprint $table) {
+        Schema::create('schedule_items', function (Blueprint $table) {
             $table->bigIncrements('schedule_item_id');
 
             $table->unsignedBigInteger('trip_day_id');
@@ -26,13 +26,13 @@ return new class extends Migration
 
             // FK: trip_day_id → TripDay(trip_day_id)
             $table->foreign('trip_day_id', 'fk_schedule_item_tripday')
-                ->references('trip_day_id')->on('trip_day')
+                ->references('trip_day_id')->on('trip_days')
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
 
             // FK: place_id → Place(place_id)
             $table->foreign('place_id', 'fk_schedule_item_place')
-                ->references('place_id')->on('place')
+                ->references('place_id')->on('places')
                 ->onUpdate('cascade')
                 ->onDelete('set null');
 
@@ -49,6 +49,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('schedule_item');
+        Schema::dropIfExists('schedule_items');
     }
 };

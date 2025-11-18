@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('place', function (Blueprint $table) {
+        Schema::create('places', function (Blueprint $table) {
             $table->bigIncrements('place_id');
 
             $table->unsignedBigInteger('category_id');
@@ -30,7 +30,7 @@ return new class extends Migration
 
             // FK: category_id → place_category(category_id)
             $table->foreign('category_id', 'fk_place_category')
-                    ->references('category_id')->on('place_category')
+                    ->references('category_id')->on('place_categories')
                     ->onUpdate('cascade')
                     ->onDelete('restrict');
 
@@ -51,6 +51,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('place');
+        Schema::dropIfExists('places');
     }
 };
