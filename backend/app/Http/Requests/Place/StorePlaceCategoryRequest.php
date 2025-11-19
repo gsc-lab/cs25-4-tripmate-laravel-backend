@@ -11,7 +11,7 @@ class StorePlaceCategoryRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return True;
+        return true;
     }
 
     /**
