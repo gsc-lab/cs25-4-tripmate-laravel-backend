@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -51,6 +51,7 @@ class RegisterUserRequest extends FormRequest
     {
         return [
             'nickname.required' => '닉네임을 입력해주세요.',
+            'nickname.string' => '닉네임은 문자형이어야 합니다.',
             'nickname.max'      => '닉네임은 50자를 초과할 수 없습니다.',
             
             'email.required' => '이메일을 입력해주세요.',
@@ -58,7 +59,8 @@ class RegisterUserRequest extends FormRequest
             'email.max'      => '이메일은 255자를 초과할 수 없습니다.',
             'email.unique'   => '이미 사용 중인 이메일입니다.',
             
-            'password.required'  => '비밀번호를 입력해주세요.'
+            'password.required'  => '비밀번호를 입력해주세요.',
+            'password.*'=> '비밀번호는 8~255자 사이의 영문자, 특수문자, 숫자로 구성되어야합니다.',
         ];
     }
 }

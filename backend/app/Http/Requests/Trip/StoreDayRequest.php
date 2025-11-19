@@ -33,10 +33,12 @@ class StoreDayRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'day_no.required' => '일차 정보를 입력해주세요.',
+            'day_no.required' => '일차(Day) 정보는 필수입니다.',
             'day_no.integer'  => '일차는 숫자여야 합니다.',
             'day_no.min'      => '일차는 1 이상이어야 합니다.',
-            'memo.max'        => '메모는 255자를 넘을 수 없습니다.'
+
+            'memo.string'     => '메모는 문자열이어야 합니다.',
+            'memo.max'        => '메모는 최대 255자까지 입력 가능합니다.',
         ];
     }
 }

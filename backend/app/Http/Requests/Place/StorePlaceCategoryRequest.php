@@ -34,23 +34,27 @@ class StorePlaceCategoryRequest extends FormRequest
      * @return array{address.required: string, category.required: string, category.string: string, lat.between: string, lat.numeric: string, lat.required: string, lng.between: string, lng.numeric: string, lng.required: string, name.required: string, name.string: string}
      */
     public function messages(): array
-{
+    {
         return [
-            'name.required'     => '장소 이름을 입력해주세요.',
-            'name.string'       => '장소 이름은 문자열이어야 합니다.', 
-            
+            'name.required' => '장소 이름을 입력해주세요.',
+            'name.string'   => '장소 이름은 문자열이어야 합니다.',
+
             'category.required' => '카테고리를 입력해주세요.',
             'category.string'   => '카테고리는 문자열이어야 합니다.',
-            
-            'address.required'  => '주소를 입력해주세요.',
-            
-            'lat.required'      => '위도(lat) 값은 필수입니다.',
-            'lat.numeric'       => '위도 값은 숫자여야 합니다.',
-            'lat.between'       => '위도는 -90에서 90 사이여야 합니다.',
 
-            'lng.required'      => '경도(lng) 값은 필수입니다.',
-            'lng.numeric'       => '경도 값은 숫자여야 합니다.',
-            'lng.between'       => '경도는 -180에서 180 사이여야 합니다.',
+            'address.required' => '주소를 입력해주세요.',
+            'address.string'   => '주소는 문자열이어야 합니다.',
+
+            'external_ref.required' => '외부 참조 ID는 필수입니다.',
+            'external_ref.string'   => '외부 참조 ID는 문자열이어야 합니다.',
+
+            'lat.required' => '위도(lat) 값을 입력해주세요.',
+            'lat.numeric'  => '위도 값은 숫자여야 합니다.',
+            'lat.between'  => '위도는 -90에서 90 사이여야 합니다.',
+
+            'lng.required' => '경도(lng) 값을 입력해주세요.',
+            'lng.numeric'  => '경도 값은 숫자여야 합니다.',
+            'lng.between'  => '경도는 -180에서 180 사이여야 합니다.',
         ];
     }
 }

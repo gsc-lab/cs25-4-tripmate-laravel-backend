@@ -41,11 +41,19 @@ class RelocateDayRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'orders.required' => '배열 값은 비워둘 수 없습니다.',
-            'orders.*.day_no.exists' => '존재하지 않는 일차(Day)입니다.',
-            'orders.*.day_no.distinct' => '동일한 날짜를 중복해서 재배치할 수 없습니다.',
-            'orders.*.new_day_no.exists' => '이동하려는 날짜가 유효한 범위(일차) 밖입니다.',
-            'orders.*.new_day_no.distinct' => '동일한 날짜를 중복해서 재배치할 수 없습니다.'
+        'orders.required' => '재배치할 날짜 정보는 필수입니다.',
+        'orders.array'    => '날짜 정보는 배열 형식이어야 합니다.',
+        'orders.min'      => '최소 1개 이상의 날짜를 재배치해야 합니다.',
+
+        'orders.*.day_no.required' => '변경할 기존 날짜(day_no)는 필수입니다.',
+        'orders.*.day_no.integer'  => '기존 날짜 값은 숫자여야 합니다.',
+        'orders.*.day_no.distinct' => '동일한 날짜를 중복해서 선택할 수 없습니다.',
+        'orders.*.day_no.exists'   => '존재하지 않는 일차(Day)이거나, 현재 여행에 속하지 않은 날짜입니다.',
+
+        'orders.*.new_day_no.required' => '이동할 목표 날짜(new_day_no)는 필수입니다.',
+        'orders.*.new_day_no.integer'  => '목표 날짜 값은 숫자여야 합니다.',
+        'orders.*.new_day_no.distinct' => '이동할 목표 날짜가 중복될 수 없습니다.',
+        'orders.*.new_day_no.exists'   => '이동하려는 날짜가 유효한 범위(일차) 밖입니다.',
         ];
     }
 }
