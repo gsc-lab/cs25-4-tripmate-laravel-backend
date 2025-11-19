@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class UpdateMemoRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -16,8 +16,7 @@ class UpdateMemoRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일차 수정 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -27,6 +26,9 @@ class UpdateMemoRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{memo.max: string, memo.string: string}
+     */
     public function messages(): array
     {
         return [

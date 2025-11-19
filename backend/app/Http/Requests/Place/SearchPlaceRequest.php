@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class SearchPlaceRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -15,8 +15,7 @@ class SearchPlaceRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 외부 지도기반 장소 검색
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -28,6 +27,10 @@ class SearchPlaceRequest extends FormRequest
         ];
     }
 
+    /**
+     * 검색 예외 메세지
+     * @return array{pageToken.integer: string, place.string: string, sort.string: string}
+     */
     public function messages(): array
     {
         return [

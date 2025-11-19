@@ -7,8 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
-     * 
+     * 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -16,8 +15,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 로그인 유효성 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -29,7 +27,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the error messages for the defined validation rules.
+     * 로그인 예외 메세지
      */
     public function messages(): array
     {

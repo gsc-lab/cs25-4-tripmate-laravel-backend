@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class UpdateItemRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -17,8 +17,7 @@ class UpdateItemRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일정 아이템 수정 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -31,6 +30,9 @@ class UpdateItemRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{memo.max: string, seq_no.integer: string, seq_no.min: string, visit_time.date_format: string}
+     */
     public function messages(): array
     {
         return [

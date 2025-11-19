@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class RelocateDayRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -17,8 +17,7 @@ class RelocateDayRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일차 재배치 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -36,6 +35,9 @@ class RelocateDayRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{orders.*.day_no.distinct: string, orders.*.day_no.exists: string, orders.*.new_day_no.distinct: string, orders.*.new_day_no.exists: string, orders.required: string}
+     */
     public function messages(): array
     {
         return [

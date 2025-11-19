@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class StoreItemRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -17,8 +17,7 @@ class StoreItemRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일정 아이템 추가
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -30,6 +29,9 @@ class StoreItemRequest extends FormRequest
         ];
     }
     
+    /**
+     * @return array{place_id.exists: string, place_id.integer: string, place_id.required: string, seq_no.integer: string, visit_time.date_format: string}
+     */
     public function messages(): array
     {
         return [

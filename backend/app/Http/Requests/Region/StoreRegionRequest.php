@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreRegionRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -15,8 +15,7 @@ class StoreRegionRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 지역 검색 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -27,6 +26,9 @@ class StoreRegionRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{country.string: string, query.string: string}
+     */
     public function messages(): array
     {
         return [

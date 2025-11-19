@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class PasswordConfirmRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -16,8 +16,7 @@ class PasswordConfirmRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 회원탈퇴 유효성 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -27,6 +26,10 @@ class PasswordConfirmRequest extends FormRequest
         ];
     }
 
+    /**
+     * 회원탈퇴 예외 메세지
+     * @return array{password.current_password: string, password.required: string}
+     */
     public function messages(): array
     {
         return [

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 class StorePlaceCategoryRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -15,8 +15,7 @@ class StorePlaceCategoryRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 외부 결과를 내부로 저장 유효성 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -31,6 +30,9 @@ class StorePlaceCategoryRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{address.required: string, category.required: string, category.string: string, lat.between: string, lat.numeric: string, lat.required: string, lng.between: string, lng.numeric: string, lng.required: string, name.required: string, name.string: string}
+     */
     public function messages(): array
 {
         return [

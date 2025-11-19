@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class ListItemRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -16,8 +16,7 @@ class ListItemRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일정 아이템 목록 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -29,6 +28,9 @@ class ListItemRequest extends FormRequest
             ];
     }
 
+    /**
+     * @return array{page.integer: string, size.integer: string, size.max: string, sort.string: string}
+     */
     public function messages(): array
     {
         return [

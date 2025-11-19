@@ -10,25 +10,28 @@ use Illuminate\Support\Str;
 class RegisterUserRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 사용자 접근 허용
      */
     public function authorize(): bool
     {
         return true;
     }
 
+    /**
+     * 유효성 전 이메일 전처리
+     * @return void
+     */
     public function prepareForValidation()
     {
         // email의 필드 정규화
         if ($this->email) {
-            // merge함수를 이용하여 덮어씌운다.
+            // merge함수를 이용하여 정규화된 이메일로 덮어씌운다.
             $this->merge(['email' => Str::lower($this->email)]);
         }
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 회원가입 유효성 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -40,6 +43,10 @@ class RegisterUserRequest extends FormRequest
         ];
         }
 
+    /**
+     * 회원가입 예외 메세지
+     * @return array{email.email: string, email.max: string, email.required: string, email.unique: string, nickname.max: string, nickname.required: string, password.required: string}
+     */
     public function messages(): array
     {
         return [

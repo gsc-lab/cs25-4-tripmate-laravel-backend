@@ -9,7 +9,7 @@ use Illuminate\Validation\Rule;
 class RelocateItemRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -17,8 +17,7 @@ class RelocateItemRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일정 아이템 순서 재배치 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -33,6 +32,9 @@ class RelocateItemRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{orders.*.item_id.distinct: string, orders.*.item_id.exists: string, orders.*.new_seq_no.min: string, orders.*.new_seq_no.required: string, orders.min: string, orders.required: string}
+     */
     public function messages(): array
     {
         return [

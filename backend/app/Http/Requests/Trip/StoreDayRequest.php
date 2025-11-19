@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 class StoreDayRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
@@ -16,8 +16,7 @@ class StoreDayRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
+     * 일차생성 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -28,6 +27,9 @@ class StoreDayRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return array{day_no.integer: string, day_no.min: string, day_no.required: string, memo.max: string}
+     */
     public function messages(): array
     {
         return [
