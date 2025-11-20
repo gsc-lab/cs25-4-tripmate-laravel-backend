@@ -1,0 +1,70 @@
+[
+    {
+        "name" : "서울특별시", 
+        "country_code" : "KR" 
+    },
+    {
+        "name" : "부산광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "대구광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "인천광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "광주광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "대전광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "울산광역시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "세종특별자치시", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "경기도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "강원특별자치도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "충청북도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "충청남도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "전북특별자치도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "전라남도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "경상북도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "경상남도", 
+        "country_code" : "KR"
+    },
+    {
+        "name" : "제주특별자치도", 
+        "country_code" : "KR"
+    }
+]
