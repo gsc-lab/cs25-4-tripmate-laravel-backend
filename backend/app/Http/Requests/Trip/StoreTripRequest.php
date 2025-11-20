@@ -53,18 +53,19 @@ class StoreTripRequest extends FormRequest
     {
         return [
             'title.required' => '여행 제목을 입력해주세요.',
+            'title.string'   => '여행 제목은 문자열이어야 합니다.',
             'title.max'      => '여행 제목은 100자를 초과할 수 없습니다.',
 
             'region_id.required' => '지역을 선택해주세요.',
             'region_id.integer'  => '지역 ID는 숫자여야 합니다.',
             'region_id.exists'   => '선택한 지역이 존재하지 않습니다.',
 
-            'start_date.required'   => '여행 시작일을 입력해주세요.',
-            'start_date.date_format'=> '여행 시작일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
+            'start_date.required'    => '여행 시작일을 입력해주세요.',
+            'start_date.date_format' => '여행 시작일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
 
-            'end_date.required'      => '여행 종료일을 입력해주세요.',
-            'end_date.date_format'   => '여행 종료일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
-            'end_date.after_or_equal'=> '여행 종료일은 시작일과 같거나 그 이후여야 합니다.',
-        ];  
+            'end_date.required'       => '여행 종료일을 입력해주세요.',
+            'end_date.date_format'    => '여행 종료일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
+            'end_date.after_or_equal' => '여행 종료일은 시작일과 같거나 그 이후여야 합니다.',
+        ];
     }
 }

@@ -21,7 +21,7 @@ class SearchPlaceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'place'     => ['sometimes', 'nullable', 'string'],
+            'place'     => ['required', 'nullable', 'string'],
             'pageToken' => ['sometimes', 'nullable', 'string'], 
             'sort' => ['sometimes', 'string'],
         ];
@@ -34,6 +34,7 @@ class SearchPlaceRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'place.required' => '장소는 필수 입력값입니다.',
             'place.string' => '장소이름은 문자열이여야 합니다.',
             'pageToken.integer' => '페이지는 문자열이어야 합니다.',
             'sort.string'  => '정렬 기준은 문자열이어야 합니다.',

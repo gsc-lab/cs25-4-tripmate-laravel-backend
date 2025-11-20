@@ -35,9 +35,13 @@ class ListItemRequest extends FormRequest
     {
         return [
             'page.integer' => '페이지 번호는 숫자여야 합니다.',
-            'size.integer' => '조회 개수는 숫자여야 합니다.',
-            'size.max'     => '한 페이지당 최대 100개까지만 조회 가능합니다.',
-            'sort.string'  => '정렬 값은 문자열이어야 합니다.',
+            'page.min'     => '페이지 번호는 1 이상이어야 합니다.',
+
+            'size.integer' => '페이지 크기(조회 개수)는 숫자여야 합니다.',
+            'size.min'     => '페이지 크기는 최소 1개 이상이어야 합니다.',
+            'size.max'     => '한 번에 최대 100개까지만 조회할 수 있습니다.',
+
+            'sort.string'  => '정렬 기준은 문자열이어야 합니다.',
         ];
     }
 }
