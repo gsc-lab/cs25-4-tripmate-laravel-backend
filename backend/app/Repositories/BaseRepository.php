@@ -62,30 +62,30 @@ abstract class BaseRepository
   /**
    * PK(id)로 단일 조회
    * 없으면 null 반환
-   * @param mixed $id
+   * @param int $userId
    * @param array $columns
    * @return \Illuminate\Database\Eloquent\Model|null
    */
   public function findById(
-    int $id, 
+    int $userId, 
     array $columns = ['*']
   ): ?Model {
-    return $this->model->newQuery()->find($id, $columns);
+    return $this->model->newQuery()->find($userId, $columns);
   }
 
   /**
    * PK(id)로 단일 조회
    * 없으면 예외 발생 (ModelNotFoundException)
-   * @param mixed $id
+   * @param int $userId
    * @param array $columns
    * @return \Illuminate\Database\Eloquent\Model
    * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function findOrFail(
-    int $id, 
+    int $userId, 
     array $columns = ['*']
   ): Model {
-    return $this->model->newQuery()->findOrFail($id, $columns);
+    return $this->model->newQuery()->findOrFail($userId, $columns);
   }
 
   /**
@@ -102,16 +102,16 @@ abstract class BaseRepository
    * PK(id) 기준 부분 업데이트
    * - 없으면 예외 발생 (ModelNotFoundException)
    * - 있으면 해당 레코드 업데이트 후 반환
-    * @param int $id
+    * @param int $userId
     * @param array $data 
     * @return \Illuminate\Database\Eloquent\Model
     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
    */
   public function updateById(
-    int $id, 
+    int $userId, 
     array $data
   ): Model {
-    $model = $this->findOrFail($id);
+    $model = $this->findOrFail($userId);
 
     $model->fill($data);
     $model->save();
@@ -123,12 +123,12 @@ abstract class BaseRepository
    * PK(id) 기준 삭제
    * - soft delete 지원 모델인 경우 소프트 삭제 수행
    * - 아니면 실제 삭제 수행
-   * @param int $id
+   * @param int $userId
    * @return bool
    */
-  public function deleteById(int $id): bool
+  public function deleteById(int $userId): bool
   {
-    $model = $this->findOrFail($id);
+    $model = $this->findOrFail($userId);
 
     return (bool)$model->delete();
   }
