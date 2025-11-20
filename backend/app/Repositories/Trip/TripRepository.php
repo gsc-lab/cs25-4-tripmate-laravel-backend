@@ -25,7 +25,7 @@ class TripRepository extends BaseRepository
    * @param array $data
    * @return Model
    */ 
-  public function create(array $data): Model
+  public function createTrip(array $data): Model
   {
     return $this->create($data);
   }
