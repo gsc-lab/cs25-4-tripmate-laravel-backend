@@ -37,8 +37,8 @@ class RegisterUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "nickname" => ["required", 'string', 'max:50'],
-            "email"=> ['required', 'email', 'max:255', Rule::unique('users', 'email_norm')],
+            "name" => ["required", 'string', 'max:50'],
+            "email_norm"=> ['required', 'email', 'max:255', Rule::unique('users', 'email_norm')],
             "password"=> ["required", Password::min(8)->letters()->numbers()->max(255)->symbols()] // 영문자, 숫자, 특수문자 포함
         ];
         }
@@ -50,14 +50,14 @@ class RegisterUserRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'nickname.required' => '닉네임을 입력해주세요.',
-            'nickname.string' => '닉네임은 문자형이어야 합니다.',
-            'nickname.max'      => '닉네임은 50자를 초과할 수 없습니다.',
+            'name.required' => '닉네임을 입력해주세요.',
+            'name.string' => '닉네임은 문자형이어야 합니다.',
+            'name.max'      => '닉네임은 50자를 초과할 수 없습니다.',
             
-            'email.required' => '이메일을 입력해주세요.',
-            'email.email'    => '올바른 이메일 형식이 아닙니다.',
-            'email.max'      => '이메일은 255자를 초과할 수 없습니다.',
-            'email.unique'   => '이미 사용 중인 이메일입니다.',
+            'email_norm.required' => '이메일을 입력해주세요.',
+            'email_norm.email'    => '올바른 이메일 형식이 아닙니다.',
+            'email_norm.max'      => '이메일은 255자를 초과할 수 없습니다.',
+            'email_norm.unique'   => '이미 사용 중인 이메일입니다.',
             
             'password.required'  => '비밀번호를 입력해주세요.',
             'password.*'=> '비밀번호는 8~255자 사이의 영문자, 특수문자, 숫자로 구성되어야합니다.',
