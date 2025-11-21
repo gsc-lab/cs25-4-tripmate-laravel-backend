@@ -60,7 +60,7 @@ Route::prefix('v2')->group(function () {
      * PATCH/DELETE   /v2/trips/{trip_id}/days/{day_no}/items/{item_id}
      * POST           /v2/trips/{trip_id}/days/{day_no}/items:reorder
      */
-    Route::apiResource('days.items', ScheduleItemController::class)->shallow()
+    Route::apiResource('days.items', ScheduleItemController::class)->shallow();
     Route::post('/days/{day}/items/reorder', [ScheduleItemController::class, 'reorder']);
 
     /**
