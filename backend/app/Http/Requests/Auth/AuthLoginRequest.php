@@ -21,7 +21,7 @@ class AuthLoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "email"=> ['required', 'email', 'max:255'],
+            "email_norm"=> ['required', 'email', 'max:255'],
             'password'=> ['required', 'string'] 
         ];
     }
@@ -32,9 +32,9 @@ class AuthLoginRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'email.required' => '이메일을 입력해주세요.',
-            'email.email'    => '올바른 이메일 형식이 아닙니다.',
-            'email.max'      => '이메일은 255자를 초과할 수 없습니다.',
+            'email_norm.required' => '이메일을 입력해주세요.',
+            'email_norm.email'    => '올바른 이메일 형식이 아닙니다.',
+            'email_norm.max'      => '이메일은 255자를 초과할 수 없습니다.',
             'password.required' => '비밀번호를 입력해주세요.',
             'password.string'   => '비밀번호는 문자열이어야 합니다.'
         ];
