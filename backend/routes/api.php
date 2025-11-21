@@ -24,50 +24,53 @@ Route::prefix('v2')->group(function () {
 
     /**
      * Users
-     * GET /v2/users/me
-     * DELETE v2/users/me
+     * GET      /v2/users/me
+     * DELETE   /v2/users/me
      */
     Route::get('/users/me', [UsersController::class, 'getCurrentUser']);
     Route::delete('/users/me', [UsersController::class, 'deleteCurrentUser']);
 
     /**
      * Auth
-     * POST /api/v2/auth/logout
+     * POST /v2/auth/logout
      */
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
     /**
      * Trips
-     * GET /v2/trips
-     * POST /v2/trips
-     * GET/PUT/PATCH/DELETE /v2/trips/{trip}
+     * GET              /v2/trips
+     * POST             /v2/trips
+     * GET/PUT/DELETE   /v2/trips/{trip_id}
      */
     Route::apiResource('trips', TripsController::class);
 
     /**
      * Trip Days (Nested + shallow)
-     * POST /v2/trips/{trip}/days
-     * GET  /v2/trips/{trip}/days
-     * GET/PUT/PATCH/DELETE /v2/days/{day}
+     * GET              /v2/trips/{trip_id}/days
+     * POST             /v2/trips/{trip_id}/days
+     * POST             /v2/trips/{trip_id}/days:reorder
+     * GET/PUT/DELETE   /v2/trips/{trip_id}/days/{day_no}
      */
     Route::apiResource('trips.days', TripDayController::class)->shallow();
+    Route::post('/trips/{trip}/days/reorder', [TripDayController::class, 'reorder']);
 
     /**
      * Schedule Items (Nested + shallow)
-     * POST /v2/days/{day}/items
-     * GET  /v2/days/{day}/items
-     * GET/PUT/PATCH/DELETE /v2/items/{item}
+     * GAT/POST       /v2/trips/{trip_id}/days/{day_no}/items
+     * PATCH/DELETE   /v2/trips/{trip_id}/days/{day_no}/items/{item_id}
+     * POST           /v2/trips/{trip_id}/days/{day_no}/items:reorder
      */
-    Route::apiResource('days.items', ScheduleItemController::class)->shallow();
+    Route::apiResource('days.items', ScheduleItemController::class)->shallow()
+    Route::post('/days/{day}/items/reorder', [ScheduleItemController::class, 'reorder']);
 
     /**
      * Places
-     * GET v2/places/external-search
-     * GET v2/places/{place_id}
-     * GET v2/places/reverse-geocode
-     * GET v2/places/place-geocode
-     * GET v2/places/nearby
-     * POST v2/places/from-external
+     * GET    /v2/places/external-search
+     * GET    /v2/places/{place_id}
+     * GET    /v2/places/reverse-geocode
+     * GET    /v2/places/place-geocode
+     * GET    /v2/places/nearby
+     * POST   /v2/places/from-external
      */
     Route::get('/places/external-search', [PlaceController::class, 'externalSearch']);
     Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
@@ -78,7 +81,7 @@ Route::prefix('v2')->group(function () {
 
     /**
      * Regions
-     * GET /v2/regions
+     * GET  /v2/regions
      */
     Route::get('/regions', [RegionController::class, 'listRegions']);
   });
