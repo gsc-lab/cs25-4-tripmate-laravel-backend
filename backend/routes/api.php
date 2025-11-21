@@ -3,13 +3,13 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\UsersController;
-use App\Http\Controllers\TripsController;
-use App\Http\Controllers\TripDayController;
-use App\Http\Controllers\ScheduleItemController;
-use App\Http\Controllers\PlaceController;
-use App\Http\Controllers\RegionController;  
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\User\UsersController;
+use App\Http\Controllers\Trip\TripsController;
+use App\Http\Controllers\TripDay\TripDayController;
+use App\Http\Controllers\ScheduleItem\ScheduleItemController;
+use App\Http\Controllers\Place\PlaceController;
+use App\Http\Controllers\Region\RegionController;  
 
 // API Version 2
 Route::prefix('v2')->group(function () {
