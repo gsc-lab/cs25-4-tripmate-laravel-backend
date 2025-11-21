@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Trip\StoreTripRequest;
-use App\Http\Requests\Trip\UpdateTripRequest;
-use App\Http\Requests\Trip\ListItemRequest;
+use App\Http\Requests\Trip\TripStoreRequest;
+use App\Http\Requests\Trip\TripUpdateRequest;
+use App\Http\Requests\Trip\TripIndexRequest;
 use App\Models\Trip;
 use App\Http\Resources\TripResource;
 use App\Services\Trip\TripService;
@@ -27,10 +27,10 @@ class TripController extends Controller
      * 1. Trip 목록 조회 
      * - 페이지네이션 적용
      * - GET /v2/trips
-     * @param ListItemRequest $request
+     * @param TripIndexRequest $request
      * @return JsonResponse
      */
-    public function index(ListItemRequest $request) : JsonResponse
+    public function index(TripIndexRequest $request) : JsonResponse
     {
         // 쿼리 파라미터 
         $page = (int)$request->query('page', 1);
@@ -64,10 +64,10 @@ class TripController extends Controller
     /**
      * 2. Trip 생성
      * - POST /v2/trips
-     * @param StoreTripRequest $request
+     * @param TripStoreRequest $request
      * @return JsonResponse
      */
-    public function store(StoreTripRequest $request) : JsonResponse
+    public function store(TripStoreRequest $request) : JsonResponse
     {
         // FormRequest에서 검증된 데이터 가져오기
         $payload = $request->validated();
@@ -102,18 +102,40 @@ class TripController extends Controller
 
     /**
      * 4. Trip 업데이트
-     * PATCH /v2/trips/{trip}
+     * PATCH /v2/trips/{trip_id}
+     * @param TripUpdateRequest $request
+     * @param int $tripId
      */
-    public function update(Request $request, string $id)
+    public function update(TripUpdateRequest $request, int $tripId)
     {
-        //
+        // FormRequest에서 검증된 데이터 가져오기
+        $payload = $request->validated();
+
+        // Trip 업데이트 서비스 호출
+        $updatedTrip = $this->tripService->updateTrip($tripId, $payload);
+
+        // 응답 반환
+        return response()->json([
+            'success' => true,
+            'data' => new TripResource($updatedTrip),
+        ]);
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 5. Trip 삭제
+     * DELETE /v2/trips/{trip_id}
+     * @param int $tripId
+     * @return JsonResponse
      */
-    public function destroy(string $id)
+    public function destroy(int $tripId) : JsonResponse
     {
-        //
+        // Trip 삭제 서비스 호출
+        $this->tripService->deleteTrip($tripId);
+
+        // 응답 반환
+        return response()->json([
+            'success' => true,
+            'message' => 'Trip 삭제에 성공하였습니다',
+        ]);
     }
 }
