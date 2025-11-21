@@ -4,8 +4,9 @@ namespace App\Http\Requests\Trip;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
 
-class UpdateMemoRequest extends FormRequest
+class TripUpdateRequest extends FormRequest
 {
     /**
      * 로그인 사용자 접근 허용
@@ -16,24 +17,16 @@ class UpdateMemoRequest extends FormRequest
     }
 
     /**
-     * 일차 수정 유효성검증
+     * 여행 수정
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'memo' => ['nullable', 'string', 'max:255']
-        ];
-    }
-
-    /**
-     * @return array{memo.max: string, memo.string: string}
-     */
-    public function messages(): array
-    {
-        return [
-            'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
-            'memo.string' => '메모는 문자열이어야 합니다.'
+            'title' => ['sometimes', 'string', 'min:1', 'max:100'],
+            'region_id' => ['sometimes', 'integer', Rule::exists('regions', 'region_id')],
+            'start_date' => ['sometimes', 'date_format:Y-m-d'],
+            'end_date' => ['sometimes', 'date_format:Y-m-d', 'after_or_equal:start_date']
         ];
     }
 }
