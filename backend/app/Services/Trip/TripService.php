@@ -1,4 +1,165 @@
 <?php
+namespace App\Services\Trip;
 
-// TripService: Trip 비즈니스 로직
+use App\Models\Trip;
+use App\Repositories\Trip\TripRepository;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
+class TripService
+{
+  // trip repository 프로퍼티
+  protected TripRepository $tripRepository;
+
+  /**
+   * 생성자에서 repository 주입
+   * @param \App\Repositories\Trip\TripRepository $tripRepository
+   */
+  public function __construct(TripRepository $tripRepository)
+  {
+    $this->tripRepository = $tripRepository;
+  }
+
+  /**
+   * 내부 공통 메서드
+   * - Trip이 현재 로그인한 사용자 소유인지 확인
+   * - 소유자가 아니면 AuthorizationException 예외 발생
+   * @param \App\Models\Trip $trip
+   * @return void
+   * @throws \Illuminate\Auth\Access\AuthorizationException
+   */
+  protected function assertTripOwnership(Trip $trip): void
+  {
+    // 현재 로그인한 사용자 ID 가져오기
+    $authUserId = Auth::id();
+
+    // 로그인 안되었거나 소유자가 다르면 예외 발생
+    if ($authUserId === null || $trip->user_id !== $authUserId) {
+      throw new AuthorizationException('본인 소유의 여행이 아닙니다');
+    }
+  }
+
+  /**
+   * 내부 공통 메서드
+   * - trip_id로 Trip 조회 후 현재 로그인한 사용자의 소유인지 확인
+   * - 소유자가 아니면 AuthorizationException 예외 발생
+   * @param int $tripId
+   * @return \App\Models\Trip
+   * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+   * @throws \Illuminate\Auth\Access\AuthorizationException
+   */
+  protected function getOwnedTripOrFail(int $tripId): Trip
+  {
+    // trip_id로 Trip 조회
+    $trip = $this->tripRepository->findTripOrFail($tripId);
+
+    // 소유자 확인
+    $this->assertTripOwnership($trip);
+
+    return $trip;
+  }
+
+  /**
+   * 1. Trip 생성
+   * @param array $payload 
+   * @return \App\Models\Trip
+   */
+  public function createTrip(array $payload): Trip
+  {
+    // 현재 로그인한 사용자 ID 가져오기
+    $userId = Auth::id();
+
+    // payload에 user_id 추가
+    $payload['user_id'] = $userId;
+
+    // Trip 생성
+    $trip = $this->tripRepository->createTrip($payload);
+
+    // 생성된 Trip 반환
+    return $trip;
+  }
+
+  /**
+   * 2. Trip 목록 조회 (페이지네이션)
+   * @param int $page
+   * @param int $size
+   * @param string|null $sort
+   * @param int|null $regionId
+   * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+   */
+  public function paginateTrips(
+    int $page,
+    int $size,
+    ?string $sort = null,
+    ?int $regionId = null
+  ): LengthAwarePaginator {
+
+    // 현재 로그인한 사용자 ID 가져오기
+    $userId = Auth::id();
+
+    // Trip 목록 페이지네이션 조회
+    return $this->tripRepository->paginateTrips(
+      $userId,
+      $page,
+      $size,
+      $sort,
+      $regionId
+    );
+  }
+
+  /**
+   * 3. 단일 Trip 조회
+   * @param int $tripId
+   * @return \App\Models\Trip
+   * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+   * @throws \Illuminate\Auth\Access\AuthorizationException
+   */
+  public function getTrip(int $tripId): Trip
+  {
+    // 소유자 확인 및 Trip 조회
+    return $this->getOwnedTripOrFail($tripId);
+  }
+
+  /**
+   * 4. Trip 부분 업데이트
+   * @param int $tripId
+   * @param array $payload
+   * @return \App\Models\Trip
+   * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+   * @throws \Illuminate\Auth\Access\AuthorizationException
+   */
+  public function updateTrip(
+    int $tripId,
+    array $payload 
+  ): Trip {
+    // 소유자 확인 및 Trip 조회
+    $this->getOwnedTripOrFail($tripId);
+
+    // Trip 부분 업데이트
+    $updatedTrip = $this->tripRepository->updateTrip(
+      $tripId,
+      $payload
+    );
+
+    // 업데이트된 Trip 반환
+    return $updatedTrip;
+  }
+
+  /**
+   * 5. Trip 삭제
+   * @param int $tripId
+   * @return bool
+   * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+   * @throws \Illuminate\Auth\Access\AuthorizationException
+   */
+  public function deleteTrip(int $tripId): bool
+  {
+    // 소유자 확인 및 Trip 조회
+    $this->getOwnedTripOrFail($tripId);
+
+    // Trip 삭제
+    return $this->tripRepository->deleteTrip($tripId);
+  }
+}
