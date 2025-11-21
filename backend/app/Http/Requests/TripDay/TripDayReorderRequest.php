@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class RelocateDayRequest extends FormRequest
+class TripDayReorderRequest extends FormRequest
 {
     /**
      * 로그인 사용자 접근 허용

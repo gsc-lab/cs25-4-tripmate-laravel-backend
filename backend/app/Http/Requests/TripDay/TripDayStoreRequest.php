@@ -23,7 +23,7 @@ class TripDaystoreRequest extends FormRequest
     {
         return [
             'day_no' => ['required', 'integer', 'min:1'],
-            'memo' => ['nullable', 'string', 'max:255']
+            'memo' => ['sometimes', 'nullable', 'string', 'max:255']
         ];
     }
 
