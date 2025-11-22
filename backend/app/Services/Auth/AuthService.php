@@ -5,6 +5,8 @@
     use App\Repositories\Auth\AuthRepository;
     use Illuminate\Support\Facades\Hash;
     use Illuminate\Database\Eloquent\Model;
+    use Illuminate\Support\Facades\Auth;
+    use App\Models\User;
 
     class AuthService
     {
@@ -52,33 +54,24 @@
         }
 
         /**
-         * Delete User Service
+         * User Logout Service
+         * @return void
          */
-        public function deleteUser(int $userId, string $password):void
+        public function logoutUser():void
         {
-            // 유저 확인
-            $user = $this->authRepository->findById($userId);
-            if (!$user) {
-                throw ValidationException::withMessages([  
-                    "email" => ["유저 정보를 찾을 수 없습니다."]
+            /**
+             * @var App\Models\User
+             */
+            $user = Auth::user();
+
+            // 사용자 식별 후 토큰 삭제
+            if ($user === null) {
+                throw ValidationException::withMessages([
+                "user"=> ["사용자 정보를 찾을 수 없습니다."]
                 ]);
             }
 
-            // 비밀번호 검증
-            if (!Hash::check($password, $user->password_hash)) {
-                throw ValidationException::withMessages([
-                    "password" => ["비밀번호가 일치하지 않습니다."]
-                ]); 
-            }
-
-            // 유저 삭제
-            $result = $this->authRepository->deleteById($userId);
-
-            if (!$result) {
-                throw ValidationException::withMessages([
-                    "email"=> ["회원 탈퇴에 실패하였습니다."]
-                ]);
-            }
+            $user->currentAccessToken()->delete();
         }
     }
 
