@@ -6,9 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Services\Auth\AuthService;
 use App\Http\Requests\Auth\AuthRegisterRequest;
 use App\Http\Requests\Auth\AuthLoginRequest;
-use App\Http\Requests\Auth\AuthVerificationRequest;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request; // 기본 Request 임포트
 
 class AuthController extends Controller
 {
@@ -22,7 +19,7 @@ class AuthController extends Controller
     /**
      * User Register
      */
-    public function register(AuthRegisterRequest $request) 
+    public function registerUser(AuthRegisterRequest $request) 
     {
         $data = $request->validated();
 
@@ -52,16 +49,15 @@ class AuthController extends Controller
     }
 
     /**
-     * User delete - 회원삭제
+     * User logout 
+     * @return \Illuminate\Http\Response
      */
-    public function logout(AuthVerificationRequest $request) 
+    public function logout()
     {
-        $data = $request->validated();
-
-        $userId = Auth::id();
-
-        $this->authService->deleteUser($userId, $data["password"]);
+        $this->authService->logoutUser();
 
         return response()->noContent();
     }
+
+    
 }
