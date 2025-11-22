@@ -17,7 +17,7 @@ class ExternalPlaceResource extends JsonResource
         return [
             'place_id' => $this['place_id'], 
             'name' => $this['name'],
-            'address' => $this['formatted_address'],
+            'address' => $this['formatted_address'] ?? $this['vicinity'],
             'lat' => $this['geometry']['location']['lat'],
             'lng' => $this['geometry']['location']['lng'],
             'category' => $this['types'][0] ?? 'unknown', 
