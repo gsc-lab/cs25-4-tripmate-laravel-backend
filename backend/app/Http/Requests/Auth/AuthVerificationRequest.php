@@ -22,7 +22,7 @@ class AuthVerificationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password'=> ['required', 'current_password']
+            'password'=> ['required']
         ];
     }
 
@@ -33,8 +33,7 @@ class AuthVerificationRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'password.required' => '비밀번호를 입력해주세요.',
-            'password.current_password'   => '현재 비밀번호가 일치하지 않습니다.'
+            'password.required' => '비밀번호를 입력해주세요.'
         ];
     }
 }
