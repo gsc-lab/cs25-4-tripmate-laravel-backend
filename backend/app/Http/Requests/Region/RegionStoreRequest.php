@@ -3,15 +3,16 @@
 namespace App\Http\Requests\Region;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class StoreRegionRequest extends FormRequest
+class RegionStoreRequest extends FormRequest
 {
     /**
-     * 사용자 접근 허용
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**

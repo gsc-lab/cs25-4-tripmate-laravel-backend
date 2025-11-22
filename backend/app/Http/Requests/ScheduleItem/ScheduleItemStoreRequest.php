@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\Trip;
+namespace App\Http\Requests\ScheduleItem;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class StoreItemRequest extends FormRequest
+class ScheduleItemStoreRequest extends FormRequest
 {
     /**
      * 로그인 사용자 접근 허용
@@ -25,7 +25,8 @@ class StoreItemRequest extends FormRequest
         return [
             'place_id' => ['required', 'integer', 'min:1', Rule::exists('places', 'place_id')],
             'seq_no' => ['required', 'integer', 'min:1'],
-            'visit_time'=> ['sometimes', 'nullable', 'date_format:Y-m-d H:i']
+            'visit_time'=> ['sometimes', 'nullable', 'date_format:Y-m-d H:i'],
+            'memo' => ['sometimes', 'nullable', 'string', 'max:255']
         ];
     }
     
@@ -45,6 +46,9 @@ class StoreItemRequest extends FormRequest
             'seq_no.min'        => '순서는 1 이상이어야 합니다.',
 
             'visit_time.date_format' => '방문 시간 형식이 올바르지 않습니다. (예: YYYY-MM-DD HH:MM)',
+
+            'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
+            'memo.string' => '메모는 문자열이어야 합니다.'
         ];
     }
 }
