@@ -33,7 +33,7 @@
          * User Login Service
          * @param array $data
          */
-        public function loginUser(string $email, string $password):mixed
+        public function loginUser(string $email, string $password)
         {
             // 유저 조회
             $user = $this->authRepository->findUserEmail($email);
