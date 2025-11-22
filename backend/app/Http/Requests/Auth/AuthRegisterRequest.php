@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Support\Str;
 
-class RegisterUserRequest extends FormRequest
+class AuthRegisterRequest extends FormRequest
 {
     /**
      * 사용자 접근 허용
@@ -26,7 +26,7 @@ class RegisterUserRequest extends FormRequest
         // email의 필드 정규화
         if ($this->email) {
             // merge함수를 이용하여 정규화된 이메일로 덮어씌운다.
-            $this->merge(['email' => Str::lower($this->email)]);
+            $this->merge(['email_norm' => Str::lower($this->email)]);
         }
     }
 
@@ -34,7 +34,7 @@ class RegisterUserRequest extends FormRequest
      * 회원가입 유효성 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    public function rules(): array 
     {
         return [
             "name" => ["required", 'string', 'max:50'],
@@ -45,7 +45,7 @@ class RegisterUserRequest extends FormRequest
 
     /**
      * 회원가입 예외 메세지
-     * @return array{email.email: string, email.max: string, email.required: string, email.unique: string, nickname.max: string, nickname.required: string, password.required: string}
+     * @return array{email.email: string, email.max: string, email.required: string, email.unique: string, nickname.max: string, nickname.required: string, nickname.string: string, password.*: string, password.required: string}
      */
     public function messages(): array
     {
