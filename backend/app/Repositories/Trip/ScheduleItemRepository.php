@@ -1,4 +1,227 @@
 <?php
+namespace App\Repositories\ScheduleItem;
 
-// ScheduleItemRepository: ScheduleItem 쿼리 전담
+use App\Models\ScheduleItem;
+use App\Repositories\BaseRepository;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Collection;
+
+/**
+ * ScheduleItem 전용 Repository
+ * - TripDay 내에서 순번 관리르 위한 쿼리 포함
+ */
+
+class ScheduleItemRepository extends BaseRepository
+{
+    /**
+     * scheduleItem Model 인스턴스 주입
+     * @param ScheduleItem $model
+     */
+    public function __construct(ScheduleItem $model)
+    {
+        parent::__construct($model);
+    } 
+
+    /**
+     * 1. 특정 TripDay의 ScheduleItem 목록 조회 (페이지네이션)
+     * @param int $tripDayId
+     * @param int $page
+     * @param int $size
+     * @return LengthAwarePaginator
+     */
+    public function paginateSchedulers(
+        int $tripDayId,
+        int $page,
+        int $size
+    ): LengthAwarePaginator {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->orderBy('order')
+            ->paginate($size, ['*'], 'page', $page);
+    }
+
+    /**
+     * 2. 특정 TripDay의 ScheduleItem 목록 조회 (페이지네이션 없음)
+     * @param int $tripDayId
+     * @return Collection
+     */
+    public function getByTripDayId(int $tripDayId): Collection
+    {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->orderBy('seq_no', 'asc')
+            ->get();
+    }
+
+    /**
+     * 해당 TripDay 안에 seq_no가 이미 존재하는지 확인
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @return bool
+     */
+    public function existsSeqNo(int $tripDayId, int $seqNo): bool
+    {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->where('seq_no', $seqNo)
+            ->exists();
+    }  
+    
+    /**
+     * 3. 특정 TripDay에서 가장 큰 seq_no 조회
+     * - 아무것도 없으면 0 반환
+     * @param int $tripDayId
+     * @return int
+     */
+    public function getMaxSeqNo(int $tripDayId): int
+    {
+        return (int)$this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->max('seq_no');
+    }
+
+    /**
+     * 4. 중간에 ScheduleItem 삽입하기 위한 메서드
+     * - seq_no >= fromSeqNo 인 ScheduleItem들의 seq_no 1씩 증가
+     * @param int $tripDayId
+     * @param int $fromSeqNo
+     * @return int 영향을 받은 행 수
+     */
+    public function incrementSeqNos(int $tripDayId, int $fromSeqNo): int
+    {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->where('seq_no', '>=', $fromSeqNo)
+            ->increment('seq_no');
+    }
+
+    /**
+     * 5. 특정 seq_no ScheduleItem 삭제 후 뒤에 item 모두 -1 처리
+     * @param int $tripDayId
+     * @param int $deletedSeqNo  // 삭제된 seq_no
+     * @return int               // 영향을 받은 행 수
+     */
+    public function decrementSeqNos(
+        int $tripDayId, 
+        int $fromSeqNo
+        ): int {
+            return $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', '>', $fromSeqNo)
+                ->decrement('seq_no');
+        }
+
+    /**
+     * 6. scheduleItem 단건 조회
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @return ScheduleItem|null
+     */
+    public function findByTripDayIdAndSeqNo(
+        int $tripDayId,
+        int $seqNo
+        ): ?ScheduleItem {
+            return $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', $seqNo)
+                ->first();
+        }
+
+    /**
+     * 7. schedule_item_id 조회
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @return int|null
+     */
+    public function getScheduleItemId(
+        int $tripDayId,
+        int $seqNo
+        ): ?int {
+            $row = $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', $seqNo)
+                ->first();
+
+            return $row?->schedule_item_id;
+        }
+    
+    /**
+     * 8. memo 수정
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @param string|null $memo
+     * @return int  영향을 받은 행 수
+     */
+    public function updateMemo(
+        int $tripDayId,
+        int $seqNo,
+        ?string $memo
+        ): int {
+            return $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', $seqNo)
+                ->update(['memo' => $memo]);
+        }
+
+    /** 
+     * 9. 방문시간 수정 
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @param string|null $visitTime
+     * @return int  영향을 받은 행 수
+     */
+    public function updateVisitTime(
+        int $tripDayId,
+        int $seqNo,
+        $visitTime
+        ): int {
+            return $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', $seqNo)
+                ->update(['visit_time' => $visitTime]);
+        }
+
+    /**
+     * 10. 해당 TripDay의 ScheduleItem 개수 조회
+     * @param int $tripDayId
+     * @return int
+     */
+    public function countByTripDayId(int $tripDayId): int
+    {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->count();
+    }
+
+    /**
+     * 11. 단일 ScheduleItem의 seq_no 업데이트
+     * @param int $tripDayId
+     * @param int $oldSeqNo // 기존 seq_no
+     * @param int $newSeqNo // 새로운 seq_no
+     * @return int          // 업데이트 된 row 수
+     */
+    public function updateSeqNo(
+        int $tripDayId,
+        int $oldSeqNo,
+        int $newSeqNo
+        ): int {
+            return $this->model
+                ->newQuery()
+                ->where('trip_day_id', $tripDayId)
+                ->where('seq_no', $oldSeqNo)
+                ->update(['seq_no' => $newSeqNo]);
+        }
+
+}
 
