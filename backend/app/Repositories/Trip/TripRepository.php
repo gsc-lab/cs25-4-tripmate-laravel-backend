@@ -32,6 +32,7 @@ class TripRepository extends BaseRepository
 
   /**
    * 2. user_id로 Trip 목록 조회 (페이지네이션)
+   * @param int $userId
    * @param int $page
    * @param int $size
    * @param string|null $sort
@@ -39,13 +40,18 @@ class TripRepository extends BaseRepository
    * @return LengthAwarePaginator
    */
   public function paginateTrips(
+    int $userId,
     int $page,
     int $size,
     ?string $sort = null,
     ?int $regionId = null
   ): LengthAwarePaginator {
+
     // 쿼리 빌더 생성
     $query = $this->model->newQuery();
+
+    // user_id 필터링
+    $query->where('user_id', $userId);
 
     // regionId 필터링
     if ($regionId !== null) {
