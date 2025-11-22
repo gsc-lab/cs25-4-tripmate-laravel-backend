@@ -68,12 +68,12 @@ class TripDayRepository extends BaseRepository
   }
 
   /**
-   * 4. 해당 Trip의 마지막 day_no 반환
+   * 4. 해당 Trip에서 가장 큰 day_no를 반환
    * - 아무것도 없으면 0 반환
    * @param int $tripId
    * @return int
    */
-  public function getByDateNo(int $tripId): int
+  public function getMaxDayNo(int $tripId): int
   {
     return (int)$this->model
       ->newQuery()
