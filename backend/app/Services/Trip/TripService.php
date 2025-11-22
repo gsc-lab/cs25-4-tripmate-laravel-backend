@@ -6,7 +6,6 @@ use App\Repositories\Trip\TripRepository;
 use App\Repositories\Trip\TripDayRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;          
 use Carbon\Carbon;           
