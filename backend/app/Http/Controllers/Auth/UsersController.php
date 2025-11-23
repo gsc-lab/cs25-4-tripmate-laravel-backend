@@ -6,6 +6,7 @@
     use App\Services\Auth\UserService;
     use App\Http\Requests\Auth\AuthVerificationRequest;
     use Illuminate\Support\Facades\Auth;
+    use App\Http\Resources\UserResource;
 
     class UsersController extends Controller
     {
@@ -24,7 +25,7 @@
 
             return response()->json([
                 'success' => true,
-                'data'=> $user
+                'data'=> UserResource::collection($user)
             ]);
         }
 
