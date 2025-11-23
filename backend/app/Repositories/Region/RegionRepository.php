@@ -14,7 +14,7 @@
         /**
          * find Regions
          * @param mixed $query
-         * @return \Illuminate\Database\Eloquent\Collection<int, TModel>
+         * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Region[]
          */
         public function findRegions($query)
         {
@@ -24,7 +24,7 @@
         /**
          * selected Regions
          * @param mixed $country
-         * @return \Illuminate\Database\Eloquent\Collection<int, TModel>
+         * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Region[]
          */
         public function selectRegions($country)
         {
