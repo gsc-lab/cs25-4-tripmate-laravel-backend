@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Trip\TripStoreRequest;
 use App\Http\Requests\Trip\TripUpdateRequest;
 use App\Http\Requests\Trip\TripIndexRequest;
-use App\Models\Trip;
 use App\Http\Resources\TripResource;
 use App\Services\Trip\TripService;
 use Illuminate\Http\JsonResponse;
@@ -84,7 +83,7 @@ class TripController extends Controller
     
     /**
      * 3. 단일 Trip 조회
-     * - GET /v2/trips/{id}
+     * - GET /v2/trips/{trip_id}
      * @param int $trip
      * @return JsonResponse
      */
@@ -135,6 +134,7 @@ class TripController extends Controller
         // 응답 반환
         return response()->json([
             'success' => true,
+            'data' => null,
             'message' => 'Trip 삭제에 성공하였습니다',
         ]);
     }
