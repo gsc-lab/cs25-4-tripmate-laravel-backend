@@ -3,32 +3,39 @@ namespace App\Services\Trip;
 
 use App\Models\Trip;
 use App\Repositories\Trip\TripRepository;
+use App\Repositories\Trip\TripDayRepository;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;          
+use Carbon\Carbon;           
 
 class TripService
 {
-  // trip repository 프로퍼티
+  // trip, tripday repository 프로퍼티
   protected TripRepository $tripRepository;
+  protected TripDayRepository $tripDayRepository;
 
   /**
    * 생성자에서 repository 주입
-   * @param \App\Repositories\Trip\TripRepository $tripRepository
+   * @param TripRepository $tripRepository
+   * @param TripDayRepository $tripDayRepository
    */
-  public function __construct(TripRepository $tripRepository)
+  public function __construct(
+    TripRepository $tripRepository,
+    TripDayRepository $tripDayRepository)
   {
     $this->tripRepository = $tripRepository;
+    $this->tripDayRepository = $tripDayRepository;
   }
 
   /**
    * 내부 공통 메서드
    * - Trip이 현재 로그인한 사용자 소유인지 확인
    * - 소유자가 아니면 AuthorizationException 예외 발생
-   * @param \App\Models\Trip $trip
+   * @param Trip $trip
    * @return void
-   * @throws \Illuminate\Auth\Access\AuthorizationException
+   * @throws AuthorizationException
    */
   protected function assertTripOwnership(Trip $trip): void
   {
@@ -46,9 +53,8 @@ class TripService
    * - trip_id로 Trip 조회 후 현재 로그인한 사용자의 소유인지 확인
    * - 소유자가 아니면 AuthorizationException 예외 발생
    * @param int $tripId
-   * @return \App\Models\Trip
-   * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
-   * @throws \Illuminate\Auth\Access\AuthorizationException
+   * @return Trip
+   * @throws AuthorizationException
    */
   protected function getOwnedTripOrFail(int $tripId): Trip
   {
@@ -63,8 +69,9 @@ class TripService
 
   /**
    * 1. Trip 생성
+   * - tripday 자동 생성
    * @param array $payload 
-   * @return \App\Models\Trip
+   * @return Trip
    */
   public function createTrip(array $payload): Trip
   {
@@ -74,11 +81,32 @@ class TripService
     // payload에 user_id 추가
     $payload['user_id'] = $userId;
 
-    // Trip 생성
-    $trip = $this->tripRepository->createTrip($payload);
+    // trip 생성
+    return DB::transaction(function () use ($payload) {
+      // Trip 생성
+      $trip = $this->tripRepository->createTrip($payload);
 
-    // 생성된 Trip 반환
-    return $trip;
+      // 시작일과 종료일 파싱
+      $startDate = Carbon::parse($trip->start_date);
+      $endDate = Carbon::parse($trip->end_date);
+
+      // TripDay 생성
+      $dayNo = 1;
+
+      // start_date ~ end_date 까지 하루씩 증가
+      for($date = $startDate->copy(); $date->lte($endDate); $date->addDay(), $dayNo++) {
+        // TripDay 생성
+        $this->tripDayRepository->create([
+          'trip_id' => $trip->trip_id,
+          'day_no' => $dayNo,
+          'memo' => null,
+        ]);
+      };
+
+
+      // 생성된 Trip 반환
+      return $trip->fresh();
+    });
   }
 
   /**

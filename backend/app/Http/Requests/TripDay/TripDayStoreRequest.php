@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Trip;
+namespace App\Http\Requests\TripDay;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class StoreDayRequest extends FormRequest
+class TripDaystoreRequest extends FormRequest
 {
     /**
      * 로그인 사용자 접근 허용
@@ -16,14 +16,14 @@ class StoreDayRequest extends FormRequest
     }
 
     /**
-     * 일차생성 유효성검증
+     * 일차 생성 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'day_no' => ['required', 'integer', 'min:1'],
-            'memo' => ['nullable', 'string', 'max:255']
+            'memo' => ['sometimes', 'nullable', 'string', 'max:255']
         ];
     }
 

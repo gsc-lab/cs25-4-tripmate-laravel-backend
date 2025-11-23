@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Trip;
+namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class UpdateMemoRequest extends FormRequest
+class PlaceDetailRequest extends FormRequest
 {
     /**
      * 로그인 사용자 접근 허용
@@ -16,24 +16,21 @@ class UpdateMemoRequest extends FormRequest
     }
 
     /**
-     * 일차 수정 유효성검증
+     * 좌표 -> 장소 반환
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'memo' => ['nullable', 'string', 'max:255']
+            "place_id" => ["required", "string"]
         ];
     }
 
-    /**
-     * @return array{memo.max: string, memo.string: string}
-     */
-    public function messages(): array
+    public function messages(): array 
     {
         return [
-            'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
-            'memo.string' => '메모는 문자열이어야 합니다.'
+            "place_id.required"=> "장소의 id 값을 입력해주세요.",
+            "place_id.string"=> "장소의 id는 문자형이어야 합니다."
         ];
     }
 }

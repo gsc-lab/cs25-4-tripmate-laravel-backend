@@ -19,7 +19,7 @@ class TripDayResource extends JsonResource
             'trip_day_id' => $this->trip_day_id,
             'trip_id' => $this->trip_id,
             'day_no' => $this->day_no,
-            'memo' => $this->whenNotNull($this->memo),
+            'memo' => $this->memo,
 
             // 해당 날짜를 반환할 경우
             'date' => $this->whenLoaded('trip', function () {

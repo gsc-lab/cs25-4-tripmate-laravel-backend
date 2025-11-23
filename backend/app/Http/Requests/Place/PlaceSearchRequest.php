@@ -3,15 +3,16 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
-class SearchPlaceRequest extends FormRequest
+class PlaceSearchRequest extends FormRequest
 {
     /**
-     * 사용자 접근 허용
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
-        return true;
+        return Auth::check();
     }
 
     /**

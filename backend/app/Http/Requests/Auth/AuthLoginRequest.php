@@ -4,7 +4,7 @@ namespace App\Http\Requests\Auth;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class AuthLoginRequest extends FormRequest
 {
     /**
      * 사용자 접근 허용
