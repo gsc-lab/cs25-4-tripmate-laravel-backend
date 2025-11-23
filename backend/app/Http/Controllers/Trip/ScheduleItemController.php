@@ -61,7 +61,7 @@ class ScheduleItemController extends Controller
         return response()->json([
             'success' => true,
             'code' => 'SUCCESS',
-            'massage' => '일정 아이템 목록 조회 성공했습니다',
+            'message' => '일정 아이템 목록 조회 성공했습니다',
             'data' => [
                 'items' => ScheduleItemResource::collection($paginatedScheduleItems->items()),
                 'pagination' => [
