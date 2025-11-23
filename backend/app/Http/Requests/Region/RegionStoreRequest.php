@@ -22,8 +22,8 @@ class RegionStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'query' => ['sometimes', 'nullable', 'string'],
-            'country' => ['sometimes', 'nullable', 'string']
+            'query' => ['nullable', 'string', 'required_without:country'],
+            'country' => ['nullable', 'string', 'required_without:query']
         ];
     }
 
@@ -34,6 +34,9 @@ class RegionStoreRequest extends FormRequest
     {
         return [
             'query.string' => '쿼리의 값은 반드시 문자형이어야 합니다.',
+            'query.required_without' => '지역 검색이 아닌 경우, 국가코드는 반드시 작성해야합니다.',
+
+            'country.required_without'=> '국가코드를 작성하지 않는 경우, 반드시 지역을 입력해야합니다.',
             'country.string'=> '국가코드의 값은 반드시 문자형이어야 합니다.'
         ];
     }
