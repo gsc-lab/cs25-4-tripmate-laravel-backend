@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\User\UsersController;
-use App\Http\Controllers\Trip\TripsController;
+use App\Http\Controllers\Trip\TripController;
 use App\Http\Controllers\TripDay\TripDayController;
 use App\Http\Controllers\ScheduleItem\ScheduleItemController;
 use App\Http\Controllers\Place\PlaceController;
@@ -37,31 +37,46 @@ Route::prefix('v2')->group(function () {
     Route::post('/auth/logout', [AuthController::class, 'logout']);
 
     /**
-     * Trips
-     * GET              /v2/trips
-     * POST             /v2/trips
-     * GET/PUT/DELETE   /v2/trips/{trip_id}
+     * Trip
+     * GET         /v2/trips
+     * POST        /v2/trips
+     * GET         /v2/trips/{trip}
+     * PUT/PATCH   /v2/trips/{trip}
+     * DELETE      /v2/trips/{trip}
      */
-    Route::apiResource('trips', TripsController::class);
+    Route::apiResource('trips', TripController::class);
 
     /**
-     * Trip Days (Nested + shallow)
-     * GET              /v2/trips/{trip_id}/days
-     * POST             /v2/trips/{trip_id}/days
-     * POST             /v2/trips/{trip_id}/days:reorder
-     * GET/PUT/DELETE   /v2/trips/{trip_id}/days/{day_no}
-     */
-    Route::apiResource('trips.days', TripDayController::class)->shallow();
-    Route::post('/trips/{trip}/days/reorder', [TripDayController::class, 'reorder']);
+     * Trip Days
+     * GET    /v2/trips/{trip_id}/days                 목록
+     * POST   /v2/trips/{trip_id}/days                 생성
+     * GET    /v2/trips/{trip_id}/days/{day_no}        단건 조회
+     * PATCH  /v2/trips/{trip_id}/days/{day_no}        메모 수정
+     * DELETE /v2/trips/{trip_id}/days/{day_no}        삭제
+     * POST   /v2/trips/{trip_id}/days/reorder         순서 변경
+    */
+    Route::get   ('/trips/{trip_id}/days', [TripDayController::class, 'index']);
+    Route::post  ('/trips/{trip_id}/days', [TripDayController::class, 'store']);
+    Route::get   ('/trips/{trip_id}/days/{day_no}', [TripDayController::class, 'show']);
+    Route::patch ('/trips/{trip_id}/days/{day_no}', [TripDayController::class, 'updateMemo']);
+    Route::delete('/trips/{trip_id}/days/{day_no}', [TripDayController::class, 'destroy']);
+    Route::post  ('/trips/{trip_id}/days/reorder', [TripDayController::class, 'reorder']);
 
     /**
-     * Schedule Items (Nested + shallow)
-     * GAT/POST       /v2/trips/{trip_id}/days/{day_no}/items
-     * PATCH/DELETE   /v2/trips/{trip_id}/days/{day_no}/items/{item_id}
-     * POST           /v2/trips/{trip_id}/days/{day_no}/items:reorder
+     * Schedule Items
+     * GET    /v2/trips/{trip_id}/days/{day_no}/items                  목록
+     * POST   /v2/trips/{trip_id}/days/{day_no}/items                  생성
+     * GET    /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         단건 조회
+     * PATCH  /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         수정(visit_time/memo)
+     * DELETE /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         삭제
+     * POST   /v2/trips/{trip_id}/days/{day_no}/items/reorder          순서 변경
      */
-    Route::apiResource('days.items', ScheduleItemController::class)->shallow();
-    Route::post('/days/{day}/items/reorder', [ScheduleItemController::class, 'reorder']);
+    Route::get   ('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'index']);
+    Route::post  ('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'store']);
+    Route::get   ('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'show']);
+    Route::patch ('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'update']);
+    Route::delete('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'destroy']);
+    Route::post  ('/trips/{trip_id}/days/{day_no}/items/reorder', [ScheduleItemController::class, 'reorder']);
 
     /**
      * Places
