@@ -37,7 +37,7 @@ class ScheduleItemRepository extends BaseRepository
         return $this->model
             ->newQuery()
             ->where('trip_day_id', $tripDayId)
-            ->orderBy('order')
+            ->orderBy('seq_no',)
             ->paginate($size, ['*'], 'page', $page);
     }
 
@@ -223,5 +223,39 @@ class ScheduleItemRepository extends BaseRepository
                 ->update(['seq_no' => $newSeqNo]);
         }
 
-}
+    /**
+     * 12. 메모 + 방문시간 동시 수정
+     * @param int $tripDayId
+     * @param int $seqNo
+     * @param string|null $memo
+     * @param string|null $visitTime
+     * @return int  영향을 받은 행 수
+     */
+    public function updateMemoAndVisitTime(
+        int $tripDayId,
+        int $seqNo,
+        ?string $memo,
+        ?string $visitTime
+    ): int {
+        $data = [];
 
+        // 수정할 값이 null이 아닐 때만 배열에 추가
+        if (!is_null($memo)) {
+            $data['memo'] = $memo;
+        }
+        if (!is_null($visitTime)) {
+            $data['visit_time'] = $visitTime;
+        }
+
+        // 수정 할 데이터가 없으면 0 반환
+        if (empty($data)) {
+            return 0; 
+        }
+
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->where('seq_no', $seqNo)
+            ->update($data);
+    }
+}
