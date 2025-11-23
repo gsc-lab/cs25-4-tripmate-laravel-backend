@@ -56,7 +56,7 @@ class TripService
    * @return Trip
    * @throws AuthorizationException
    */
-  protected function getOwnedTripOrFail(int $tripId): Trip
+  public function getOwnedTripOrFail(int $tripId): Trip
   {
     // trip_id로 Trip 조회
     $trip = $this->tripRepository->findTripOrFail($tripId);
