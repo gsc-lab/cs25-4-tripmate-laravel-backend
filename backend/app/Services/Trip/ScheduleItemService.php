@@ -10,6 +10,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ScheduleItemService
 {
@@ -54,6 +55,37 @@ class ScheduleItemService
             // Trip_day_id 반환
             return $tripDayId;
         }
+    
+    /**
+     * 내부 공통 헬퍼 메서드
+     * - schedule_item_id로 ScheduleItem 조회
+     * - Trip + day_no에 속하는지까지 확인
+     *
+     * @param Trip $trip
+     * @param int $dayNo
+     * @param int $itemId   schedule_item_id
+     * @return ScheduleItem
+     * @throws ModelNotFoundException
+     */
+    protected function getOwnedScheduleItemOrFail(
+        Trip $trip,
+        int $dayNo,
+        int $itemId
+    ): ScheduleItem {
+        // TripDay 존재 여부 및 trip_day_id 조회
+        $tripDayId = $this->getTripDayIdOrFail($trip, $dayNo);
+
+        // PK(scheduled_item_id)로 조회
+        /** @var ScheduleItem|null $item */
+        $item = $this->scheduleItemRepository->findById($itemId);
+
+        // 없거나 다른 TripDay에 속하면 예외
+        if (!$item || $item->trip_day_id !== $tripDayId) {
+            throw new ModelNotFoundException('해당하는 Schedule Item을 찾을 수 없습니다');
+        }
+
+        return $item;
+    }
     
     /**
      * 1. 특정 TripDay의 ScheduleItem 목록 조회 (페이지네이션)
@@ -180,29 +212,16 @@ class ScheduleItemService
      * 4. ScheduleItem 단건 조회
      * @param Trip $trip
      * @param int $dayNo
-     * @param int $seqNo
+     * @param int $itemId  schedule_item_id
      * @return ScheduleItem
      * @throws ModelNotFoundException
      */
     public function getScheduleItem(
         Trip $trip,
         int $dayNo,
-        int $seqNo
+        int $itemId
     ): ScheduleItem {
-        // tripDayId 조회
-        $tripDayId = $this->getTripDayIdOrFail($trip, $dayNo);
-
-        // ScheduleItem 단건 조회
-        $item = $this->scheduleItemRepository->findByTripDayIdAndSeqNo(
-            $tripDayId,
-            $seqNo
-        );
-
-        if (is_null($item)) {
-            throw new ModelNotFoundException("해당하는 Schedule Item을 찾을 수 없습니다");
-        }
-
-        return $item;
+        return $this->getOwnedScheduleItemOrFail($trip, $dayNo, $itemId);
     }
 
     /**
@@ -210,7 +229,7 @@ class ScheduleItemService
      * = 둘 중 일부만 수정 가능
      * @param Trip $trip
      * @param int $dayNo
-     * @param int $seqNo
+     * @param int $itemId       
      * @param string|null $visitTime
      * @param string|null $memo
      * @return ScheduleItem
@@ -219,26 +238,16 @@ class ScheduleItemService
     public function updateScheduleItem(
         Trip $trip,
         int $dayNo,
-        int $seqNo,
+        int  $itemId,
         ?string $visitTime,
         ?string $memo
     ): ScheduleItem {
         // tripDayId 조회
-        $tripDayId = $this->getTripDayIdOrFail($trip, $dayNo);
-
-        $item = $this->scheduleItemRepository->findByTripDayIdAndSeqNo(
-            $tripDayId,
-            $seqNo
-        );
-
-        // 없으면 예외 발생
-        if (is_null($item)) {
-            throw new ModelNotFoundException("해당하는 Schedule Item을 찾을 수 없습니다");
-        }
+        $item = $this->getOwnedScheduleItemOrFail($trip, $dayNo, $itemId);
 
         // 메모/방문시간 수정
         if (!is_null($visitTime)) {
-            $item->visit_time = $visitTime;
+            $item->visit_time = Carbon::parse($visitTime);
         }
         if (!is_null($memo)) {
             $item->memo = $memo;
@@ -303,7 +312,7 @@ class ScheduleItemService
     public function reorderScheduleItem(
         Trip $trip,
         int $dayNo,
-        int $oldSeqNo,
+        int $itemId,
         int $newSeqNo
     ): void {
         // tripDayId 조회
@@ -311,14 +320,11 @@ class ScheduleItemService
 
         DB::transaction(function () use (
             $tripDayId,
-            $oldSeqNo,
+            $itemId,
             $newSeqNo
         ) {
             // ScheduleItem 이동 대상 조회
-            $item = $this->scheduleItemRepository->findByTripDayIdAndSeqNo(
-                $tripDayId,
-                $oldSeqNo
-            );
+            $item = $this->scheduleItemRepository->findById($itemId);
 
             // 없으면 예외 발생
             if (is_null($item)) {
@@ -339,16 +345,16 @@ class ScheduleItemService
                 $newSeqNo = $maxSeqNo;
             }
 
-            if ($oldSeqNo === $newSeqNo) {
+            if ($itemId === $newSeqNo) {
                 // 이동 없음
                 return;
             }
 
-            if ($oldSeqNo < $newSeqNo) {
+            if ($itemId < $newSeqNo) {
                 // 앞으로 이동: oldSeqNo+1 ~ newSeqNo 항목들 seq_no 1씩 감소
                 $this->scheduleItemRepository->decrementSeqNos(
                     $tripDayId,
-                    $oldSeqNo
+                    $itemId
                 );
             } else {
                 // 뒤로 이동: newSeqNo ~ oldSeqNo-1 항목들 seq_no 1씩 증가
@@ -361,7 +367,7 @@ class ScheduleItemService
             // 대상 항목의 seq_no 업데이트
             $this->scheduleItemRepository->updateSeqNo(
                 $tripDayId,
-                $oldSeqNo,
+                $itemId,
                 $newSeqNo
             );
         });
