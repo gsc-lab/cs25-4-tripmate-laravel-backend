@@ -151,7 +151,7 @@ class ScheduleItemService
                     }
 
                     // 이미 해당 seq_no가 존재하면 이후 항목들의 seq_no 1씩 증가
-                    if ($$this->scheduleItemRepository->existsSeqNo(
+                    if ($this->scheduleItemRepository->existsSeqNo(
                         $tripDayId,
                         $seqNo
                     )) {
