@@ -222,8 +222,8 @@ class TripDayService
                 // 위로 이동 : newDayNo <= day_no < oldDayNo 인 day_no 들을 +1 씩 증가
                 $this->tripDayRepository->shiftUpRange(
                     $tripId,
-                    $newDayNo,
-                    $oldDayNo
+                    $oldDayNo,
+                    $newDayNo
                 );
             }
 

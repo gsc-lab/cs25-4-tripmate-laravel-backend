@@ -145,7 +145,7 @@ class TripDayRepository extends BaseRepository
       ->newQuery()
       ->where('trip_id', $tripId)
       ->where('day_no', $dayNo)
-      ->first();
+      ->firstOrFail();
   }
 
   /**
