@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\TripDay;
+namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +11,7 @@ use App\Http\Requests\TripDay\TripDayUpdateRequest;
 use App\Http\Requests\TripDay\TripDayReorderRequest;
 use App\Http\Resources\TripDayResource;
 use App\Services\Trip\TripService;
-use App\Services\TripDay\TripDayService;
+use App\Services\Trip\TripDayService;
 
 /**
  * Trip Day Controller
@@ -222,13 +222,14 @@ class TripDayController extends Controller
         TripDayReorderRequest $request,
         int $tripId
     ): JsonResponse {
+
         // 현재 로그인 사용자의 Trip인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
         // 유효성 검사된 데이터 가져오기
         $validated = $request->validated();
-        $newOrder = $validated['new_order'];
-        $oldOrder = $validated['old_order'];
+        $newOrder = $validated['new_day_no'];
+        $oldOrder = $validated['old_day_no'];
 
         // TripDay 재정렬
         $this->tripDayService->reorderTripDay(

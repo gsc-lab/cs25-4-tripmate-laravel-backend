@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UsersController;
 use App\Http\Controllers\Trip\TripController;
-use App\Http\Controllers\TripDay\TripDayController;
-use App\Http\Controllers\ScheduleItem\ScheduleItemController;
+use App\Http\Controllers\Trip\TripDayController;
+use App\Http\Controllers\Trip\ScheduleItemController;
 use App\Http\Controllers\Place\PlaceController;
 use App\Http\Controllers\Region\RegionController;  
 
