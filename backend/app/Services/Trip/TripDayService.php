@@ -69,23 +69,17 @@ class TripDayService
 
             return DB::transaction(function () use ($tripId, $dayNo, $memo) {
                 
-                // 중간 삽입인 경우 day_no 이후의 day_no 들을 1씩 증가
-               if ($this->tripDayRepository->existDayNo($tripId, $dayNo)) {
+            // 중간 삽입인 경우 day_no 이후의 day_no 들을 1씩 증가
+            if ($this->tripDayRepository->existDayNo($tripId, $dayNo)) {
                     $this->tripDayRepository->incrementDayNo($tripId, $dayNo);
-                }
+            }
 
-                // TripDay 생성
-                $day = $this->tripDayRepository->create([
-                    'trip_id' => $tripId,
-                    'day_no' => $dayNo,
-                    'memo' => $memo
-                ]);
-
-                // day_count 보정
-                $newCount = $this->tripDayRepository->countByTripId($tripId);
-                $trip = Trip::findOrFail($tripId);
-                $trip->day_count = $newCount;
-                $trip->save();
+            // TripDay 생성
+            $day = $this->tripDayRepository->create([
+                'trip_id' => $tripId,
+                'day_no' => $dayNo,
+                'memo' => $memo
+            ]);
 
                 return $day;
             });
@@ -167,10 +161,6 @@ class TripDayService
                 // day_no 이후의 day_no 들을 1씩 감소
                 $this->tripDayRepository->decrementDayNoAfter($tripId, $dayNo);
 
-                // day_count 보정
-                $trip = Trip::findOrFail($tripId);
-                $trip->day_count = $this->tripDayRepository->countByTripId($tripId);
-                $trip->save();
             });
         }
 
@@ -216,7 +206,6 @@ class TripDayService
                 $this->tripDayRepository->incrementDayNo(
                     $tripId,
                     $newDayNo
-                   
                 );
             }
 
