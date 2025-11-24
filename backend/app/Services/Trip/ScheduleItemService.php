@@ -315,61 +315,61 @@ class ScheduleItemService
         int $itemId,
         int $newSeqNo
     ): void {
-        // tripDayId 조회
-        $tripDayId = $this->getTripDayIdOrFail($trip, $dayNo);
+
+        // 아이템 + TripDay 소속 검증
+        $item = $this->getOwnedScheduleItemOrFail($trip, $dayNo, $itemId);
+        $tripDayId = $item->trip_day_id;
+        $oldSeqNo  = $item->seq_no;
 
         DB::transaction(function () use (
             $tripDayId,
-            $itemId,
+            $oldSeqNo,
             $newSeqNo
         ) {
-            // ScheduleItem 이동 대상 조회
-            $item = $this->scheduleItemRepository->findById($itemId);
 
-            // 없으면 예외 발생
-            if (is_null($item)) {
+            $maxSeqNo = $this->scheduleItemRepository->getMaxSeqNo($tripDayId);
+
+            if ($maxSeqNo === 0) {
                 throw new ModelNotFoundException("해당하는 Schedule Item을 찾을 수 없습니다");
             }
 
             // newSeqNo 보정
-            $maxSeqNo = $this->scheduleItemRepository->getMaxSeqNo($tripDayId);
-            
-            if ($maxSeqNo === 0) {
-                throw new ModelNotFoundException("재배치할 Schedule Item이 없습니다");
-            }
-
             if ($newSeqNo < 1) {
                 $newSeqNo = 1;
-            }
-            else if ($newSeqNo > $maxSeqNo) {
+            } elseif ($newSeqNo > $maxSeqNo) {
                 $newSeqNo = $maxSeqNo;
             }
 
-            if ($itemId === $newSeqNo) {
-                // 이동 없음
+            // 이동할 위치가 같으면 아무 작업도 하지 않음
+            if ($oldSeqNo === $newSeqNo) {
                 return;
             }
 
-            if ($itemId < $newSeqNo) {
-                // 앞으로 이동: oldSeqNo+1 ~ newSeqNo 항목들 seq_no 1씩 감소
-                $this->scheduleItemRepository->decrementSeqNos(
+            // 위로 이동: [newSeqNo, oldSeqNo) 구간의 항목들 seq_no + 1
+            if ($newSeqNo < $oldSeqNo) {
+                $this->scheduleItemRepository->incrementSeqRange(
                     $tripDayId,
-                    $itemId
-                );
-            } else {
-                // 뒤로 이동: newSeqNo ~ oldSeqNo-1 항목들 seq_no 1씩 증가
-                $this->scheduleItemRepository->incrementSeqNos(
-                    $tripDayId,
+                    $oldSeqNo,
                     $newSeqNo
                 );
             }
 
-            // 대상 항목의 seq_no 업데이트
+            // 아래로 이동: (oldSeqNo, newSeqNo] 구간의 항목들 seq_no - 1
+            else {
+                $this->scheduleItemRepository->decrementSeqRange(
+                    $tripDayId,
+                    $oldSeqNo,
+                    $newSeqNo
+                );
+            }
+
+            // 대상 아이템의 seq_no 수정
             $this->scheduleItemRepository->updateSeqNo(
                 $tripDayId,
-                $itemId,
+                $oldSeqNo,
                 $newSeqNo
             );
+            
         });
     }
 

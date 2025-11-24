@@ -258,4 +258,48 @@ class ScheduleItemRepository extends BaseRepository
             ->where('seq_no', $seqNo)
             ->update($data);
     }
+
+    /**
+     * 13. 재배치(아래로 이동)용 메서드
+     * - oldSeqNo < newSeqNo 인 경우
+     * - (oldSeqNo, newSeqNo] 구간의 항목들을 seq_no - 1
+     * @param int $tripDayId
+     * @param int $oldSeqNo
+     * @param int $newSeqNo
+     * @return int 
+     */
+    public function decrementSeqRange(
+        int $tripDayId,
+        int $oldSeqNo,
+        int $newSeqNo
+    ): int {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->where('seq_no', '>', $oldSeqNo)
+            ->where('seq_no', '<=', $newSeqNo)
+            ->decrement('seq_no');
+    }
+
+    /**
+     * 14. 재배치(위로 이동)용 메서드
+     * - oldSeqNo > newSeqNo 인 경우
+     * - [newSeqNo, oldSeqNo) 구간의 항목들을 seq_no + 1
+     * @param int $tripDayId
+     * @param int $oldSeqNo
+     * @param int $newSeqNo
+     * @return int 
+     */
+    public function incrementSeqRange(
+        int $tripDayId,
+        int $oldSeqNo,
+        int $newSeqNo
+    ): int {
+        return $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->where('seq_no', '>=', $newSeqNo)
+            ->where('seq_no', '<', $oldSeqNo)
+            ->increment('seq_no');
+    }
 }
