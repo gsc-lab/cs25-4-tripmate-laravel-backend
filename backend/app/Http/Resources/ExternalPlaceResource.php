@@ -15,12 +15,12 @@ class ExternalPlaceResource extends JsonResource
     {
         // google에서 받아올 배열
         return [
-            'place_id' => $this['place_id'], 
-            'name' => $this['name'],
-            'address' => $this['formatted_address'] ?? $this['vicinity'],
-            'lat' => $this['geometry']['location']['lat'],
-            'lng' => $this['geometry']['location']['lng'],
-            'category' => $this['types'][0] ?? 'unknown', 
+            'place_id' => $this['id'], 
+            'name' => $this['displayName']['text'] ?? $this['name'],
+            'address' => $this['formattedAddress'],
+            'lat'      => $this['location']['latitude'],
+            'lng'      => $this['location']['longitude'],
+            'category' => $this['primaryType'][0] ?? 'etc', 
         ];
     }
 }
