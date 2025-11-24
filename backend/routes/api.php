@@ -19,8 +19,8 @@ Route::prefix('v2')->group(function () {
   Route::post('/auth/login', [AuthController::class, 'login']);     
 
 
-  // 인증된 사용자만 접근 가능한 API
-  Route::middleware('auth:sanctum')->group(function () {
+  // // 인증된 사용자만 접근 가능한 API
+  // Route::middleware('auth:sanctum')->group(function () {
 
     /**
      * Users
@@ -88,11 +88,11 @@ Route::prefix('v2')->group(function () {
      * POST   /v2/places/from-external
      */
     Route::get('/places/external-search', [PlaceController::class, 'externalSearch']);
-    Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
     Route::get('/places/reverse-geocode', [PlaceController::class, 'reverseGeocode']);
     Route::get('/places/place-geocode', [PlaceController::class, 'placeGeocode']);
     Route::get('/places/nearby', [PlaceController::class, 'nearbyPlaces']);
     Route::post('/places/from-external', [PlaceController::class, 'createPlaceFromExternal']);
+    Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
 
     /**
      * Regions
@@ -100,4 +100,4 @@ Route::prefix('v2')->group(function () {
      */
     Route::get('/regions', [RegionController::class, 'listRegions']);
   });
-});
+// });
