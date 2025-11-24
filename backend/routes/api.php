@@ -4,7 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Auth\AuthController;
-use App\Http\Controllers\User\UsersController;
+use App\Http\Controllers\Auth\UsersController;
 use App\Http\Controllers\Trip\TripController;
 use App\Http\Controllers\TripDay\TripDayController;
 use App\Http\Controllers\ScheduleItem\ScheduleItemController;
