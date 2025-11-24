@@ -69,23 +69,17 @@ class TripDayService
 
             return DB::transaction(function () use ($tripId, $dayNo, $memo) {
                 
-                // 중간 삽입인 경우 day_no 이후의 day_no 들을 1씩 증가
-               if ($this->tripDayRepository->existDayNo($tripId, $dayNo)) {
+            // 중간 삽입인 경우 day_no 이후의 day_no 들을 1씩 증가
+            if ($this->tripDayRepository->existDayNo($tripId, $dayNo)) {
                     $this->tripDayRepository->incrementDayNo($tripId, $dayNo);
-                }
+            }
 
-                // TripDay 생성
-                $day = $this->tripDayRepository->create([
-                    'trip_id' => $tripId,
-                    'day_no' => $dayNo,
-                    'memo' => $memo
-                ]);
-
-                // day_count 보정
-                $newCount = $this->tripDayRepository->countByTripId($tripId);
-                $trip = Trip::findOrFail($tripId);
-                $trip->day_count = $newCount;
-                $trip->save();
+            // TripDay 생성
+            $day = $this->tripDayRepository->create([
+                'trip_id' => $tripId,
+                'day_no' => $dayNo,
+                'memo' => $memo
+            ]);
 
                 return $day;
             });
@@ -167,10 +161,6 @@ class TripDayService
                 // day_no 이후의 day_no 들을 1씩 감소
                 $this->tripDayRepository->decrementDayNoAfter($tripId, $dayNo);
 
-                // day_count 보정
-                $trip = Trip::findOrFail($tripId);
-                $trip->day_count = $this->tripDayRepository->countByTripId($tripId);
-                $trip->save();
             });
         }
 
@@ -193,6 +183,11 @@ class TripDayService
 
         DB::transaction(function () use ($tripId, $oldDayNo, $newDayNo) {
             
+            if ($oldDayNo === $newDayNo) {
+                // 변경 사항이 없으면 아무 작업도 하지 않음
+                return;
+            }
+
             // 변경 전 일차 조회
             $day = $this->tripDayRepository->findByTripAndDayNo(
                 $tripId,
@@ -204,26 +199,38 @@ class TripDayService
                 throw new ModelNotFoundException('변경 할 일차가 존재하지 않습니다');
             }
 
+            // 임시 day_no로 이동
+            $maxDayNo = $this->tripDayRepository->getMaxDayNo($tripId);
+            $tempDayNo = $maxDayNo + 1000;
 
-            if ($oldDayNo < $newDayNo) {
-                // day_no 감소
-                $this->tripDayRepository->decrementDayNoAfter(
-                    $tripId,
-                    $oldDayNo
-                );
-            } elseif ($oldDayNo > $newDayNo) {
-                // day_no 증가
-                $this->tripDayRepository->incrementDayNo(
-                    $tripId,
-                    $newDayNo
-                   
-                );
-            }
-
-            // 대상 일차의 day_no 변경
+            // 임시 번호로 변경
             $this->tripDayRepository->updateDayNo(
                 $tripId,
                 $oldDayNo,
+                $tempDayNo
+            );
+
+            // 중간 구간 이동
+            if ($oldDayNo < $newDayNo) {
+                // 아래로 이동 : oldDayNo < day_no <= newDayNo  인 day_no 들을 -1 씩 감소
+                $this->tripDayRepository->shiftDownRange(
+                    $tripId,
+                    $oldDayNo,
+                    $newDayNo
+                );
+            } else {
+                // 위로 이동 : newDayNo <= day_no < oldDayNo 인 day_no 들을 +1 씩 증가
+                $this->tripDayRepository->shiftUpRange(
+                    $tripId,
+                    $oldDayNo,
+                    $newDayNo
+                );
+            }
+
+            // 임시 번호를 최종 번호로 변경
+            $this->tripDayRepository->updateDayNo(
+                $tripId,
+                $tempDayNo,
                 $newDayNo
             );
         });
