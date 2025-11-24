@@ -301,11 +301,13 @@ class ScheduleItemService
 
     /**
      * 7. ScheduleItem 재배치
-     * - 같은 TripDay 내에서만 이동 가능
-     * @param Trip $trip
-     * @param int $dayNo
-     * @param int $oldSeqNo // 기존 순번
-     * @param int $newSeqNo // 새로운 순번
+     * - 같은 TripDay 내에서 seq_no 연속성을 유지하며 이동
+     *
+     * @param Trip $trip              대상 Trip (소유권 이미 검증됨)
+     * @param int  $dayNo             TripDay 번호
+     * @param int  $itemId            이동할 ScheduleItem ID
+     * @param int  $newSeqNo          새로운 순번
+     *
      * @return void
      * @throws ModelNotFoundException
      */
@@ -315,62 +317,68 @@ class ScheduleItemService
         int $itemId,
         int $newSeqNo
     ): void {
-
+    
         // 아이템 + TripDay 소속 검증
         $item = $this->getOwnedScheduleItemOrFail($trip, $dayNo, $itemId);
         $tripDayId = $item->trip_day_id;
         $oldSeqNo  = $item->seq_no;
-
-        DB::transaction(function () use (
-            $tripDayId,
-            $oldSeqNo,
-            $newSeqNo
-        ) {
-
+    
+        DB::transaction(function () use ($tripDayId, $oldSeqNo, $newSeqNo) {
+    
+            // 최대 seq_no 조회
             $maxSeqNo = $this->scheduleItemRepository->getMaxSeqNo($tripDayId);
-
+    
             if ($maxSeqNo === 0) {
-                throw new ModelNotFoundException("해당하는 Schedule Item을 찾을 수 없습니다");
+                throw new ModelNotFoundException('재배치할 Schedule Item을 찾을 수 없습니다');
             }
-
+    
             // newSeqNo 보정
             if ($newSeqNo < 1) {
                 $newSeqNo = 1;
             } elseif ($newSeqNo > $maxSeqNo) {
                 $newSeqNo = $maxSeqNo;
             }
-
-            // 이동할 위치가 같으면 아무 작업도 하지 않음
+    
+            // 이동할 위치가 동일하면 아무 작업도 하지 않음
             if ($oldSeqNo === $newSeqNo) {
                 return;
             }
-
-            // 위로 이동: [newSeqNo, oldSeqNo) 구간의 항목들 seq_no + 1
-            if ($newSeqNo < $oldSeqNo) {
+    
+            // 임시 seq_no (충돌 방지용)
+            $tempSeqNo = $maxSeqNo + 1000;
+    
+            // 임시 번호로 변경
+            $this->scheduleItemRepository->updateSeqNo(
+                $tripDayId,
+                $oldSeqNo,
+                $tempSeqNo
+            );
+    
+            // 중간 구간 shift
+            if ($oldSeqNo < $newSeqNo) {
+                // 아래로 이동: oldSeqNo < seq_no <= newSeqNo → -1
+                $this->scheduleItemRepository->decrementSeqRange(
+                    $tripDayId,
+                    $oldSeqNo,
+                    $newSeqNo
+                );
+            } else {
+                // 위로 이동: newSeqNo <= seq_no < oldSeqNo → +1
                 $this->scheduleItemRepository->incrementSeqRange(
                     $tripDayId,
                     $oldSeqNo,
                     $newSeqNo
                 );
             }
-
-            // 아래로 이동: (oldSeqNo, newSeqNo] 구간의 항목들 seq_no - 1
-            else {
-                $this->scheduleItemRepository->decrementSeqRange(
-                    $tripDayId,
-                    $oldSeqNo,
-                    $newSeqNo
-                );
-            }
-
-            // 대상 아이템의 seq_no 수정
+    
+            // 3) 임시 seq_no → 최종 newSeqNo 로 변경
             $this->scheduleItemRepository->updateSeqNo(
                 $tripDayId,
-                $oldSeqNo,
+                $tempSeqNo,
                 $newSeqNo
             );
-            
         });
     }
+    
 
 }
