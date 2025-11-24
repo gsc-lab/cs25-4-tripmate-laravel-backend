@@ -216,6 +216,63 @@ class TripDayRepository extends BaseRepository
       ->where('day_no', $oldDayNo)
       ->update(['day_no' => $newDayNo]);
   }
-  
 
+  /**
+   * 12. 재배치용 일차 번호 변경 메서드
+   * - oldDayNo < newDayNo
+   * - oldDayNo , newDayNo 사이의 일차 번호들을 -1 씩 감소
+   * @param int $tripId
+   * @param int $oldDayNo
+   * @param int $newDayNo
+   * @return int
+   */
+  public function shiftDownRange(
+    int $tripId,
+    int $oldDayNo,
+    int $newDayNo
+  ): int {
+
+    // 조건이 맞지 않으면 아무 작업도 하지 않음
+    if ($oldDayNo >= $newDayNo) {
+      return 0;
+    }
+
+    // 해당 범위의 일차 번호들을 -1 씩 감소
+    return $this->model
+      ->newQuery()
+      ->where('trip_id', $tripId)
+      ->where('day_no', '>', $oldDayNo)
+      ->where('day_no', '<=', $newDayNo)
+      ->decrement('day_no');
+  }
+
+  /**
+   * 13. 재배치용 일차 번호 변경 메서드
+   * - oldDayNo > newDayNo
+   * - oldDayNo , newDayNo 사이의 일차 번호들을 +1 씩 증가
+   * @param int $tripId
+   * @param int $oldDayNo
+   * @param int $newDayNo
+   * @return int
+   */
+  public function shiftUpRange(
+    int $tripId,
+    int $oldDayNo,
+    int $newDayNo
+  ): int {
+
+    // 조건이 맞지 않으면 아무 작업도 하지 않음
+    if ($oldDayNo <= $newDayNo) {
+      return 0;
+    }
+
+    // 해당 범위의 일차 번호들을 +1 씩 증가
+    return $this->model
+      ->newQuery()
+      ->where('trip_id', $tripId)
+      ->where('day_no', '>=', $newDayNo)
+      ->where('day_no', '<', $oldDayNo)
+      ->increment('day_no');
+  }
+  
 }
