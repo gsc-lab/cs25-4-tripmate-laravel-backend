@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\ScheduleItem;
+namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +11,7 @@ use App\Http\Requests\ScheduleItem\ScheduleItemUpdateRequest;
 use App\Http\Requests\ScheduleItem\ScheduleItemReorderRequest;
 use App\Http\Resources\ScheduleItemResource;
 use App\Services\Trip\TripService;
-use App\Services\ScheduleItem\ScheduleItemService;
+use App\Services\Trip\ScheduleItemService;
 
 
 class ScheduleItemController extends Controller

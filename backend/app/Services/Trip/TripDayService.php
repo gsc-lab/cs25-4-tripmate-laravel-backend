@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\TripDay;
+namespace App\Services\Trip;
 
 use App\Models\Trip;
 use App\Models\TripDay;
@@ -9,7 +9,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Repositories\Trip\TripDayRepository;
-use App\Repositories\ScheduleItem\ScheduleItemRepository;
+use App\Repositories\Trip\ScheduleItemRepository;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -229,4 +229,3 @@ class TripDayService
         });
     }   
 }
-

@@ -1,5 +1,5 @@
 <?php
-namespace App\Repositories\ScheduleItem;
+namespace App\Repositories\Trip;
 
 use App\Models\ScheduleItem;
 use App\Repositories\BaseRepository;
