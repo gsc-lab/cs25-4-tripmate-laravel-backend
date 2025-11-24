@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Services\ScheduleItem;
+namespace App\Services\Trip;
 
 use App\Models\Trip;
 use App\Models\ScheduleItem;
 use App\Repositories\Trip\TripDayRepository;
-use App\Repositories\ScheduleItem\ScheduleItemRepository;
+use App\Repositories\Trip\ScheduleItemRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;

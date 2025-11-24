@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\TripDay;
+namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
@@ -11,7 +11,7 @@ use App\Http\Requests\TripDay\TripDayUpdateRequest;
 use App\Http\Requests\TripDay\TripDayReorderRequest;
 use App\Http\Resources\TripDayResource;
 use App\Services\Trip\TripService;
-use App\Services\TripDay\TripDayService;
+use App\Services\Trip\TripDayService;
 
 /**
  * Trip Day Controller
