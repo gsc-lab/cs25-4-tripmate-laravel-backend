@@ -50,6 +50,11 @@ class PlaceController extends Controller
 
     public function getPlaceById(int $id) {
         $result = $this->service->find($id);
+
+        return response()->json([
+            'success'=> true,
+            'data'=> $result
+        ]);
     }
 
     public function reverseGeocode(PlaceGeocodeRequest $request) {
