@@ -1,4 +1,13 @@
 <?php
+    namespace App\Repositories\Auth;
 
-// UserRepository: User 쿼리 전담
+    use App\Repositories\BaseRepository;
+    use App\Models\User; 
 
+    class UserRepository extends BaseRepository
+    {
+        public function __construct(User $user)
+        {
+            return parent::__construct($user);
+        }
+    }
