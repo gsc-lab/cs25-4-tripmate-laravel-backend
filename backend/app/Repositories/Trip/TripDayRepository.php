@@ -90,11 +90,20 @@ class TripDayRepository extends BaseRepository
    */
   public function incrementDayNo(int $tripId, int $fromDayNo): int
   {
-    return $this->model
+    // 해당 일차 이후의 row 들 조회 
+    $rows = $this->model
       ->newQuery()
       ->where('trip_id', $tripId)
       ->where('day_no', '>=', $fromDayNo)
-      ->increment('day_no');
+      ->orderByDesc('day_no')
+      ->get();
+
+    // 각 row 들의 day_no 증가
+    foreach ($rows as $row) {
+      $row->increment('day_no');
+    }
+
+    return $rows->count();
   }
 
   /**
@@ -106,11 +115,20 @@ class TripDayRepository extends BaseRepository
    */
   public function decrementDayNoAfter(int $tripId, int $fromDayNo): int
   {
-    return $this->model
+    // 해당 일차 이후의 row 들 조회
+    $rows = $this->model
       ->newQuery()
       ->where('trip_id', $tripId)
       ->where('day_no', '>', $fromDayNo)
-      ->decrement('day_no');
+      ->orderBy('day_no', 'asc')
+      ->get();
+
+    // 각 row 들의 day_no 감소
+    foreach ($rows as $row) {
+      $row->decrement('day_no');
+    }
+
+    return $rows->count();
   }
 
   /**
