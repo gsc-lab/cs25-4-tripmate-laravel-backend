@@ -20,7 +20,7 @@ Route::prefix('v2')->group(function () {
 
 
   // // 인증된 사용자만 접근 가능한 API
-  // Route::middleware('auth:sanctum')->group(function () {
+  Route::middleware('auth:sanctum')->group(function () {
 
     /**
      * Users
@@ -100,4 +100,4 @@ Route::prefix('v2')->group(function () {
      */
     Route::get('/regions', [RegionController::class, 'listRegions']);
   });
-// });
+});
