@@ -1,3 +1,180 @@
 <?php
+    namespace App\Services\Place;
 
-// PlaceService: Place 비즈니스 로직
+    use App\Repositories\Place\PlaceRepository;
+    use Illuminate\Support\Facades\Http;
+
+    class PlaceService
+    {
+        private PlaceRepository $repository;
+        public function __construct(PlaceRepository $placeRepository)
+        {
+            $this->repository = $placeRepository;
+        }
+
+        /**
+         * API 키를 가져오는 내부 헬퍼 메서드
+         * @param array $data
+         * @throws \Exception
+         */
+        public function getApiKey()
+        {
+            $key = config('services.googleApi.api_key');
+
+            if (empty($key)) {
+                throw new \Exception('Google Maps API KEY 가 설정되지 않아 실행에 실패하였습니다.');
+                }    
+
+            return $key;
+        }
+
+        public function search($place, $pageToken, $sort)
+        {
+            // 본문 작성
+            $postData = [
+                'languageCode' => 'ko',
+                'pageSize' => 10
+            ];
+
+            // 페이지네이션
+            if (!empty($pageToken)) {
+                $postData['pageToken'] = $pageToken; // pagetoken만 사용(textQuery 사용 불가)
+            } else {
+                $postData['textQuery'] = $place; // 첫 페이지는 place로 요청
+            }
+
+            // API 키
+            $apiKey = $this->getApiKey();
+
+            // URI
+            $url = 'https://places.googleapis.com/v1/places:searchText';
+            
+            // API 연결
+            $response = Http::withHeaders([
+                'Content-Type'     => 'application/json',
+                'X-Goog-Api-Key'   => $apiKey, // [중요] API 키 헤더 추가
+                'X-Goog-FieldMask' => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType'
+                ])->post($url, $postData);
+
+            // 응답처리
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                throw new \Exception('장소 검색 도중 알 수 없는 에러가 발생했습니다. : ');
+            }
+
+        }
+
+        /**
+         * selected Place 장소 단건 조회
+         * @param int $placeId
+         * @return \Illuminate\Database\Eloquent\Model|null
+         */
+        public function find(int $placeId)
+        {
+            return $this->repository->findById($placeId);
+        }
+
+        /**
+         * Geocoding reverse 좌표를 주소로 변환
+         * @param mixed $lat
+         * @param mixed $lng
+         * @throws \Exception
+         */
+        public function reverse($lat, $lng)
+        {
+            // 쿼리 작성
+            $paramas = [
+                'latlng' => "$lat, $lng",
+                'key'    => $this->getApiKey(),
+                'language' => 'ko',
+                'result_type' => 'street_address|premise'
+            ];
+
+            // URI 작성
+            $url = "https://maps.googleapis.com/maps/api/geocode/json";
+
+            // API 요청
+            $response = Http::get($url, $paramas);
+
+            if ($response->successful()) {
+                $data = $response->json();
+
+                // 응답 처리
+                if ($data['status'] === 'OK') {
+                    return $data['results'][0]['formatted_address'];
+                } else {
+                    return null;
+                }
+            // 좌표가 없을 경우
+            } else {
+                throw new \Exception('좌표를 주소로 반환할 수 없습니다.');
+            }
+        }
+
+        public function geocode(string $placeId)
+        {
+            // 쿼리
+            $params = ['languageCode' => 'ko'];
+
+            // uri 작성
+            $url = "https://places.googleapis.com/v1/places/{$placeId}";
+
+            // API 요청
+            $response = Http::withHeaders([
+                'Content-Type'     => 'application/json',
+                'X-Goog-Api-Key'   => $this->getApiKey(),
+                'X-Goog-FieldMask' => 'id,displayName,formattedAddress,location,primaryType'
+            ])->get($url, $params);
+
+            // 응답 반환
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                throw new \Exception('주소를 장소로 변경하는 데에 실패하였습니다.');
+            }
+        }
+
+        public function nearby($lat, $lng, $radius = 1000)
+        {
+            $url = 'https://places.googleapis.com/v1/places:searchNearby';
+
+            $postData = [
+                'languageCode' => 'ko',
+                'maxResultCount' => 20, 
+                'locationRestriction' => [
+                'circle' => [
+                    'center' => [
+                        'latitude' => (float) $lat,
+                        'longitude' => (float) $lng,
+                    ],
+                    'radius' => (float) $radius, // 미터 단위
+                ],
+            ],
+        ];
+
+        $fieldMask = 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType';
+
+        // API 요청
+        $response = Http::withHeaders([
+            'Content-Type'     => 'application/json',
+            'X-Goog-Api-Key'   => $this->getApiKey(),
+            'X-Goog-FieldMask' => $fieldMask
+        ])->post($url, $postData);
+
+        // 반환 값
+        if ($response->successful()) {
+            return $response->json();
+        } else {
+            throw new \Exception('주변 장소 검색에 실패하였습니다.');
+        }
+    }
+
+        public function create(array $data) 
+        {
+            $result = $this->repository->update($data);
+
+            return $result;
+        }
+        
+    }
