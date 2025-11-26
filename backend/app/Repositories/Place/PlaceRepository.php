@@ -12,6 +12,10 @@
             parent::__construct($place);
         }
 
+        /**
+         * place update 외부 결과를 내부 DB에 저장
+         * @param array $data
+         */
         public function update(array $data)
         {
             $categoryCode = $data['category'] ?? 'etc';
