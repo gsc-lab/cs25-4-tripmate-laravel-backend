@@ -20,7 +20,7 @@ class ExternalPlaceResource extends JsonResource
             'address' => $this['formattedAddress'],
             'lat'      => $this['location']['latitude'],
             'lng'      => $this['location']['longitude'],
-            'category' => $this['primaryType'][0] ?? 'etc', 
+            'category' => $this['primaryType'] ?? 'etc', 
         ];
     }
 }
