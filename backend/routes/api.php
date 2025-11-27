@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\UsersController;
 use App\Http\Controllers\Trip\TripController;
-use App\Http\Controllers\TripDay\TripDayController;
-use App\Http\Controllers\ScheduleItem\ScheduleItemController;
+use App\Http\Controllers\Trip\TripDayController;
+use App\Http\Controllers\Trip\ScheduleItemController;
 use App\Http\Controllers\Place\PlaceController;
 use App\Http\Controllers\Region\RegionController;  
 
@@ -80,19 +80,21 @@ Route::prefix('v2')->group(function () {
 
     /**
      * Places
+     * GET    /v2/places/autocomplete
      * GET    /v2/places/external-search
-     * GET    /v2/places/{place_id}
      * GET    /v2/places/reverse-geocode
      * GET    /v2/places/place-geocode
      * GET    /v2/places/nearby
      * POST   /v2/places/from-external
+     * GET    /v2/places/{place_id}
      */
+    Route::get('/places/autocomplete', [PlaceController::class,'autocomplete']);
     Route::get('/places/external-search', [PlaceController::class, 'externalSearch']);
-    Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
     Route::get('/places/reverse-geocode', [PlaceController::class, 'reverseGeocode']);
     Route::get('/places/place-geocode', [PlaceController::class, 'placeGeocode']);
     Route::get('/places/nearby', [PlaceController::class, 'nearbyPlaces']);
     Route::post('/places/from-external', [PlaceController::class, 'createPlaceFromExternal']);
+    Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
 
     /**
      * Regions
