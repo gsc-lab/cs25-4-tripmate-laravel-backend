@@ -11,12 +11,8 @@ use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
-    protected AuthService $authService;
-
-    public function __construct(AuthService $authService)
-    {
-        $this->authService = $authService;
-    }
+    public function __construct(private AuthService $authService)
+    {}
 
     /**
      * User Register
