@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Services\Auth\AuthService;
 use App\Http\Requests\Auth\AuthRegisterRequest;
 use App\Http\Requests\Auth\AuthLoginRequest;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -18,45 +20,47 @@ class AuthController extends Controller
 
     /**
      * User Register
+     * - 성공 시 201 Created 응답 반환
+     * @param AuthRegisterRequest $request
+     * @return JsonResponse
      */
-    public function registerUser(AuthRegisterRequest $request) 
+    public function registerUser(AuthRegisterRequest $request): JsonResponse 
     {
         $data = $request->validated();
 
         $this->authService->registerUser($data);
 
-        return response()->noContent();
+        return $this->respondCreated(null, '회원가입이 완료되었습니다.');
     }
 
     /**
      * User Login
+     * - 엑세스 토큰 및 만료시간 반환 (status 200)
+     * @param AuthLoginRequest $request
+     * @return JsonResponse
      */
-    public function login(AuthLoginRequest $request)
+    public function login(AuthLoginRequest $request): JsonResponse
     {
         $data = $request->validated();
 
-        $result = $this->authService->loginUser($data["email"], $data["password"]);
+        $token = $this->authService->loginUser($data["email"], $data["password"]);
         
-        return response()->json([
-            'success' => true,
-            'data'=> [
-                'access_token' => $result,
-                "token_type" => "Bearer",
-                "expires_in" => 43200
-                ]
-            ]
-        );
+        return $this->respondSuccess([
+            'acess_token' => $token,
+            'token_type' => 'Bearer',
+            'expires_in' => config('sanctum.expiration')         
+        ], '로그인에 성공하였습니다.');
     }
 
     /**
      * User logout 
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function logout()
+    public function logout(): Response
     {
         $this->authService->logoutUser();
 
-        return response()->noContent();
+        return $this->respondNoContent();
     }
 
     

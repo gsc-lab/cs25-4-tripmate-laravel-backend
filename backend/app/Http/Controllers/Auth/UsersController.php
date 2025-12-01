@@ -7,6 +7,8 @@
     use App\Http\Requests\Auth\AuthVerificationRequest;
     use Illuminate\Support\Facades\Auth;
     use App\Http\Resources\UserResource;
+    use Illuminate\Http\JsonResponse;
+    use Illuminate\Http\Response;
 
     class UsersController extends Controller
     {
@@ -18,21 +20,23 @@
 
         /**
          * User Mypage
+         * - 성공 시 200 및 user_id, email, nickname 반환
+         * @return JsonResponse
          */
-        public function getCurrentUser() 
+        public function getCurrentUser(): JsonResponse 
         {
             $user = $this->userService->currentUser();
 
-            return response()->json([
-                'success' => true,
-                'data'=> UserResource::collection($user)
-            ]);
+            return $this->respondSuccess(new UserResource($user));
         }
 
         /**
-         * User delete - 회원삭제
+         * User delete
+         * - 성공 시 204 NoContent 반환
+         * @param AuthVerificationRequest $request
+         * @return Response
          */
-        public function deleteCurrentUser(AuthVerificationRequest $request) 
+        public function deleteCurrentUser(AuthVerificationRequest $request): Response 
         {
             $data = $request->validated();
 
@@ -40,7 +44,7 @@
 
             $this->userService->deleteUser($userId, $data["password"]);
 
-            return response()->noContent();
+            return $this->respondNoContent();
         }
 
     }
