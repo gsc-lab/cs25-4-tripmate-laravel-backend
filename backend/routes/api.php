@@ -80,13 +80,15 @@ Route::prefix('v2')->group(function () {
 
     /**
      * Places
+     * GET    /v2/places/autocomplete
      * GET    /v2/places/external-search
-     * GET    /v2/places/{place_id}
      * GET    /v2/places/reverse-geocode
      * GET    /v2/places/place-geocode
      * GET    /v2/places/nearby
      * POST   /v2/places/from-external
+     * GET    /v2/places/{place_id}
      */
+    Route::get('/places/autocomplete', [PlaceController::class,'autocomplete']);
     Route::get('/places/external-search', [PlaceController::class, 'externalSearch']);
     Route::get('/places/reverse-geocode', [PlaceController::class, 'reverseGeocode']);
     Route::get('/places/place-geocode', [PlaceController::class, 'placeGeocode']);
