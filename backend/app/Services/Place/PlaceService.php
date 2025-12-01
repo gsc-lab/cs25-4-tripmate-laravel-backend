@@ -17,7 +17,7 @@
          * @param array $data
          * @throws \Exception
          */
-        public function getApiKey()
+        private function getApiKey()
         {
             $key = config('services.googleApi.api_key');
 
@@ -28,6 +28,57 @@
             return $key;
         }
 
+        private function getHeaders(?string $fieldMask = null)
+        {
+            $headers = [
+                'Content-Type'   => 'application/json',
+                'X-Goog-Api-Key' => $this->getApiKey(),
+            ];
+
+            if ($fieldMask) {
+                $headers['X-Goog-FieldMask'] = config("services.google_places.field_masks.{$fieldMask}");
+            } 
+
+            return $headers;
+        }
+
+        /**
+         * autoplace 자동검색완성기능 서비스
+         * @param mixed $place
+         * @param mixed $sessionToken
+         * @throws \Exception
+         */
+        public function autoPlace($place, $sessionToken = null) 
+        {
+            $url = config('services.google_places.endpoints.autocomplete');
+
+            $postData = [
+                'input' => $place,
+                'languageCode' => 'ko'
+            ];
+
+            // 세션있을 경우 추가
+            if ($sessionToken) {
+                $postData['sessionToken'] = $sessionToken;
+            }
+
+            // API 요청 
+            $response = Http::withHeaders($this->getHeaders())->post($url, $postData);
+
+            if ($response->successful()) {
+                return $response->json();
+            } else {
+                throw new \Exception('자동검색 API 호출에 실패하였습니다.');
+            }
+        }
+
+        /**
+         * search 외부api를 이용해 장소 검색
+         * @param mixed $place
+         * @param mixed $pageToken
+         * @param mixed $sort
+         * @throws \Exception
+         */
         public function search($place, $pageToken, $sort)
         {
             // 본문 작성
@@ -43,18 +94,11 @@
                 $postData['textQuery'] = $place; // 첫 페이지는 place로 요청
             }
 
-            // API 키
-            $apiKey = $this->getApiKey();
-
             // URI
-            $url = 'https://places.googleapis.com/v1/places:searchText';
+            $url = config('services.google_places.endpoints.text_search');
             
             // API 연결
-            $response = Http::withHeaders([
-                'Content-Type'     => 'application/json',
-                'X-Goog-Api-Key'   => $apiKey, // [중요] API 키 헤더 추가
-                'X-Goog-FieldMask' => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType'
-                ])->post($url, $postData);
+            $response = Http::withHeaders($this->getHeaders('search'))->post($url, $postData);
 
             // 응답처리
             if ($response->successful()) {
@@ -84,7 +128,7 @@
         public function reverse($lat, $lng)
         {
             // 쿼리 작성
-            $paramas = [
+            $params = [
                 'latlng' => "$lat, $lng",
                 'key'    => $this->getApiKey(),
                 'language' => 'ko',
@@ -92,10 +136,10 @@
             ];
 
             // URI 작성
-            $url = "https://maps.googleapis.com/maps/api/geocode/json";
+            $url = config('services.google_places.endpoints.reverse_geocoding');
 
             // API 요청
-            $response = Http::get($url, $paramas);
+            $response = Http::get($url, $params);
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -112,6 +156,11 @@
             }
         }
 
+        /**
+         * geocode 주소를 이용하여 장소로 변환
+         * @param string $placeId
+         * @throws \Exception
+         */
         public function geocode(string $placeId)
         {
             // 쿼리
@@ -121,11 +170,7 @@
             $url = "https://places.googleapis.com/v1/places/{$placeId}";
 
             // API 요청
-            $response = Http::withHeaders([
-                'Content-Type'     => 'application/json',
-                'X-Goog-Api-Key'   => $this->getApiKey(),
-                'X-Goog-FieldMask' => 'id,displayName,formattedAddress,location,primaryType'
-            ])->get($url, $params);
+            $response = Http::withHeaders($this->getHeaders('place_details'))->get($url, $params);
 
             // 응답 반환
             if ($response->successful()) {
@@ -135,9 +180,16 @@
             }
         }
 
+        /**
+         * nearby 주변 지역 검색 후 장소 반환
+         * @param mixed $lat
+         * @param mixed $lng
+         * @param mixed $radius
+         * @throws \Exception
+         */
         public function nearby($lat, $lng, $radius = 1000)
         {
-            $url = 'https://places.googleapis.com/v1/places:searchNearby';
+            $url = config('services.google_places.endpoints.nearby');
 
             $postData = [
                 'languageCode' => 'ko',
@@ -153,14 +205,8 @@
             ],
         ];
 
-        $fieldMask = 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType';
-
         // API 요청
-        $response = Http::withHeaders([
-            'Content-Type'     => 'application/json',
-            'X-Goog-Api-Key'   => $this->getApiKey(),
-            'X-Goog-FieldMask' => $fieldMask
-        ])->post($url, $postData);
+        $response = Http::withHeaders($this->getHeaders('nearby'))->post($url, $postData);
 
         // 반환 값
         if ($response->successful()) {
@@ -170,6 +216,10 @@
         }
     }
 
+        /**
+         * create 외부 결과 내부로 저장
+         * @param array $data
+         */
         public function create(array $data) 
         {
             $result = $this->repository->update($data);
