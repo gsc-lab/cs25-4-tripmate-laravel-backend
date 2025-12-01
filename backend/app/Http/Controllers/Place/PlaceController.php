@@ -3,11 +3,13 @@
     namespace App\Http\Controllers\Place;
 
     use App\Http\Controllers\Controller;
+    use App\Http\Requests\Place\PlaceAutoCompleteRequest;
     use App\Http\Requests\Place\PlaceDetailRequest;
     use App\Http\Requests\Place\PlaceGeocodeRequest;
     use App\Http\Requests\Place\PlaceSearchRequest;
     use App\Http\Requests\Place\PlaceStoreRequest;
     use App\Http\Resources\ExternalPlaceResource;
+    use App\Http\Resources\PlaceResource;
     use App\Services\Place\PlaceService;
 
 class PlaceController extends Controller
@@ -16,6 +18,23 @@ class PlaceController extends Controller
     public function __construct(PlaceService $service)
     {
         $this->service = $service;
+    }
+
+    /**
+     * 자동검색 완성
+     * @param PlaceAutoCompleteRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function autocomplete(PlaceAutoCompleteRequest $request)
+    {
+        $data = $request->validated();
+
+        $result = $this->service->autoPlace($data['input'], $data['session_token']);
+
+        return response()->json([
+            'success' => true,
+            'data'=> $result['suggestions'] ?? []
+        ]);
     }
 
     /**
@@ -48,6 +67,11 @@ class PlaceController extends Controller
         ]);
     } 
 
+    /**
+     * place select 장소 단건 조회
+     * @param int $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getPlaceById(int $id) {
         $result = $this->service->find($id);
 
@@ -57,6 +81,11 @@ class PlaceController extends Controller
         ]);
     }
 
+    /**
+     * reverseGeocode 좌표를 주소로 변환
+     * @param PlaceGeocodeRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function reverseGeocode(PlaceGeocodeRequest $request) {
         $data = $request->validated();
 
@@ -71,7 +100,7 @@ class PlaceController extends Controller
     }
 
     /**
-     * placeGeocode 
+     * placeGeocode 주소를 장소로 변환
      * @param PlaceDetailRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
@@ -84,6 +113,11 @@ class PlaceController extends Controller
         ]);
     }
 
+    /**
+     * nearbyPlace 주변 장소 반환
+     * @param PlaceGeocodeRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function nearbyPlaces(PlaceGeocodeRequest $request) {
         $data = $request->validated();
 
@@ -103,6 +137,11 @@ class PlaceController extends Controller
         ]);
     }
 
+    /**
+     * create Place form External 외부 결과 저장
+     * @param PlaceStoreRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function createPlaceFromExternal(PlaceStoreRequest $request) {
         $data = $request->validated();
 
@@ -110,7 +149,7 @@ class PlaceController extends Controller
 
         return response()->json([
             "success"=> true,
-            "data"=> ExternalPlaceResource::make($result)
+            "data"=> PlaceResource::make($result)
         ]);
     }
 
