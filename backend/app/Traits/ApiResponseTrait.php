@@ -16,8 +16,9 @@
         {
             return response()->json([
                 'success' => true,
+                'code' => 'SUCCESS',
                 'message' => $message,
-                'data' => $data,
+                'data' => $data
             ], $status);
         }
 
