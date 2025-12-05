@@ -42,7 +42,7 @@ class AuthController extends Controller
             'data'=> [
                 'access_token' => $result,
                 "token_type" => "Bearer",
-                "expires_in" => 43200
+                "expires_in" => config('sanctum.expiration') * 60
                 ]
             ]
         );

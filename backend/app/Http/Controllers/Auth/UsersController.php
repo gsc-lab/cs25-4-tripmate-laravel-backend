@@ -25,7 +25,7 @@
 
             return response()->json([
                 'success' => true,
-                'data'=> UserResource::collection($user)
+                'data'=> new UserResource($user)
             ]);
         }
 
