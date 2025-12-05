@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Services\Trip\DistanceHelper;
 
 class ScheduleItemService
 {
@@ -379,6 +380,70 @@ class ScheduleItemService
             );
         });
     }
-    
 
+    /**
+     * getlatlngBy Repository 
+     * - dayid로 조회하여 latlng 반환
+     * @param int $dayNo
+     * @param Trip $trip 
+     * @return float[]
+     */
+    public function getlatlng($trip, $dayNo)
+    {
+        // Trip_day_id 조회
+        $tripDayId = $this->getTripDayIdOrFail($trip, $dayNo);
+
+        return $this->scheduleItemRepository->getlatlngFromPlaceId($tripDayId);
+    }
+
+    /**
+     * 거리 계산 헬퍼 메서드
+     * @param array $latlng
+     */
+    public function calculateRouteDistances(array $latlng)
+    {
+        $distance = [];
+        $totalDistance = 0;
+
+        // 반복문으로 거리 계산
+        for ($i = 1; $i < count($latlng); $i++) {
+            $pr = $latlng[$i - 1]; // 출발지
+            $cu = $latlng[$i]; // 도착지
+
+            // 거리 계산을 위한 값 전달
+            $km = DistanceHelper::calculate(
+                $pr['lat'], $pr['lng'],
+                $cu['lat'], $cu['lng']
+            );
+
+            // 결과 저장
+            $distance[] = [
+                'from_index' => $i - 1,
+                'to_index' => $i,
+                'distance_km' => $km
+            ];
+
+            $totalDistance += $km;
+        }
+
+        return [
+            'segments'=> $distance, // 각 거리 결과
+            'total_km' => $totalDistance // 총 소요 거리
+        ];
+    }
+
+    /**
+     * 장소 간 거리 계산 서비스 
+     * @param Trip $trip 
+     * @param mixed $dayNo
+     * @return array{segments: array, total_km: float|int|array{segments: array, total_km: int}}
+     */
+    public function calculateRouteDistancesByDistance($trip, $dayNo) 
+    {
+        // place의 좌표 조회
+        $latlng = $this->getlatlng($trip, $dayNo);
+
+        // 좌표 계산
+        return $this->calculateRouteDistances($latlng);
+    }
 }
