@@ -57,6 +57,8 @@ class ScheduleItemController extends Controller
             $size
         );
 
+        $detale = $this->scheduleItemService->calculateRouteDistancesByDistance($trip, $dayNo);
+
         // 성공응답 반환
         return response()->json([
             'success' => true,
@@ -70,6 +72,8 @@ class ScheduleItemController extends Controller
                     'total' => $paginatedScheduleItems->total(),
                     'last_page' => $paginatedScheduleItems->lastPage(),
                 ],
+                'detale' => $detale,
+                'latlng' => $this->scheduleItemService->getlatlng($trip, $dayNo)
             ]
         ]);
     }
