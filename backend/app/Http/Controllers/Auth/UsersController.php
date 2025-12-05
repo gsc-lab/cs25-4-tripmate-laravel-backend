@@ -37,7 +37,7 @@
         {
             $data = $request->validated();
 
-            $userId = Auth::id();
+            $userId = $request->user()->user_id;
 
             $this->userService->deleteUser($userId, $data["password"]);
 
