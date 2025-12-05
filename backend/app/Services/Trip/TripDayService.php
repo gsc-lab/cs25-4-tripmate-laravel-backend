@@ -164,75 +164,141 @@ class TripDayService
             });
         }
 
+    // /**
+    //  * 6. TripDay 번호 재정렬
+    //  * - day_no가 중간에 비는 경우 연속성 유지를 위해 재정렬
+    //  * @param Trip $trip
+    //  * @param int $oldDayNo
+    //  * @param int $newDayNo
+    //  * @return void
+    //  * @throws ModelNotFoundException
+    //  */
+    // public function reorderTripDay(
+    //     Trip $trip,
+    //     int $oldDayNo,
+    //     int $newDayNo
+    // ): void {
+
+    //     $tripId = $trip->trip_id;
+
+    //     DB::transaction(function () use ($tripId, $oldDayNo, $newDayNo) {
+            
+    //         if ($oldDayNo === $newDayNo) {
+    //             // 변경 사항이 없으면 아무 작업도 하지 않음
+    //             return;
+    //         }
+
+    //         // 변경 전 일차 조회
+    //         $day = $this->tripDayRepository->findByTripAndDayNo(
+    //             $tripId,
+    //             $oldDayNo
+    //         );
+
+    //         // 존재하지 않으면 예외 발생
+    //         if (!$day){
+    //             throw new ModelNotFoundException('변경 할 일차가 존재하지 않습니다');
+    //         }
+
+    //         // 임시 day_no로 이동
+    //         $maxDayNo = $this->tripDayRepository->getMaxDayNo($tripId);
+    //         $tempDayNo = $maxDayNo + 1000;
+
+    //         // 임시 번호로 변경
+    //         $this->tripDayRepository->updateDayNo(
+    //             $tripId,
+    //             $oldDayNo,
+    //             $tempDayNo
+    //         );
+
+    //         // 중간 구간 이동
+    //         if ($oldDayNo < $newDayNo) {
+    //             // 아래로 이동 : oldDayNo < day_no <= newDayNo  인 day_no 들을 -1 씩 감소
+    //             $this->tripDayRepository->shiftDownRange(
+    //                 $tripId,
+    //                 $oldDayNo,
+    //                 $newDayNo
+    //             );
+    //         } else {
+    //             // 위로 이동 : newDayNo <= day_no < oldDayNo 인 day_no 들을 +1 씩 증가
+    //             $this->tripDayRepository->shiftUpRange(
+    //                 $tripId,
+    //                 $oldDayNo,
+    //                 $newDayNo
+    //             );
+    //         }
+
+    //         // 임시 번호를 최종 번호로 변경
+    //         $this->tripDayRepository->updateDayNo(
+    //             $tripId,
+    //             $tempDayNo,
+    //             $newDayNo
+    //         );
+    //     });
+    // }
+
     /**
-     * 6. TripDay 번호 재정렬
-     * - day_no가 중간에 비는 경우 연속성 유지를 위해 재정렬
+     * 6. tripDay 전체 재배치
+     * - 프론트에서 전발답은 최종 순서 기준으로 재배치
+     * - 임시로 큰 번호를 부여한 후 최종 번호로 변경
      * @param Trip $trip
-     * @param int $oldDayNo
-     * @param int $newDayNo
+     * @param array $DayIds
      * @return void
      * @throws ModelNotFoundException
+     * @throws \InvalidArgumentException
      */
-    public function reorderTripDay(
+    public function reorderTripDays(
         Trip $trip,
-        int $oldDayNo,
-        int $newDayNo
+        array $dayIds
     ): void {
-
         $tripId = $trip->trip_id;
 
-        DB::transaction(function () use ($tripId, $oldDayNo, $newDayNo) {
-            
-            if ($oldDayNo === $newDayNo) {
-                // 변경 사항이 없으면 아무 작업도 하지 않음
-                return;
+        DB::transaction(function () use ($tripId, $dayIds) {
+
+            // 값이 비어있는지 확인
+            if (empty($dayIds)) {
+                throw new \InvalidArgumentException('dayIds 배열이 비어있습니다');
             }
 
-            // 변경 전 일차 조회
-            $day = $this->tripDayRepository->findByTripAndDayNo(
-                $tripId,
-                $oldDayNo
-            );
-
-            // 존재하지 않으면 예외 발생
-            if (!$day){
-                throw new ModelNotFoundException('변경 할 일차가 존재하지 않습니다');
-            }
-
-            // 임시 day_no로 이동
-            $maxDayNo = $this->tripDayRepository->getMaxDayNo($tripId);
-            $tempDayNo = $maxDayNo + 1000;
-
-            // 임시 번호로 변경
-            $this->tripDayRepository->updateDayNo(
-                $tripId,
-                $oldDayNo,
-                $tempDayNo
-            );
-
-            // 중간 구간 이동
-            if ($oldDayNo < $newDayNo) {
-                // 아래로 이동 : oldDayNo < day_no <= newDayNo  인 day_no 들을 -1 씩 감소
-                $this->tripDayRepository->shiftDownRange(
-                    $tripId,
-                    $oldDayNo,
-                    $newDayNo
-                );
-            } else {
-                // 위로 이동 : newDayNo <= day_no < oldDayNo 인 day_no 들을 +1 씩 증가
-                $this->tripDayRepository->shiftUpRange(
-                    $tripId,
-                    $oldDayNo,
-                    $newDayNo
+            // trip의 전체 일차 개수와 dayIds 개수가 일치하는지 확인
+            $dayCount = $this->tripDayRepository->countByTripId($tripId);
+            if (count($dayIds) !== $dayCount) {
+                throw new \InvalidArgumentException(
+                    'dayIds 배열의 개수가 일치하지 않습니다'
                 );
             }
 
-            // 임시 번호를 최종 번호로 변경
-            $this->tripDayRepository->updateDayNo(
+            // 중복 된 dayIds가 있는지 확인
+            if (count($dayIds) !== count(array_unique($dayIds))) {
+                throw new \InvalidArgumentException(
+                    'dayIds 배열에 중복 된 값이 있습니다'
+                );
+            }
+
+            // 모든 dayIds가 해당 trip에 속하는지 확인
+            $foundCount = $this->tripDayRepository->countByTripAndTripDayIds(
                 $tripId,
-                $tempDayNo,
-                $newDayNo
+                $dayIds
             );
+            if ($foundCount !== count($dayIds)) {
+                throw new ModelNotFoundException(
+                    '일부 일차가 해당 여행에 속하지 않습니다'
+                );
+            }
+
+            // 임시로 큰 번호 부여
+            $this->tripDayRepository->tempShiftDayNo($tripId, 1000);
+
+            // 최종 번호로 변경
+            $newDayNo = 1; 
+            foreach ($dayIds as $dayId) {
+                $this->tripDayRepository->updateDayNoByTripDayId(
+                    $tripId,
+                    $dayId,
+                    $newDayNo
+                );
+
+                $newDayNo++;
+            }
         });
-    }   
+    }
 }
