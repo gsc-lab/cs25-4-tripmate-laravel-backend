@@ -302,4 +302,28 @@ class ScheduleItemRepository extends BaseRepository
             ->where('seq_no', '<', $oldSeqNo)
             ->increment('seq_no');
     }
+
+    /**
+     * latlng를 가져오는 헬퍼 메서드
+     * - lat와 lng를 한 쌍으로 반환
+     * @param mixed $tripDayId
+     * @return float[]
+     */
+    public function getlatlngFromPlaceId($tripDayId)
+    {
+        $items = ScheduleItem::with('place:place_id,lat,lng')
+            ->where('trip_day_id', $tripDayId)
+            ->orderBy('seq_no', 'asc')
+            ->get();
+
+        $latlng = [];
+        foreach ($items as $item) {
+            $latlng[] = [
+                'lat' => $item->place->lat,
+                'lng' => $item->place->lng
+            ];
+        }
+
+        return $latlng;
+    }
 }
