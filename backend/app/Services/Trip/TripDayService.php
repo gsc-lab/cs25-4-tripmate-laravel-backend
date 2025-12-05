@@ -246,7 +246,7 @@ class TripDayService
      * @throws ModelNotFoundException
      * @throws \InvalidArgumentException
      */
-    public function reorderTripDays(
+    public function reorderTripDay(
         Trip $trip,
         array $dayIds
     ): void {
