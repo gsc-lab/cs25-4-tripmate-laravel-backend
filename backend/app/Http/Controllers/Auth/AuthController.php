@@ -42,14 +42,15 @@ class AuthController extends Controller
         $token = $this->authService->loginUser($data["email"], $data["password"]);
         
         return $this->respondSuccess([
-            'acess_token' => $token,
+            'access_token' => $token,
             'token_type' => 'Bearer',
-            'expires_in' => config('sanctum.expiration')         
+            'expires_in' => config('sanctum.expiration') * 60       
         ], '로그인에 성공하였습니다.');
     }
 
     /**
      * User logout 
+     * - 성공 시 204 NoContent 반환
      * @return Response
      */
     public function logout(): Response
@@ -58,6 +59,4 @@ class AuthController extends Controller
 
         return $this->respondNoContent();
     }
-
-    
 }
