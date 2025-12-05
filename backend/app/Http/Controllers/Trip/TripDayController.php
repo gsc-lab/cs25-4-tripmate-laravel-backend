@@ -211,13 +211,48 @@ class TripDayController extends Controller
         ]);
     }
 
+    // /**
+    //  * 6. TripDay 재정렬
+    //  * - POST /v2/trips/{trip_id}/days/reorder
+    //  * @param TripDayReorderRequest $request
+    //  * @param int $tripId
+    //  * @return JsonResponse
+    //  */    
+    // public function reorder(
+    //     TripDayReorderRequest $request,
+    //     int $tripId
+    // ): JsonResponse {
+
+    //     // 현재 로그인 사용자의 Trip인지 확인
+    //     $trip = $this->tripService->getOwnedTripOrFail($tripId);
+
+    //     // 유효성 검사된 데이터 가져오기
+    //     $validated = $request->validated();
+    //     $newOrder = $validated['new_day_no'];
+    //     $oldOrder = $validated['old_day_no'];
+
+    //     // TripDay 재정렬
+    //     $this->tripDayService->reorderTripDay(
+    //         $trip,
+    //         $oldOrder,
+    //     );
+
+    //     // 성공응답 반환
+    //     return response()->json([
+    //         'success' => true,
+    //         'code' => 'SUCCESS',
+    //         'message' => 'Trip Day 재정렬에 성공했습니다',
+    //         'data' => null,
+    //     ]);
+    // }
+    
     /**
-     * 6. TripDay 재정렬
+     * 6. TripDay 전체 재배치
      * - POST /v2/trips/{trip_id}/days/reorder
      * @param TripDayReorderRequest $request
      * @param int $tripId
      * @return JsonResponse
-     */    
+     */
     public function reorder(
         TripDayReorderRequest $request,
         int $tripId
@@ -228,21 +263,19 @@ class TripDayController extends Controller
 
         // 유효성 검사된 데이터 가져오기
         $validated = $request->validated();
-        $newOrder = $validated['new_day_no'];
-        $oldOrder = $validated['old_day_no'];
+        $dayIds = $validated['day_ids'];
 
-        // TripDay 재정렬
+        // TripDay 재배치
         $this->tripDayService->reorderTripDay(
             $trip,
-            $oldOrder,
-            $newOrder
+            $dayIds
         );
 
         // 성공응답 반환
         return response()->json([
             'success' => true,
             'code' => 'SUCCESS',
-            'message' => 'Trip Day 재정렬에 성공했습니다',
+            'message' => 'Trip Day 재배치에 성공했습니다',
             'data' => null,
         ]);
     }
