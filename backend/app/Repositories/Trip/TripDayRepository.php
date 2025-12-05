@@ -7,6 +7,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\DB;
 
 /**
  * TripDay 전용 Repository
@@ -127,7 +128,7 @@ class TripDayRepository extends BaseRepository
     foreach ($rows as $row) {
       $row->decrement('day_no');
     }
-
+ 
     return $rows->count();
   }
 
@@ -199,6 +200,7 @@ class TripDayRepository extends BaseRepository
   }
 
   /**
+   * @deprecated Trip 전체 재배치 정책 변경으로 인해 더이상 사용하지 않습니다
    * 11. 단일 일차 번호 변경
    * @param int $tripId
    * @param int $oldDayNo // 변경 전 일차 번호
@@ -218,6 +220,7 @@ class TripDayRepository extends BaseRepository
   }
 
   /**
+   * @deprecated Trip 전체 재배치 정책 변경으로 인해 더이상 사용하지 않습니다
    * 12. 재배치용 일차 번호 변경 메서드
    * - oldDayNo < newDayNo
    * - oldDayNo , newDayNo 사이의 일차 번호들을 -1 씩 감소
@@ -247,6 +250,7 @@ class TripDayRepository extends BaseRepository
   }
 
   /**
+   * @deprecated Trip 전체 재배치 정책 변경으로 인해 더이상 사용하지 않습니다
    * 13. 재배치용 일차 번호 변경 메서드
    * - oldDayNo > newDayNo
    * - oldDayNo , newDayNo 사이의 일차 번호들을 +1 씩 증가
@@ -274,5 +278,65 @@ class TripDayRepository extends BaseRepository
       ->where('day_no', '<', $oldDayNo)
       ->increment('day_no');
   }
-  
+
+  /**
+   *  14. 특정 Trip의 모든 day_no를 임시 큰 값으로 변경
+   * - 재배치 작업 전 충돌 방지용
+   * - +1000 씩 증가
+   * @param int $tripId
+   * @param int $offset  // 기본 1000
+   * @return int         // 영향을 받은 row 수
+   */
+  public function tempShiftDayNo(
+    int $tripId,
+    int $offset = 1000
+  ): int {
+    return $this->model
+      ->newQuery()
+      ->where('trip_id', $tripId)
+      ->update([
+        'day_no' => DB::raw("day_no + {$offset}")
+      ]);
+  }
+
+  /**
+   * 15. trip_Day_id 기준으로 day_no 조정
+   * - 재배치 작업 후 실제 일차 번호로 복원
+   * @param int $tripId
+   * @param int $tripDayId
+   * @param int $newDayNo
+   * @return int        // 영향을 받은 row 수
+   */
+  public function updateDayNoByTripDayId(
+    int $tripId,
+    int $tripDayId,
+    int $newDayNo
+  ): int {
+    return $this->model
+      ->newQuery()
+      ->where('trip_id', $tripId)
+      ->where('trip_day_id', $tripDayId)
+      ->update(['day_no' => $newDayNo]);
+  }
+
+  /**
+   * 16. 모든 trip_day_id가 trip에 속하는지 확인
+   * @param int $tripId
+   * @param array<int> $tripDayIds
+   * @return int
+   */
+  public function countByTripAndTripDayIds(
+    int $tripId,
+    array $tripDayIds
+  ): int {
+    if (empty($tripDayIds)) {
+      return 0;
+    }
+
+    return $this->model
+      ->newQuery()
+      ->where('trip_id', $tripId)
+      ->whereIn('trip_day_id', $tripDayIds)
+      ->count();
+  }
 }
