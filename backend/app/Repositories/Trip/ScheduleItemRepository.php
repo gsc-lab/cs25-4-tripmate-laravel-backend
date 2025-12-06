@@ -385,15 +385,13 @@ class ScheduleItemRepository extends BaseRepository
 
     /**
      * 18. 특정 tripDay의 schedule_item_id 순서대로 재배치
-     * - seq_no를 재설정 + visit_time 초기화
+     * - seq_no를 재설정
      * @param int $tripDayId
      * @param int[] $itemIds        // 재배치할 schedule_item_id 배열
-     * @param string $visitTime     // 기본 visit_time 값
      */
     public function reorderSeqNosByItemIds(
         int $tripDayId,
         array $itemIds,
-        string $visitTime
     ): void {
         foreach (array_values($itemIds) as $index => $itemId) {
             $this->model
@@ -402,8 +400,7 @@ class ScheduleItemRepository extends BaseRepository
                 ->update([
                     'trip_day_id' => $tripDayId,
                     'seq_no' => $index + 1,
-                    'visit_time' => $visitTime
-                ]);
+            ]);
         }
     }
 
