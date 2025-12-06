@@ -1,0 +1,62 @@
+[
+  {
+    "user_email": "triplover@example.com",
+    "title": "서울 주말 여행",
+    "start_date": "2025-01-03",
+    "end_date": "2025-01-05"
+  },
+  {
+    "user_email": "seoultrip@example.com",
+    "title": "서울 카페 투어",
+    "start_date": "2025-02-10",
+    "end_date": "2025-02-11"
+  },
+  {
+    "user_email": "jejutrip@example.com",
+    "title": "제주도 2박3일 힐링 여행",
+    "start_date": "2025-03-01",
+    "end_date": "2025-03-03"
+  },
+  {
+    "user_email": "user1@example.com",
+    "title": "부산 1박2일 먹방 여행",
+    "start_date": "2025-04-05",
+    "end_date": "2025-04-06"
+  },
+  {
+    "user_email": "user2@example.com",
+    "title": "강원도 드라이브 여행",
+    "start_date": "2025-05-01",
+    "end_date": "2025-05-03"
+  },
+  {
+    "user_email": "user3@example.com",
+    "title": "도쿄 3박4일 도시 여행",
+    "start_date": "2025-06-10",
+    "end_date": "2025-06-13"
+  },
+  {
+    "user_email": "alice@example.com",
+    "title": "오사카/교토 맛집 투어",
+    "start_date": "2025-07-01",
+    "end_date": "2025-07-04"
+  },
+  {
+    "user_email": "bob@example.com",
+    "title": "후쿠오카 주말 여행",
+    "start_date": "2025-08-15",
+    "end_date": "2025-08-17"
+  },
+  {
+    "user_email": "charlie@example.com",
+    "title": "홍콩/마카오 3일 여행",
+    "start_date": "2025-09-20",
+    "end_date": "2025-09-22"
+  },
+  {
+    "user_email": "demo01@example.com",
+    "title": "타이베이 도시 탐방",
+    "start_date": "2025-10-05",
+    "end_date": "2025-10-07"
+  }
+]

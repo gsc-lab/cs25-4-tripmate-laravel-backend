@@ -1,0 +1,14 @@
+[
+  { "email_norm": "user1@example.com", "password": "password123", "name": "테스트유저1" },
+  { "email_norm": "user2@example.com", "password": "password123", "name": "테스트유저2" },
+  { "email_norm": "user3@example.com", "password": "password123", "name": "테스트유저3" },
+  { "email_norm": "alice@example.com", "password": "password123", "name": "앨리스" },
+  { "email_norm": "bob@example.com", "password": "password123", "name": "밥" },
+  { "email_norm": "charlie@example.com", "password": "password123", "name": "찰리" },
+  { "email_norm": "demo01@example.com", "password": "password123", "name": "데모유저01" },
+  { "email_norm": "demo02@example.com", "password": "password123", "name": "데모유저02" },
+  { "email_norm": "demo03@example.com", "password": "password123", "name": "데모유저03" },
+  { "email_norm": "triplover@example.com", "password": "password123", "name": "여행러버" },
+  { "email_norm": "seoultrip@example.com", "password": "password123", "name": "서울트립" },
+  { "email_norm": "jejutrip@example.com", "password": "password123", "name": "제주트립" }
+]

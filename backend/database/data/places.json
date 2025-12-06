@@ -1,0 +1,137 @@
+[
+  {
+    "category_code": "cafe",
+    "name": "카페 트립메이트 종로점",
+    "address": "서울 종로구 어딘가 1",
+    "lat": 37.5725,
+    "lng": 126.9793,
+    "external_provider": "google",
+    "external_ref": "place_cafe_tripmate_jongno"
+  },
+  {
+    "category_code": "cafe",
+    "name": "카페 트립메이트 홍대점",
+    "address": "서울 마포구 어딘가 2",
+    "lat": 37.5568,
+    "lng": 126.9237,
+    "external_provider": "google",
+    "external_ref": "place_cafe_tripmate_hongdae"
+  },
+  {
+    "category_code": "restaurant",
+    "name": "김밥천국 강남역점",
+    "address": "서울 강남구 테헤란로 어딘가 3",
+    "lat": 37.4983,
+    "lng": 127.0276,
+    "external_provider": "google",
+    "external_ref": "place_kimbap_gangnam"
+  },
+  {
+    "category_code": "korean_restaurant",
+    "name": "한식당 서울식당",
+    "address": "서울 중구 어딘가 4",
+    "lat": 37.5642,
+    "lng": 126.982,
+    "external_provider": "google",
+    "external_ref": "place_korean_seoul"
+  },
+  {
+    "category_code": "japanese_restaurant",
+    "name": "일식당 도쿄스시",
+    "address": "서울 용산구 어딘가 5",
+    "lat": 37.53,
+    "lng": 126.98,
+    "external_provider": "google",
+    "external_ref": "place_tokyo_sushi"
+  },
+  {
+    "category_code": "hotel",
+    "name": "트립메이트 호텔 서울",
+    "address": "서울 중구 어딘가 6",
+    "lat": 37.5651,
+    "lng": 126.9895,
+    "external_provider": "google",
+    "external_ref": "place_hotel_seoul"
+  },
+  {
+    "category_code": "hotel",
+    "name": "트립메이트 호텔 제주",
+    "address": "제주 제주시 어딘가 7",
+    "lat": 33.4996,
+    "lng": 126.5312,
+    "external_provider": "google",
+    "external_ref": "place_hotel_jeju"
+  },
+  {
+    "category_code": "airport",
+    "name": "인천국제공항 제1터미널",
+    "address": "인천 중구 공항로 272",
+    "lat": 37.4602,
+    "lng": 126.4407,
+    "external_provider": "google",
+    "external_ref": "place_icn_t1"
+  },
+  {
+    "category_code": "airport",
+    "name": "김포국제공항",
+    "address": "서울 강서구 하늘길 38",
+    "lat": 37.5583,
+    "lng": 126.7906,
+    "external_provider": "google",
+    "external_ref": "place_gmp"
+  },
+  {
+    "category_code": "museum",
+    "name": "국립중앙박물관",
+    "address": "서울 용산구 서빙고로 137",
+    "lat": 37.5239,
+    "lng": 126.9804,
+    "external_provider": "google",
+    "external_ref": "place_national_museum"
+  },
+  {
+    "category_code": "art_gallery",
+    "name": "삼청동 갤러리",
+    "address": "서울 종로구 삼청로 어딘가",
+    "lat": 37.582,
+    "lng": 126.981,
+    "external_provider": "google",
+    "external_ref": "place_samcheong_gallery"
+  },
+  {
+    "category_code": "amusement_park",
+    "name": "롯데월드",
+    "address": "서울 송파구 올림픽로 240",
+    "lat": 37.511,
+    "lng": 127.098,
+    "external_provider": "google",
+    "external_ref": "place_lotte_world"
+  },
+  {
+    "category_code": "amusement_park",
+    "name": "에버랜드",
+    "address": "경기 용인시 처인구 포곡읍",
+    "lat": 37.294,
+    "lng": 127.203,
+    "external_provider": "google",
+    "external_ref": "place_everland"
+  },
+  {
+    "category_code": "aquarium",
+    "name": "코엑스 아쿠아리움",
+    "address": "서울 강남구 영동대로 513",
+    "lat": 37.5126,
+    "lng": 127.0584,
+    "external_provider": "google",
+    "external_ref": "place_coex_aquarium"
+  },
+  {
+    "category_code": "park",
+    "name": "한강시민공원 여의도지구",
+    "address": "서울 영등포구 여의도동",
+    "lat": 37.5286,
+    "lng": 126.9327,
+    "external_provider": "google",
+    "external_ref": "place_yeouido_park"
+  }
+]
