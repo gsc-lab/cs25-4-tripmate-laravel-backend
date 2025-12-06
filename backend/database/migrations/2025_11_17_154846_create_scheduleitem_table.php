@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('place_id')->nullable();
 
             $table->integer('seq_no')->comment('일차 내 순번(1..n)');
-            $table->dateTime('visit_time')->nullable();
+            $table->time('visit_time')->nullable();
             $table->string('memo', 255)->nullable();
 
             $table->timestamp('created_at')->useCurrent();
