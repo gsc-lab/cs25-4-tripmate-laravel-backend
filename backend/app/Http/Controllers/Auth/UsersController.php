@@ -5,7 +5,6 @@
     use App\Http\Controllers\Controller;
     use App\Services\Auth\UserService;
     use App\Http\Requests\Auth\AuthVerificationRequest;
-    use Illuminate\Support\Facades\Auth;
     use App\Http\Resources\UserResource;
     use Illuminate\Http\JsonResponse;
     use Illuminate\Http\Response;
