@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class PlaceSearchRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class PlaceSearchRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
-     * 외부 지도기반 장소 검색
+     * 외부 지도기반 장소 검색 유효성 검증
+     * - place, pageToken(google token), sort 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

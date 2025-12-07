@@ -3,7 +3,6 @@
 namespace App\Http\Requests\TripDay;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class TripDayIndexRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class TripDayIndexRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
-     * 일정 아이템 목록 유효성검증
+     * 일정 아이템 목록 유효성 검증
+     * - page, size, sort 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

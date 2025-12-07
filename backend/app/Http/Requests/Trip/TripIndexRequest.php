@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Trip;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class TripIndexRequest extends FormRequest
@@ -13,11 +12,12 @@ class TripIndexRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
      * 여행 목록 유효성 검증
+     * - page, size, sort, region_id 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

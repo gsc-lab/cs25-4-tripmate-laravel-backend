@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class PlaceDetailRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class PlaceDetailRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
      * 좌표 -> 장소 반환
+     * - place_id(고유 google Place Id) 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

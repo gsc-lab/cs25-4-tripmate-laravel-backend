@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Region;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class RegionStoreRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class RegionStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
-     * 지역 검색 유효성검증
+     * 지역 검색 유효성 검증
+     * - query, country 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
