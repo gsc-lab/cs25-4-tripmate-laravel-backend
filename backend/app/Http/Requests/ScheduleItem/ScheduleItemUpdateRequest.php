@@ -3,17 +3,21 @@
 namespace App\Http\Requests\ScheduleItem;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ScheduleItemUpdateRequest extends FormRequest
 {
     /**
-     * 로그인 사용자 접근 허용
+     * 일정 주인만 접근 허용
      */
-    public function authorize(): bool
+    public function authorize():bool
     {
-        return Auth::check();
+        // URL에서 가져온 trip_id로 user_id 비교
+        $tripId = $this->route('trip_id');
+        $trip = \App\Models\Trip::findOrFail($tripId);
+
+        // user_id와 로그인 사용자 일치일 경우 true
+        return $this->user()->id === $trip->user_id;
     }
 
     /**

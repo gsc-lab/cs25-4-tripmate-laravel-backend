@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class PlaceAutoCompleteRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class PlaceAutoCompleteRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
      * 자동 검색 입력값 유효성검증
+     * - input(장소 검색), session_token(사용자 랜덤값)
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
