@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class PlaceNearbyRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class PlaceNearbyRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
-     * 주변 지역 검색
+     * 주변 지역 검색 유효성 검증
+     * - lat, lng 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

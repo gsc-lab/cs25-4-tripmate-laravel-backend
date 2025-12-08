@@ -69,24 +69,26 @@ Route::prefix('v2')->group(function () {
      * GET    /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         단건 조회
      * PATCH  /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         수정(visit_time/memo)
      * DELETE /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         삭제
-     * POST   /v2/trips/{trip_id}/days/{day_no}/items/reorder          순서 변경
+     * PUT   /v2/trips/{trip_id}/days/{day_no}/items/reorder          순서 변경
      */
     Route::get   ('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'index']);
     Route::post  ('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'store']);
     Route::get   ('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'show']);
     Route::patch ('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'update']);
     Route::delete('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'destroy']);
-    Route::post  ('/trips/{trip_id}/days/{day_no}/items/reorder', [ScheduleItemController::class, 'reorder']);
+    Route::put   ('/trips/{trip_id}/days/{day_no}/items/reorder', [ScheduleItemController::class, 'reorder']);
 
     /**
      * Places
+     * GET    /v2/places/autocomplete
      * GET    /v2/places/external-search
-     * GET    /v2/places/{place_id}
      * GET    /v2/places/reverse-geocode
      * GET    /v2/places/place-geocode
      * GET    /v2/places/nearby
      * POST   /v2/places/from-external
+     * GET    /v2/places/{place_id}
      */
+    Route::get('/places/autocomplete', [PlaceController::class,'autocomplete']);
     Route::get('/places/external-search', [PlaceController::class, 'externalSearch']);
     Route::get('/places/reverse-geocode', [PlaceController::class, 'reverseGeocode']);
     Route::get('/places/place-geocode', [PlaceController::class, 'placeGeocode']);

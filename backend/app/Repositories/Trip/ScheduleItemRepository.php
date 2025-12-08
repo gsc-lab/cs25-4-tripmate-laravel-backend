@@ -5,6 +5,7 @@ use App\Models\ScheduleItem;
 use App\Repositories\BaseRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * ScheduleItem 전용 Repository
@@ -37,7 +38,7 @@ class ScheduleItemRepository extends BaseRepository
         return $this->model
             ->newQuery()
             ->where('trip_day_id', $tripDayId)
-            ->orderBy('seq_no',)
+            ->orderBy('seq_no', 'asc')
             ->paginate($size, ['*'], 'page', $page);
     }
 
@@ -260,6 +261,7 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
+     * @deprecated 재배치 정책 변경으로 사용되지 않는 메서드 입니다
      * 13. 재배치(아래로 이동)용 메서드
      * - oldSeqNo < newSeqNo 인 경우
      * - (oldSeqNo, newSeqNo] 구간의 항목들을 seq_no - 1
@@ -282,6 +284,7 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
+     * @deprecated 재배치 정책 변경으로 사용되지 않는 메서드 입니다
      * 14. 재배치(위로 이동)용 메서드
      * - oldSeqNo > newSeqNo 인 경우
      * - [newSeqNo, oldSeqNo) 구간의 항목들을 seq_no + 1
@@ -301,5 +304,124 @@ class ScheduleItemRepository extends BaseRepository
             ->where('seq_no', '>=', $newSeqNo)
             ->where('seq_no', '<', $oldSeqNo)
             ->increment('seq_no');
+    }
+
+    /**
+     * latlng를 가져오는 헬퍼 메서드
+     * - lat와 lng를 한 쌍으로 반환
+     * @param mixed $tripDayId
+     * @return float[]
+     */
+    public function getlatlngFromPlaceId($tripDayId)
+    {
+        $items = ScheduleItem::with('place:place_id,lat,lng')
+            ->where('trip_day_id', $tripDayId)
+            ->orderBy('seq_no', 'asc')
+            ->get();
+
+        $latlng = [];
+        foreach ($items as $item) {
+            $latlng[] = [
+                'lat' => $item->place->lat,
+                'lng' => $item->place->lng
+            ];
+        }
+
+        return $latlng;
+    }
+
+    /**
+     * 15. 특정 schedule_item_id 목록으로 ScheduleItem들 조회
+     * @param int[] $itemIds
+     * @return Collection|ScheduleItem[]
+     */
+    public function getByItemIds(array $itemIds): Collection
+    {
+        return $this->model
+            ->newQuery()
+            ->whereIn('schedule_item_id', $itemIds)
+            ->get();
+    }
+
+    /**
+     * 16. 특정 itemId가 원래 속해있던 tripDayId 조회
+     * @param int[]   // $itemIds
+     * @return int[]  // tripDayId 배열 반환
+     */
+    public function getTripDayIdsByItemIds(array $itemIds): array
+    {
+        // 중복 제거 후 trip_day_id 배열 반환
+        return $this->model
+            ->newQuery()
+            ->whereIn('schedule_item_id', $itemIds)
+            ->distinct()
+            ->pluck('trip_day_id')
+            ->toArray();
+    }
+
+    /**
+     * 17. 특정 TripDay에 모든 seq_no 임시 큰 겂으로 변경
+     * - 재배치 작업 전 충돌 방지용
+     * - +1000 씩 증가
+     * @param int[] $tripDayIds
+     * @param int $offset    // 기본 1000
+     * @return int           // 영향을 받은 row 수
+     */
+    public function tempShiftSeqNos(
+        array $tripDayIds,
+        int $offset = 1000
+    ): int {
+        if (empty($tripDayIds)) {
+            return 0;
+        }
+
+        return $this->model
+            ->newQuery()
+            ->whereIn('trip_day_id', $tripDayIds)
+            ->update([
+                'seq_no' => DB::raw("seq_no + {$offset}")
+            ]);
+    }
+
+    /**
+     * 18. 특정 tripDay의 schedule_item_id 순서대로 재배치
+     * - seq_no를 재설정
+     * @param int $tripDayId
+     * @param int[] $itemIds        // 재배치할 schedule_item_id 배열
+     */
+    public function reorderSeqNosByItemIds(
+        int $tripDayId,
+        array $itemIds,
+    ): void {
+        foreach (array_values($itemIds) as $index => $itemId) {
+            $this->model
+                ->newQuery()
+                ->where('schedule_item_id', $itemId)
+                ->update([
+                    'trip_day_id' => $tripDayId,
+                    'seq_no' => $index + 1,
+            ]);
+        }
+    }
+
+    /**
+     * 19. 특정 tripDay에 남아있는 아이템 seq_no 재정렬
+     * 
+     * @param int $tripDayId
+     */
+    public function normalizeSeqNosForTripDay(int $tripDayId): void
+    {
+        $items = $this->model
+            ->newQuery()
+            ->where('trip_day_id', $tripDayId)
+            ->orderBy('seq_no', 'asc')
+            ->get(['schedule_item_id']);
+
+        foreach ($items as $index => $item) {
+            $this->model
+                ->newQuery()
+                ->where('schedule_item_id', $item->schedule_item_id)
+                ->update(['seq_no' => $index + 1]);
+        }
     }
 }

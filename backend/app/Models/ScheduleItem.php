@@ -36,7 +36,7 @@ class ScheduleItem extends Model
         'trip_day_id'      => 'integer',
         'place_id'         => 'integer',
         'seq_no'           => 'integer',
-        'visit_time'       => 'datetime',
+        'visit_time'       => 'time',
         'created_at'       => 'datetime',
         'updated_at'       => 'datetime',
     ];

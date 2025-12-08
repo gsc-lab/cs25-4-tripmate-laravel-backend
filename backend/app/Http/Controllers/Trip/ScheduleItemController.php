@@ -57,6 +57,8 @@ class ScheduleItemController extends Controller
             $size
         );
 
+        $detale = $this->scheduleItemService->calculateRouteDistancesByDistance($trip, $dayNo);
+
         // 성공응답 반환
         return response()->json([
             'success' => true,
@@ -70,6 +72,8 @@ class ScheduleItemController extends Controller
                     'total' => $paginatedScheduleItems->total(),
                     'last_page' => $paginatedScheduleItems->lastPage(),
                 ],
+                'detale' => $detale,
+                'latlng' => $this->scheduleItemService->getlatlng($trip, $dayNo)
             ]
         ]);
     }
@@ -217,6 +221,44 @@ class ScheduleItemController extends Controller
         ]);
     }
 
+    // /**
+    //  * 6. 일정 아이템 순서 변경
+    //  * - PATCH /v2/trips/{trip_id}/days/{day_no}/items/reorder
+    //  * @param ScheduleItemReorderRequest $request
+    //  * @param int $tripId
+    //  * @param int $dayNo
+    //  * @return JsonResponse
+    //  */
+    // public function reorder(
+    //     ScheduleItemReorderRequest $request,
+    //     int $tripId,
+    //     int $dayNo
+    // ): JsonResponse {
+    //     // 본인 소유 trip 인지 확인
+    //     $trip = $this->tripService->getOwnedTripOrFail($tripId);
+
+    //     // 유효성 검사된 데이터 가져오기
+    //     $validated = $request->validated();
+    //     $itemId = $validated['item_id'];
+    //     $newSeqNo = $validated['new_seq_no'];
+
+    //     // 일정 아이템 순서 변경
+    //     $this->scheduleItemService->reorderScheduleItem(
+    //         $trip,
+    //         $dayNo,
+    //         $itemId,
+    //         $newSeqNo
+    //     );
+
+    //     // 성공응답 반환
+    //     return response()->json([
+    //         'success' => true,
+    //         'code' => 'SUCCESS',
+    //         'message' => '일정 아이템 순서 변경에 성공했습니다',
+    //         'data' => null,
+    //     ]);
+    // }
+
     /**
      * 6. 일정 아이템 순서 변경
      * - PATCH /v2/trips/{trip_id}/days/{day_no}/items/reorder
@@ -234,23 +276,19 @@ class ScheduleItemController extends Controller
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
         // 유효성 검사된 데이터 가져오기
-        $validated = $request->validated();
-        $itemId = $validated['item_id'];
-        $newSeqNo = $validated['new_seq_no'];
+        $orders = $request->validated('orders');
 
         // 일정 아이템 순서 변경
-        $this->scheduleItemService->reorderScheduleItem(
+        $this->scheduleItemService->reorderScheduleItems(
             $trip,
-            $dayNo,
-            $itemId,
-            $newSeqNo
+            $orders
         );
 
         // 성공응답 반환
         return response()->json([
             'success' => true,
             'code' => 'SUCCESS',
-            'message' => '일정 아이템 순서 변경에 성공했습니다',
+            'message' => '일정 아이템 재배치에 성공했습니다',
             'data' => null,
         ]);
     }

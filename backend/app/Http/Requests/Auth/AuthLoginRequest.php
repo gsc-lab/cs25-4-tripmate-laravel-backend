@@ -16,6 +16,7 @@ class AuthLoginRequest extends FormRequest
 
     /**
      * 로그인 유효성 검증
+     * - email, password 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array

@@ -3,17 +3,21 @@
 namespace App\Http\Requests\ScheduleItem;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ScheduleItemReorderRequest extends FormRequest
 {
     /**
-     * 로그인 사용자 접근 허용
+     * 일정 주인만 접근 허용
      */
-    public function authorize(): bool
+    public function authorize()
     {
-        return Auth::check();
+        // URL에서 가져온 trip_id로 user_id 비교
+        $tripId = $this->route('trip_id');
+        $trip = \App\Models\Trip::findOrFail($tripId);
+
+        // user_id와 로그인 사용자 일치일 경우 true
+        return $this->user()->id === $trip->user_id;
     }
 
     /**
@@ -31,19 +35,50 @@ class ScheduleItemReorderRequest extends FormRequest
         //     "orders.*.new_seq_no"=> ["required","integer","distinct", "min:1"],
         // ];
 
+        // return [
+        //     // 단일 일정 아이템 재배치 
+        //     'item_id' => [
+        //         'required',
+        //         'integer',
+        //         Rule::exists('schedule_items', 'schedule_item_id'),
+        //     ],
+
+        //     // 새로운 순서 번호
+        //     'new_seq_no' => [
+        //         'required',
+        //         'integer',
+        //         'min:1',
+        //     ],
+        // ];
+
         return [
-            // 단일 일정 아이템 재배치 
-            'item_id' => [
+            // orders 전체
+            'orders' => [
                 'required',
-                'integer',
-                Rule::exists('schedule_items', 'schedule_item_id'),
+                'array',
+                'min:1',
             ],
 
-            // 새로운 순서 번호
-            'new_seq_no' => [
+            // 각 요소의 trip_day_id
+            'orders.*.trip_day_id' => [
                 'required',
                 'integer',
+                Rule::exists('trip_days', 'trip_day_id'),
+            ],
+
+            // 각 요소의 item_ids 배열
+            'orders.*.item_ids' => [
+                'required',
+                'array',
                 'min:1',
+            ],
+
+            // 실제 ScheduleItem ID들
+            'orders.*.item_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                Rule::exists('schedule_items', 'schedule_item_id'),
             ],
         ];
     }
@@ -53,15 +88,15 @@ class ScheduleItemReorderRequest extends FormRequest
      */
     public function messages(): array
     {
-        return [
-            'item_id.required' => '아이템 ID는 필수입니다.',
-            'item_id.integer'  => '아이템 ID는 숫자여야 합니다.',
-            'item_id.exists'   => '유효하지 않은 아이템 ID입니다.',
+        // return [
+        //     'item_id.required' => '아이템 ID는 필수입니다.',
+        //     'item_id.integer'  => '아이템 ID는 숫자여야 합니다.',
+        //     'item_id.exists'   => '유효하지 않은 아이템 ID입니다.',
 
-            'new_seq_no.required' => '새로운 순서 번호는 필수입니다.',
-            'new_seq_no.integer'  => '순서 번호는 숫자여야 합니다.',
-            'new_seq_no.min'      => '순서 번호는 1 이상이어야 합니다.',
-        ];
+        //     'new_seq_no.required' => '새로운 순서 번호는 필수입니다.',
+        //     'new_seq_no.integer'  => '순서 번호는 숫자여야 합니다.',
+        //     'new_seq_no.min'      => '순서 번호는 1 이상이어야 합니다.',
+        // ];
         // return [
         //     'orders.required' => '재배치할 순서 정보는 필수입니다.',
         //     'orders.array'    => '순서 정보는 배열 형식이어야 합니다.',
@@ -77,5 +112,24 @@ class ScheduleItemReorderRequest extends FormRequest
         //     'orders.*.new_seq_no.distinct' => '순서 번호가 중복될 수 없습니다.',
         //     'orders.*.new_seq_no.min'      => '순서 번호는 1 이상이어야 합니다.',
         // ];
+
+        return [
+            'orders.required' => '재배치할 순서 정보(orders)는 필수입니다.',
+            'orders.array'    => 'orders 필드는 배열 형식이어야 합니다.',
+            'orders.min'      => '최소 1개 이상의 재배치 정보가 필요합니다.',
+
+            'orders.*.trip_day_id.required' => '각 항목의 trip_day_id 값은 필수입니다.',
+            'orders.*.trip_day_id.integer'  => 'trip_day_id 값은 숫자여야 합니다.',
+            'orders.*.trip_day_id.exists'   => '존재하지 않는 Trip Day ID가 포함되어 있습니다.',
+
+            'orders.*.item_ids.required' => '각 trip_day_id에 대해 재배치할 item_ids 배열이 필요합니다.',
+            'orders.*.item_ids.array'    => 'item_ids는 배열 형식이어야 합니다.',
+            'orders.*.item_ids.min'      => '각 Trip Day에는 최소 1개 이상의 일정 아이템이 포함되어야 합니다.',
+
+            'orders.*.item_ids.*.required' => '일정 아이템 ID는 필수입니다.',
+            'orders.*.item_ids.*.integer'  => '일정 아이템 ID는 숫자여야 합니다.',
+            'orders.*.item_ids.*.distinct' => '동일한 일정 아이템 ID를 중복해서 보낼 수 없습니다.',
+            'orders.*.item_ids.*.exists'   => '존재하지 않는 일정 아이템 ID가 포함되어 있습니다.',
+        ];
     }
 }

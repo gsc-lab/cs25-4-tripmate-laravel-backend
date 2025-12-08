@@ -18,7 +18,8 @@ class AuthRegisterRequest extends FormRequest
     }
 
     /**
-     * 유효성 전 이메일 전처리
+     * 이메일 전처리
+     * - 입력된 이메일을 바로 DB에 저장할 수 있도록 전처리 진행.
      * @return void
      */
     public function prepareForValidation()
@@ -32,6 +33,7 @@ class AuthRegisterRequest extends FormRequest
 
     /**
      * 회원가입 유효성 검증
+     * - name, email_norm, password 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array 
