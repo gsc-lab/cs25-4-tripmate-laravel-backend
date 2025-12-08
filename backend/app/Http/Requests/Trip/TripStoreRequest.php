@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Trip;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth; 
 use Illuminate\Validation\Rule;
 
 class TripStoreRequest extends FormRequest
@@ -13,11 +12,12 @@ class TripStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
      * 여행 생성 유효성검증
+     * - title, region_id, start_date, end_date 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array 

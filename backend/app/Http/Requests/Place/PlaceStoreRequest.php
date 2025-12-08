@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Place;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class PlaceStoreRequest extends FormRequest
 {
@@ -12,11 +11,12 @@ class PlaceStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check();
+        return true;
     }
 
     /**
      * 외부 결과를 내부로 저장 유효성 검증
+     * - name, category, address, external_ref, lat, lng 검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
