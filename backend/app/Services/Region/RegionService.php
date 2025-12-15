@@ -22,7 +22,7 @@ use Ramsey\Collection\Collection;
         {
             // 지역 검색
             if ($query !== null) {
-                return $this->regionRepository->findRegions($query);
+                return $this->regionRepository->findRegions($query, $country);
 
             } else {
                 // 지역 목록 반환
