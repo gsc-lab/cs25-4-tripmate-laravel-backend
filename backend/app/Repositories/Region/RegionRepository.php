@@ -14,11 +14,15 @@
         /**
          * find Regions
          * @param mixed $query
+         * @param mixed $country
          * @return \Illuminate\Database\Eloquent\Collection|\App\Models\Region[]
          */
-        public function findRegions($query)
+        public function findRegions($query, $country)
         {
-            return $this->model->where('name', 'like', '%'. $query .'%')->get();
+            return $this->model
+                ->where('country_code', $country)
+                ->where('name', 'like', '%'. $query .'%')
+                ->get();
         }
 
         /**
