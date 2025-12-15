@@ -18,7 +18,7 @@ class RegionSeeder extends Seeder
         $regions = json_decode($json, true);
 
         // 반복문으로 데이터 삽입
-        Foreach ($regions as $region) {
+        foreach ($regions as $region) {
             Region::firstOrCreate(
                 [
                     "name"=> $region["name"],
