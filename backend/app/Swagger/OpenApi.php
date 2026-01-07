@@ -1,15 +1,11 @@
 <?php
+
 namespace App\Swagger;
 
 use OpenApi\Attributes as OA;
 
-class OpenApi
-{
-    public const SERVER_URL = 'https://tripmate-api.test';
-}
-
 #[OA\Info(
-    version: '1.0.0',
+    version: '2.0.0',
     title: 'TripMate API v2',
     description: '여행 계획 관리용 API'
 )]
@@ -23,4 +19,10 @@ class OpenApi
     scheme: 'bearer',
     bearerFormat: 'JWT'
 )]
-class OpenApiDoc {}
+#[OA\Tag(name: 'Trips', description: 'Trip CRUD')]
+#[OA\Tag(name: 'TripDays', description: 'Trip day management')]
+#[OA\Tag(name: 'ScheduleItems', description: 'Schedule item management')]
+final class OpenApi
+{
+    public const SERVER_URL = 'https://tripmate-api.test';
+}
