@@ -12,7 +12,7 @@ use App\Http\Requests\TripDay\TripDayReorderRequest;
 use App\Http\Resources\TripDayResource;
 use App\Services\Trip\TripService;
 use App\Services\Trip\TripDayService;
-
+use OpenApi\Attributes as OA;
 /**
  * Trip Day Controller
  * - TripDay 조회 / 생성 / 수정 / 삭제 / 재정렬
@@ -32,6 +32,7 @@ class TripDayController extends Controller
         $this->tripService = $tripService;
     }
 
+    
     /**
      * 1. TripDay 목록 조회 (페이지네이션)
      * - GET /api/v2/trips/{trip_id}/days
@@ -39,6 +40,23 @@ class TripDayController extends Controller
      * @param int $tripId
      * @return JsonResponse
      */
+    #[OA\Get(
+        path: '/api/v2/trips/{trip_id}/days',
+        summary: 'TripDay 목록 조회',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1)),
+        new OA\Parameter(name: 'size', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100)),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayListResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]
+    )]
     public function index(
         TripDayIndexRequest $request,
         int $tripId
@@ -82,6 +100,26 @@ class TripDayController extends Controller
      * @param int $tripId
      * @return JsonResponse
      */
+    #[OA\Post(
+        path: '/api/v2/trips/{trip_id}/days',
+        summary: 'TripDay 생성',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: '#/components/schemas/TripDayCreateRequest')
+        ),
+        responses: [
+            new OA\Response(response: 201, description: '생성 성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDaySingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+        ]
+    )]
     public function store(
         TripDayStoreRequest $request,
         int $tripId
@@ -118,6 +156,22 @@ class TripDayController extends Controller
      * @param int $dayNo
      * @return JsonResponse
      */
+    #[OA\Get(
+        path: '/api/v2/trips/{trip_id}/days/{$dayNo}',
+        summary: 'TripDay 단건 조회',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: '$dayNo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDaySingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]
+    )]  
     public function show(
         int $tripId,
         int $dayNo
@@ -148,6 +202,27 @@ class TripDayController extends Controller
      * @param int $dayNo
      * @return JsonResponse
      */
+    #[OA\Patch(
+        path: '/api/v2/trips/{trip_id}/days/{$dayNo}',
+        summary: 'TripDay 수정',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: '$dayNo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: '#/components/schemas/TripDayUpdateRequest')
+        ),
+        responses: [
+            new OA\Response(response: 200, description: '수정 성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDaySingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+        ]
+    )]
     public function updateMemo(
         TripDayUpdateRequest $request,
         int $tripId,
@@ -189,7 +264,23 @@ class TripDayController extends Controller
      * @param int $dayNo
      * @return JsonResponse
      */
-    public function destroy(
+    #[OA\Delete(
+        path: '/api/v2/trips/{trip_id}/days/{$dayNo}',
+        summary: 'TripDay 삭제',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: '$dayNo', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(response: 200, description: '삭제 성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayNullDataResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]  
+    )]
+        public function destroy(
         int $tripId,
         int $dayNo
     ): JsonResponse{
@@ -253,6 +344,26 @@ class TripDayController extends Controller
      * @param int $tripId
      * @return JsonResponse
      */
+    #[OA\Post(
+        path: '/api/v2/trips/{trip_id}/days/reorder',
+        summary: 'TripDay 재배치',
+        tags: ['TripDays'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(ref: '#/components/schemas/TripDayReorderRequest')
+        ),
+        responses: [
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayListResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+        ]
+    )]
     public function reorder(
         TripDayReorderRequest $request,
         int $tripId
