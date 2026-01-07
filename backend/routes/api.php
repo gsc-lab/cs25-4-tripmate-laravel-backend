@@ -94,7 +94,7 @@ Route::prefix('v2')->group(function () {
     Route::get('/places/place-geocode', [PlaceController::class, 'placeGeocode']);
     Route::get('/places/nearby', [PlaceController::class, 'nearbyPlaces']);
     Route::post('/places/from-external', [PlaceController::class, 'createPlaceFromExternal']);
-    Route::get('/places/{place}', [PlaceController::class, 'getPlaceById']);
+    Route::get('/places/{place_id}', [PlaceController::class, 'getPlaceById']);
 
     /**
      * Regions
