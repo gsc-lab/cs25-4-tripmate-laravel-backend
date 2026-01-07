@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
@@ -9,7 +8,7 @@ use App\Http\Requests\Trip\TripIndexRequest;
 use App\Http\Resources\TripResource;
 use App\Services\Trip\TripService;
 use Illuminate\Http\JsonResponse;
-
+use OpenApi\Attributes as OA;
 
 class TripController extends Controller
 {   
@@ -21,7 +20,6 @@ class TripController extends Controller
     {
         $this->tripService = $tripService;
     }
-
     /**
      * 1. Trip 목록 조회 
      * - 페이지네이션 적용
@@ -29,6 +27,26 @@ class TripController extends Controller
      * @param TripIndexRequest $request
      * @return JsonResponse
      */
+    #[OA\Get(
+        path: '/api/v2/trips',
+        summary: 'Trip 목록 조회',
+        tags: ['Trips'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1)),
+        new OA\Parameter(name: 'size', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100)),
+        new OA\Parameter(name: 'region_id', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(
+            response: 200,
+            description: '성공',
+            content: new OA\JsonContent(ref: '#/components/schemas/TripListResponse')
+            ),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+        ]
+    )]
     public function index(TripIndexRequest $request) : JsonResponse
     {
         // 쿼리 파라미터 
@@ -66,6 +84,25 @@ class TripController extends Controller
      * @param TripStoreRequest $request
      * @return JsonResponse
      */
+    #[OA\Post(
+        path: '/api/v2/trips',
+        summary: 'Trip 생성',
+        tags: ['Trips'],
+        security: [['bearerAuth' => []]],
+        requestBody: new OA\RequestBody(
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/TripCreateRequest')
+        ),
+        responses: [
+            new OA\Response(
+                response: 201,
+                description: '생성 성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/TripSingleResponse')
+            ),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+        ]
+    )]
     public function store(TripStoreRequest $request) : JsonResponse
     {
         // FormRequest에서 검증된 데이터 가져오기
@@ -87,6 +124,30 @@ class TripController extends Controller
      * @param int $trip
      * @return JsonResponse
      */
+    #[OA\Get(
+        path: '/api/v2/trips/{trip_id}',
+        summary: 'Trip 단건 조회',
+        tags: ['Trips'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+            new OA\Parameter(
+                name: 'trip_id',
+                in: 'path',
+                required: true,
+                schema: new OA\Schema(type: 'integer')
+            ),
+        ],
+        responses: [
+            new OA\Response(
+                response: 200,
+                description: '성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/TripSingleResponse')
+            ),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]
+    )]    
     public function show(int $trip) : JsonResponse
     {
         // Trip 조회 서비스 호출
@@ -105,6 +166,27 @@ class TripController extends Controller
      * @param TripUpdateRequest $request
      * @param int $tripId
      */
+    #[OA\Patch(
+        path: '/api/v2/trips/{trip_id}',
+        summary: 'Trip 수정',
+        tags: ['Trips'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/TripUpdateRequest')),
+        responses: [
+            new OA\Response(
+            response: 200,
+            description: '수정 성공',
+            content: new OA\JsonContent(ref: '#/components/schemas/TripSingleResponse')
+            ),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+        ]
+    )]
     public function update(TripUpdateRequest $request, int $tripId)
     {
         // FormRequest에서 검증된 데이터 가져오기
@@ -126,6 +208,25 @@ class TripController extends Controller
      * @param int $tripId
      * @return JsonResponse
      */
+    #[OA\Delete(
+        path: '/api/v2/trips/{trip_id}',
+        summary: 'Trip 삭제',
+        tags: ['Trips'],
+        security: [['bearerAuth' => []]],
+        parameters: [
+        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        ],
+        responses: [
+            new OA\Response(
+            response: 200,
+            description: '삭제 성공',
+            content: new OA\JsonContent(ref: '#/components/schemas/TripNullDataResponse')
+            ),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]
+    )]  
     public function destroy(int $tripId) : JsonResponse
     {
         // Trip 삭제 서비스 호출
