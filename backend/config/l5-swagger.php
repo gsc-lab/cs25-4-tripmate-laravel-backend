@@ -45,10 +45,12 @@ return [
                  */
                 'annotations' => [
                     base_path('app/Http/Controllers'),
+                    // Swagger 엔트리(Info/Server/Security)
                     base_path('app/Swagger'),
-                    // 필요한 경우 주석 해제 후 추가 바람
-                    // base_path('app/Http/Requests'),
-                    // base_path('app/Http/Resources'),
+                    // Components: responses/components 등록
+                    base_path('app/Swagger/Components'),
+                    // Schemas: request/response/data schemas
+                    base_path('app/Swagger/Schemas'),
                 ],
             ],
         ],
