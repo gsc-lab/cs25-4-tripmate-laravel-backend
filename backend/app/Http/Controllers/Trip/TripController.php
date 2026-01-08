@@ -120,18 +120,18 @@ class TripController extends Controller
     
     /**
      * 3. 단일 Trip 조회
-     * - GET /v2/trips/{trip_id}
+     * - GET /v2/trips/{trip}
      * @param int $trip
      * @return JsonResponse
      */
     #[OA\Get(
-        path: '/api/v2/trips/{trip_id}',
+        path: '/api/v2/trips/{trip}',
         summary: 'Trip 단건 조회',
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
             new OA\Parameter(
-                name: 'trip_id',
+                name: 'trip',
                 in: 'path',
                 required: true,
                 schema: new OA\Schema(type: 'integer')
@@ -162,17 +162,17 @@ class TripController extends Controller
 
     /**
      * 4. Trip 업데이트
-     * PATCH /v2/trips/{trip_id}
+     * PATCH /v2/trips/{trip}
      * @param TripUpdateRequest $request
      * @param int $tripId
      */
     #[OA\Patch(
-        path: '/api/v2/trips/{trip_id}',
+        path: '/api/v2/trips/{trip}',
         summary: 'Trip 수정',
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/TripUpdateRequest')),
         responses: [
@@ -187,13 +187,13 @@ class TripController extends Controller
             new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
         ]
     )]
-    public function update(TripUpdateRequest $request, int $tripId)
+    public function update(TripUpdateRequest $request, int $trip)
     {
         // FormRequest에서 검증된 데이터 가져오기
         $payload = $request->validated();
 
         // Trip 업데이트 서비스 호출
-        $updatedTrip = $this->tripService->updateTrip($tripId, $payload);
+        $updatedTrip = $this->tripService->updateTrip($trip, $payload);
 
         // 응답 반환
         return response()->json([
@@ -204,17 +204,17 @@ class TripController extends Controller
 
     /**
      * 5. Trip 삭제
-     * DELETE /v2/trips/{trip_id}
+     * DELETE /v2/trips/{trip}
      * @param int $tripId
      * @return JsonResponse
      */
     #[OA\Delete(
-        path: '/api/v2/trips/{trip_id}',
+        path: '/api/v2/trips/{trip}',
         summary: 'Trip 삭제',
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+        new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(
@@ -227,10 +227,10 @@ class TripController extends Controller
             new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
         ]
     )]  
-    public function destroy(int $tripId) : JsonResponse
+    public function destroy(int $trip) : JsonResponse
     {
         // Trip 삭제 서비스 호출
-        $this->tripService->deleteTrip($tripId);
+        $this->tripService->deleteTrip($trip);
 
         // 응답 반환
         return response()->json([
