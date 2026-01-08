@@ -3,6 +3,7 @@
 namespace App\Http\Requests\TripDay;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Trip;
 
 class TripDayStoreRequest extends FormRequest
 {
@@ -13,10 +14,10 @@ class TripDayStoreRequest extends FormRequest
     {
         // URL에서 가져온 trip_id로 user_id 비교
         $tripId = $this->route('trip_id');
-        $trip = \App\Models\Trip::findOrFail($tripId);
+        $trip = Trip::findOrFail($tripId);
 
         // user_id와 로그인 사용자 일치일 경우 true
-        return $this->user()->id === $trip->user_id;
+        return (int) $this->user()->getKey() === (int) $trip->user_id;
     }
 
     /**
