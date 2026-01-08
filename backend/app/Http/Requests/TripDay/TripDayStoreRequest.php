@@ -4,7 +4,7 @@ namespace App\Http\Requests\TripDay;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TripDaystoreRequest extends FormRequest
+class TripDayStoreRequest extends FormRequest
 {
     /**
      * 일정 주인만 접근 허용
