@@ -4,6 +4,7 @@ namespace App\Http\Requests\Trip;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Trip;
 
 class TripUpdateRequest extends FormRequest
 {
@@ -12,12 +13,21 @@ class TripUpdateRequest extends FormRequest
      */
     public function authorize():bool
     {
-        // URL에서 가져온 trip_id로 user_id 비교
-        $tripId = $this->route('trip_id');
-        $trip = \App\Models\Trip::findOrFail($tripId);
+        // URL에서 가져온 trip로 user_id 비교
+        $tripId = $this->route('trip') ?? $this->route('trip_id');
+
+        if (!$tripId) {
+            return false;
+        }
+    
+        $trip = Trip::find($tripId);
+    
+        if (!$trip) {
+            return false;
+        }
 
         // user_id와 로그인 사용자 일치일 경우 true
-        return $this->user()->id === $trip->user_id;
+        return (int) $this->user()->getKey() === (int) $trip->user_id;
     }
 
     /**
