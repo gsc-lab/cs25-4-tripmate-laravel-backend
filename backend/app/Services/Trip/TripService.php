@@ -54,7 +54,7 @@ class TripService
      *
      * @throws AuthorizationException
      */
-    public function getOwnedTripOrFail(int $tripId): Trip
+    protected function getOwnedTripOrFail(int $tripId): Trip
     {
         // trip_id로 Trip 조회
         $trip = $this->tripRepository->findTripOrFail($tripId);
@@ -68,11 +68,15 @@ class TripService
     /**
      * 1. Trip 생성
      * - tripday 자동 생성
+     * @param array{title:string, region_id:int, start_date:string, end_date:string} $payload
      */
-    public function createTrip(array $payload): Trip
+    public function store(array $payload): Trip
     {
         // 현재 로그인한 사용자 ID 가져오기
         $userId = Auth::id();
+        if ($userId === null) {
+            throw new AuthorizationException('로그인한 사용자만 여행을 생성할 수 있습니다');
+        }
 
         // payload에 user_id 추가
         $payload['user_id'] = $userId;
@@ -107,7 +111,7 @@ class TripService
     /**
      * 2. Trip 목록 조회 (페이지네이션)
      */
-    public function paginateTrips(
+    public function paginate(
         int $page,
         int $size,
         ?string $sort = null,
@@ -116,6 +120,9 @@ class TripService
 
         // 현재 로그인한 사용자 ID 가져오기
         $userId = Auth::id();
+        if ($userId === null) {
+            throw new AuthorizationException('로그인이 필요합니다');
+        }
 
         // Trip 목록 페이지네이션 조회
         return $this->tripRepository->paginateTrips(
@@ -133,7 +140,7 @@ class TripService
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function getTrip(int $tripId): Trip
+    public function show(int $tripId): Trip
     {
         // 소유자 확인 및 Trip 조회
         return $this->getOwnedTripOrFail($tripId);
@@ -141,11 +148,11 @@ class TripService
 
     /**
      * 4. Trip 부분 업데이트
-     *
+     * @param array{title?:string, region_id?:int, start_date?:string, end_date?:string} $payload
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function updateTrip(
+    public function update(
         int $tripId,
         array $payload
     ): Trip {
@@ -168,7 +175,7 @@ class TripService
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      * @throws \Illuminate\Auth\Access\AuthorizationException
      */
-    public function deleteTrip(int $tripId): bool
+    public function destroy(int $tripId): bool
     {
         // 소유자 확인 및 Trip 조회
         $this->getOwnedTripOrFail($tripId);
