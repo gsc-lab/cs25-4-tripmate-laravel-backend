@@ -1,5 +1,4 @@
 <?php
-
 namespace Tests\Feature\TripDays;
 
 use App\Models\Region;
@@ -53,19 +52,14 @@ class TripDayReorderTest extends TestCase
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        // day 1~3 생성
-        for ($d = 1; $d <= 3; $d++) {
-            $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days", [
-                'day_no' => $d,
-                'memo' => "memo {$d}",
-            ])->assertStatus(201);
-        }
 
-        // 현재 trip_day_id를 day_no 순서로 가져오기
         $ids = TripDay::where('trip_id', $tripId)
             ->orderBy('day_no')
             ->pluck('trip_day_id')
             ->all();
+
+        // 안전 체크(최소 3일)
+        $this->assertCount(3, $ids);
 
         // reverse reorder: [3,2,1] 순으로 day_no가 1,2,3으로 다시 매겨져야 함
         $payload = [
@@ -94,14 +88,9 @@ class TripDayReorderTest extends TestCase
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        // day 1~2 생성
-        for ($d = 1; $d <= 2; $d++) {
-            $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days", [
-                'day_no' => $d,
-            ])->assertStatus(201);
-        }
-
-        $id = TripDay::where('trip_id', $tripId)->orderBy('day_no')->value('trip_day_id');
+        $id = TripDay::where('trip_id', $tripId)
+            ->orderBy('day_no')
+            ->value('trip_day_id');
 
         // 중복 id 넣기 -> distinct 룰로 422
         $this->withHeaders($headers)
