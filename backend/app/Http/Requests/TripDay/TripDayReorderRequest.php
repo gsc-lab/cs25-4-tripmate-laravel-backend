@@ -5,6 +5,7 @@ namespace App\Http\Requests\TripDay;
 use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\Trip;
 
 class TripDayReorderRequest extends FormRequest
 {

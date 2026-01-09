@@ -4,6 +4,7 @@ namespace App\Http\Requests\TripDay;
 
 use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\Trip;
 
 class TripDayUpdateRequest extends FormRequest
 {
