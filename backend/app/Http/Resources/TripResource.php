@@ -9,6 +9,7 @@ class TripResource extends JsonResource
 {
     /**
      * 여행 관련 리소스
+     *
      * @return array<string, mixed>
      */
     public function toArray(Request $request): array
@@ -27,7 +28,7 @@ class TripResource extends JsonResource
             }),
 
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
         ];
     }
 }

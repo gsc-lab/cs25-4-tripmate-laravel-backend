@@ -18,16 +18,17 @@ class TripIndexRequest extends FormRequest
     /**
      * 여행 목록 유효성 검증
      * - page, size, sort, region_id 검증
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-                'page' => ['sometimes', 'integer', 'min:1'],
-                'size' => ['sometimes', 'integer', 'min:1', 'max:100'],
-                'sort' => ['sometimes', 'string'],
-                'region_id' => ['sometimes', 'integer', Rule::exists('regions', 'region_id')],
-            ];
+            'page' => ['sometimes', 'integer', 'min:1'],
+            'size' => ['sometimes', 'integer', 'min:1', 'max:100'],
+            'sort' => ['sometimes', 'string'],
+            'region_id' => ['sometimes', 'integer', Rule::exists('regions', 'region_id')],
+        ];
     }
 
     /**
@@ -37,16 +38,16 @@ class TripIndexRequest extends FormRequest
     {
         return [
             'page.integer' => '페이지 번호는 숫자여야 합니다.',
-            'page.min'     => '페이지 번호는 1 이상이어야 합니다.',
+            'page.min' => '페이지 번호는 1 이상이어야 합니다.',
 
             'size.integer' => '페이지 크기(조회 개수)는 숫자여야 합니다.',
-            'size.min'     => '페이지 크기는 최소 1개 이상이어야 합니다.',
-            'size.max'     => '한 번에 최대 100개까지만 조회할 수 있습니다.',
+            'size.min' => '페이지 크기는 최소 1개 이상이어야 합니다.',
+            'size.max' => '한 번에 최대 100개까지만 조회할 수 있습니다.',
 
-            'sort.string'  => '정렬 기준은 문자열이어야 합니다.',
+            'sort.string' => '정렬 기준은 문자열이어야 합니다.',
 
-            'region_id.integer'  => '지역 ID는 숫자여야 합니다.',
-            'region_id.exists'   => '선택한 지역이 존재하지 않습니다.'
+            'region_id.integer' => '지역 ID는 숫자여야 합니다.',
+            'region_id.exists' => '선택한 지역이 존재하지 않습니다.',
         ];
     }
 }

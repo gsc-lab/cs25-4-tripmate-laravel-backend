@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\PlaceCategory;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
-
 
 class PlaceCategorySeeder extends Seeder
 {
@@ -17,12 +16,12 @@ class PlaceCategorySeeder extends Seeder
         // json 파일 찾기
         $json = File::get(database_path('data/place_categories.json'));
         $categories = json_decode($json, true);
-    
+
         // 데이터 삽입
         foreach ($categories as $category) {
             PlaceCategory::updateOrCreate(
-                ['code' => $category['code']], 
-                ['name' => $category['name']] 
+                ['code' => $category['code']],
+                ['name' => $category['name']]
             );
         }
     }

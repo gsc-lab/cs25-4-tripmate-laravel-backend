@@ -1,13 +1,14 @@
 <?php
-    namespace App\Repositories\Auth;
 
-    use App\Repositories\BaseRepository;
-    use App\Models\User; 
+namespace App\Repositories\Auth;
 
-    class UserRepository extends BaseRepository
+use App\Models\User;
+use App\Repositories\BaseRepository;
+
+class UserRepository extends BaseRepository
+{
+    public function __construct(User $user)
     {
-        public function __construct(User $user)
-        {
-            return parent::__construct($user);
-        }
+        return parent::__construct($user);
     }
+}

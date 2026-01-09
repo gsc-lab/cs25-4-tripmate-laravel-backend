@@ -1,13 +1,14 @@
 <?php
+
 namespace Tests\Feature\TripDays;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use App\Models\User;
 use App\Models\Region;
 use App\Models\TripDay;
+use App\Models\User;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class TripDayCrudTest extends TestCase
 {
@@ -63,7 +64,7 @@ class TripDayCrudTest extends TestCase
         $this->postJson('/api/v2/trips/1/days/reorder', ['day_ids' => [1]])->assertStatus(401);
     }
 
-    public function test_tripday_store_show_updateMemo_destroy_success(): void
+    public function test_tripday_store_show_update_memo_destroy_success(): void
     {
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
@@ -84,7 +85,7 @@ class TripDayCrudTest extends TestCase
             ->assertJsonPath('data.day_no', $dayNo);
 
         $tripDayId = $store->json('data.trip_day_id');
-        if (!$tripDayId) {
+        if (! $tripDayId) {
             $tripDayId = TripDay::where('trip_id', $tripId)->where('day_no', $dayNo)->value('trip_day_id');
         }
 

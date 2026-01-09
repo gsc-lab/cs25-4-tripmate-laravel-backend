@@ -18,7 +18,7 @@ class ScheduleItemResource extends JsonResource
             'schedule_item_id' => $this->schedule_item_id,
             'trip_day_id' => $this->trip_day_id,
             'seq_no' => $this->seq_no,
-            'visit_time' => $this->visit_time, 
+            'visit_time' => $this->visit_time,
             'memo' => $this->memo,
             'place_id' => $this->place_id,
             'created_at' => $this->created_at,

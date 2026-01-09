@@ -69,6 +69,4 @@ use OpenApi\Attributes as OA;
         ]
     )
 )]
-final class CommonResponses
-{
-}
+final class CommonResponses {}

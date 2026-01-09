@@ -17,19 +17,21 @@ class PlaceSearchRequest extends FormRequest
     /**
      * 외부 지도기반 장소 검색 유효성 검증
      * - place, pageToken(google token), sort 검증
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'place'     => ['required', 'nullable', 'string'],
-            'pageToken' => ['sometimes', 'nullable', 'string'], 
+            'place' => ['required', 'nullable', 'string'],
+            'pageToken' => ['sometimes', 'nullable', 'string'],
             'sort' => ['sometimes', 'string'],
         ];
     }
 
     /**
      * 검색 예외 메세지
+     *
      * @return array{pageToken.integer: string, place.string: string, sort.string: string}
      */
     public function messages(): array
@@ -38,7 +40,7 @@ class PlaceSearchRequest extends FormRequest
             'place.required' => '장소는 필수 입력값입니다.',
             'place.string' => '장소이름은 문자열이여야 합니다.',
             'pageToken.integer' => '페이지는 문자열이어야 합니다.',
-            'sort.string'  => '정렬 기준은 문자열이어야 합니다.',
+            'sort.string' => '정렬 기준은 문자열이어야 합니다.',
         ];
     }
 }

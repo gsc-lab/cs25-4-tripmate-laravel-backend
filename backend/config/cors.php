@@ -9,7 +9,7 @@ return [
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
     // 허용 Origin
-    // 프론트 주소: http://localhost:5173 
+    // 프론트 주소: http://localhost:5173
     'allowed_origins' => ['http://localhost:5173'],
 
     'allowed_origins_patterns' => [],

@@ -2,12 +2,11 @@
 
 namespace Tests\Feature\Trips;
 
-use Tests\TestCase;
+use App\Models\Region;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Region;
-use App\Models\Trip;
+use Tests\TestCase;
 
 class TripPaginationTest extends TestCase
 {
@@ -74,13 +73,13 @@ class TripPaginationTest extends TestCase
             ->assertJsonPath('data.pagination.last_page', 3);
     }
 
-    public function test_trip_list_filter_by_regionId(): void
+    public function test_trip_list_filter_by_region_id(): void
     {
         $headers = $this->authHeader();
         $regionA = Region::create(['name' => 'A', 'country_code' => 'KR']);
         $regionB = Region::create(['name' => 'B', 'country_code' => 'KR']);
 
-        foreach ([1,2,3] as $i) {
+        foreach ([1, 2, 3] as $i) {
             $this->withHeaders($headers)->postJson('/api/v2/trips', [
                 'title' => "A{$i}",
                 'region_id' => $regionA->region_id,
@@ -89,7 +88,7 @@ class TripPaginationTest extends TestCase
             ])->assertStatus(201);
         }
 
-        foreach ([1,2] as $i) {
+        foreach ([1, 2] as $i) {
             $this->withHeaders($headers)->postJson('/api/v2/trips', [
                 'title' => "B{$i}",
                 'region_id' => $regionB->region_id,

@@ -2,11 +2,11 @@
 
 namespace Tests\Feature\Trips;
 
-use Tests\TestCase;
+use App\Models\Region;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
-use App\Models\Region;
+use Tests\TestCase;
 
 class TripCrudTest extends TestCase
 {

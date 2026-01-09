@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class LogoutTest extends TestCase
 {

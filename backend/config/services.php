@@ -35,7 +35,7 @@ return [
         ],
     ],
 
-    'googleApi'=> [
+    'googleApi' => [
         'api_key' => env('GOOGLE_API_KEY'),
     ],
 
@@ -43,18 +43,18 @@ return [
 
         // API 엔드포인트
         'endpoints' => [
-            'autocomplete'     => 'https://places.googleapis.com/v1/places:autocomplete',
-            'text_search'      => 'https://places.googleapis.com/v1/places:searchText',
-            'reverse_geocoding'=> 'https://maps.googleapis.com/maps/api/geocode/json',
-            'nearby'           => 'https://places.googleapis.com/v1/places:searchNearby',
+            'autocomplete' => 'https://places.googleapis.com/v1/places:autocomplete',
+            'text_search' => 'https://places.googleapis.com/v1/places:searchText',
+            'reverse_geocoding' => 'https://maps.googleapis.com/maps/api/geocode/json',
+            'nearby' => 'https://places.googleapis.com/v1/places:searchNearby',
         ],
 
         // FieldMask
         'field_masks' => [
-            'search'         => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType,nextPageToken',
-            'nearby'         => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType',
-            'place_details'  => 'id,displayName,formattedAddress,location,primaryType',
-        ]
-    ]
+            'search' => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType,nextPageToken',
+            'nearby' => 'places.id,places.displayName,places.formattedAddress,places.location,places.primaryType',
+            'place_details' => 'id,displayName,formattedAddress,location,primaryType',
+        ],
+    ],
 
 ];

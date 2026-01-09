@@ -1,17 +1,18 @@
 <?php
+
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Trip\TripIndexRequest;
 use App\Http\Requests\Trip\TripStoreRequest;
 use App\Http\Requests\Trip\TripUpdateRequest;
-use App\Http\Requests\Trip\TripIndexRequest;
 use App\Http\Resources\TripResource;
 use App\Services\Trip\TripService;
 use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
 class TripController extends Controller
-{   
+{
     // trip service 프로퍼티
     protected TripService $tripService;
 
@@ -20,12 +21,11 @@ class TripController extends Controller
     {
         $this->tripService = $tripService;
     }
+
     /**
-     * 1. Trip 목록 조회 
+     * 1. Trip 목록 조회
      * - 페이지네이션 적용
      * - GET /v2/trips
-     * @param TripIndexRequest $request
-     * @return JsonResponse
      */
     #[OA\Get(
         path: '/api/v2/trips',
@@ -33,33 +33,33 @@ class TripController extends Controller
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1)),
-        new OA\Parameter(name: 'size', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100)),
-        new OA\Parameter(name: 'region_id', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'page', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1)),
+            new OA\Parameter(name: 'size', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100)),
+            new OA\Parameter(name: 'region_id', in: 'query', required: false, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(
-            response: 200,
-            description: '성공',
-            content: new OA\JsonContent(ref: '#/components/schemas/TripListResponse')
+                response: 200,
+                description: '성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/TripListResponse')
             ),
             new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
         ]
     )]
-    public function index(TripIndexRequest $request) : JsonResponse
+    public function index(TripIndexRequest $request): JsonResponse
     {
-        // 쿼리 파라미터 
-        $page = (int)$request->query('page', 1);
-        $size = (int)$request->query('size', 20);
+        // 쿼리 파라미터
+        $page = (int) $request->query('page', 1);
+        $size = (int) $request->query('size', 20);
         $sort = $request->input('sort');
         $regionId = $request->input('regionId');
 
         // 페이지네이션 처리된 Trip 목록 조회
         $paginatoredTrips = $this->tripService->paginateTrips(
-            $page, 
-            $size, 
-            $sort, 
+            $page,
+            $size,
+            $sort,
             $regionId
         );
 
@@ -81,8 +81,6 @@ class TripController extends Controller
     /**
      * 2. Trip 생성
      * - POST /v2/trips
-     * @param TripStoreRequest $request
-     * @return JsonResponse
      */
     #[OA\Post(
         path: '/api/v2/trips',
@@ -103,7 +101,7 @@ class TripController extends Controller
             new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
         ]
     )]
-    public function store(TripStoreRequest $request) : JsonResponse
+    public function store(TripStoreRequest $request): JsonResponse
     {
         // FormRequest에서 검증된 데이터 가져오기
         $payload = $request->validated();
@@ -117,12 +115,10 @@ class TripController extends Controller
             'data' => new TripResource($trip),
         ], 201);
     }
-    
+
     /**
      * 3. 단일 Trip 조회
      * - GET /v2/trips/{trip}
-     * @param int $trip
-     * @return JsonResponse
      */
     #[OA\Get(
         path: '/api/v2/trips/{trip}',
@@ -147,8 +143,8 @@ class TripController extends Controller
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
             new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
         ]
-    )]    
-    public function show(int $trip) : JsonResponse
+    )]
+    public function show(int $trip): JsonResponse
     {
         // Trip 조회 서비스 호출
         $tripModel = $this->tripService->getTrip($trip);
@@ -163,8 +159,8 @@ class TripController extends Controller
     /**
      * 4. Trip 업데이트
      * PATCH /v2/trips/{trip}
-     * @param TripUpdateRequest $request
-     * @param int $tripId
+     *
+     * @param  int  $tripId
      */
     #[OA\Patch(
         path: '/api/v2/trips/{trip}',
@@ -172,14 +168,14 @@ class TripController extends Controller
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(required: true, content: new OA\JsonContent(ref: '#/components/schemas/TripUpdateRequest')),
         responses: [
             new OA\Response(
-            response: 200,
-            description: '수정 성공',
-            content: new OA\JsonContent(ref: '#/components/schemas/TripSingleResponse')
+                response: 200,
+                description: '수정 성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/TripSingleResponse')
             ),
             new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
@@ -205,8 +201,8 @@ class TripController extends Controller
     /**
      * 5. Trip 삭제
      * DELETE /v2/trips/{trip}
-     * @param int $tripId
-     * @return JsonResponse
+     *
+     * @param  int  $tripId
      */
     #[OA\Delete(
         path: '/api/v2/trips/{trip}',
@@ -214,20 +210,20 @@ class TripController extends Controller
         tags: ['Trips'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(
-            response: 200,
-            description: '삭제 성공',
-            content: new OA\JsonContent(ref: '#/components/schemas/TripNullDataResponse')
+                response: 200,
+                description: '삭제 성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/TripNullDataResponse')
             ),
             new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
             new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
         ]
-    )]  
-    public function destroy(int $trip) : JsonResponse
+    )]
+    public function destroy(int $trip): JsonResponse
     {
         // Trip 삭제 서비스 호출
         $this->tripService->deleteTrip($trip);

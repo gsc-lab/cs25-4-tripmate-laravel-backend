@@ -16,23 +16,25 @@ class AuthVerificationRequest extends FormRequest
 
     /**
      * 회원탈퇴 유효성 검증
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'password'=> ['required']
+            'password' => ['required'],
         ];
     }
 
     /**
      * 회원탈퇴 예외 메세지
+     *
      * @return array{password.current_password: string, password.required: string}
      */
     public function messages(): array
     {
         return [
-            'password.required' => '비밀번호를 입력해주세요.'
+            'password.required' => '비밀번호를 입력해주세요.',
         ];
     }
 }

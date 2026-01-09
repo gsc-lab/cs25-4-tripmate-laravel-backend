@@ -10,34 +10,38 @@ class Trip extends Model
     use HasFactory;
 
     /**
-     * 테이블명 
+     * 테이블명
+     *
      * @var string
      */
     protected $table = 'trips';
 
     /**
      * 기본키 컬럼명
+     *
      * @var string
      */
     protected $primaryKey = 'trip_id';
 
     /**
      * mass assignment 설정 (지금은 모두 허용)
+     *
      * @var array
      */
     protected $guarded = [];
 
     /**
      * 속성 타입 캐스팅
+     *
      * @var array
      */
     protected $casts = [
-        'trip_id'    => 'integer',
-        'user_id'    => 'integer',
-        'region_id'  => 'integer',
+        'trip_id' => 'integer',
+        'user_id' => 'integer',
+        'region_id' => 'integer',
         'start_date' => 'date',
-        'end_date'   => 'date',
-        'day_count'  => 'integer',   // 생성 컬럼
+        'end_date' => 'date',
+        'day_count' => 'integer',   // 생성 컬럼
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -51,7 +55,7 @@ class Trip extends Model
     // Trip N:1 User
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'user_id'); 
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
     // Trip 1:N TripDay

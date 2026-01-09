@@ -10,25 +10,29 @@ class Region extends Model
     use HasFactory;
 
     /**
-     * 테이블명 
+     * 테이블명
+     *
      * @var string
      */
     protected $table = 'regions';
 
     /**
      * 기본키 컬럼명
+     *
      * @var string
      */
     protected $primaryKey = 'region_id';
 
     /**
      * mass assignment 설정 (지금은 모두 허용)
+     *
      * @var array
      */
     protected $guarded = [];
 
     /**
      * 속성 타입 캐스팅
+     *
      * @var array
      */
     protected $casts = [

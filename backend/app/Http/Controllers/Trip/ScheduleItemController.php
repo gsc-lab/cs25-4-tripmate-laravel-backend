@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
-
 use App\Http\Requests\ScheduleItem\ScheduleItemIndexRequest;
+use App\Http\Requests\ScheduleItem\ScheduleItemReorderRequest;
 use App\Http\Requests\ScheduleItem\ScheduleItemStoreRequest;
 use App\Http\Requests\ScheduleItem\ScheduleItemUpdateRequest;
-use App\Http\Requests\ScheduleItem\ScheduleItemReorderRequest;
 use App\Http\Resources\ScheduleItemResource;
-use App\Services\Trip\TripService;
 use App\Services\Trip\ScheduleItemService;
+use App\Services\Trip\TripService;
+use Illuminate\Http\JsonResponse;
 use OpenApi\Attributes as OA;
 
 class ScheduleItemController extends Controller
 {
     // service 프로퍼티 정의
     protected ScheduleItemService $scheduleItemService;
+
     protected TripService $tripService;
 
     // 생성자에서 서비스 주입
@@ -29,14 +29,9 @@ class ScheduleItemController extends Controller
         $this->tripService = $tripService;
     }
 
-    
     /**
      * 1. 일정 아이템 목록 조회 (페이지네이션)
      * - GET /v2/trips/{trip_id}/days/{day_no}/items
-     * @param ScheduleItemIndexRequest $request
-     * @param int $tripId
-     * @param int $dayNo
-     * @return JsonResponse
      */
     #[OA\Get(
         path: '/api/v2/trips/{trip_id}/days/{trip_day_id}/schedule-items',
@@ -44,8 +39,8 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
             new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemListResponse')),
@@ -90,18 +85,14 @@ class ScheduleItemController extends Controller
                     'last_page' => $paginatedScheduleItems->lastPage(),
                 ],
                 'detale' => $detale,
-                'latlng' => $this->scheduleItemService->getlatlng($trip, $dayNo)
-            ]
+                'latlng' => $this->scheduleItemService->getlatlng($trip, $dayNo),
+            ],
         ]);
     }
 
     /**
      * 2. 일정 아이템 생성
      * - POST /v2/trips/{trip_id}/days/{day_no}/items
-     * @param ScheduleItemStoreRequest $request
-     * @param int $tripId
-     * @param int $dayNo
-     * @return JsonResponse
      */
     #[OA\Post(
         path: '/api/v2/trips/{trip_id}/days/{trip_day_id}/schedule-items',
@@ -109,19 +100,19 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
-        required: true,
-        content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemCreateRequest')
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemCreateRequest')
         ),
         responses: [
-        new OA\Response(response:200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
-        new OA\Response(response:401, ref: '#/components/responses/Unauthorized'),
-        new OA\Response(response:403, ref: '#/components/responses/Forbidden'),
-        new OA\Response(response:404, ref: '#/components/responses/NotFound')
-        ]  
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        ]
     )]
     public function store(
         ScheduleItemStoreRequest $request,
@@ -161,9 +152,6 @@ class ScheduleItemController extends Controller
     /**
      * 3. 일정 아이템 단건 조회
      * - GET /v2/trips/{trip_id}/days/{day_no}/items/{$item_id}
-     * @param int $tripId
-     * @param int $dayNo
-     * @param int $itemId
      */
     #[OA\Get(
         path: '/api/v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}',
@@ -171,22 +159,22 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-        new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
-        new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
-        new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
-        new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
         ]
     )]
     public function show(
         int $tripId,
         int $dayNo,
         int $itemId
-    ):JsonResponse {
+    ): JsonResponse {
         // 본인 소유 trip 인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
@@ -217,20 +205,20 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
-        required: true,
-        content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemUpdateRequest')
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemUpdateRequest')
         ),
         responses: [
-        new OA\Response(response: 200, description: '수정 성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
-        new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
-        new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
-        new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
-        new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+            new OA\Response(response: 200, description: '수정 성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
         ]
     )]
     public function update(
@@ -268,10 +256,10 @@ class ScheduleItemController extends Controller
     /**
      * 5. 일정 아이템 삭제
      * - DELETE /v2/trips/{trip_id}/days/{day_no}/items/{$item_id}
-     * @param int $tripId
-     * @param int $dayNo
-     * @param int $itemId
-     * @return JsonResponse
+     *
+     * @param  int  $tripId
+     * @param  int  $dayNo
+     * @param  int  $itemId
      */
     #[OA\Delete(
         path: '/api/v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}',
@@ -279,30 +267,30 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
-        responses:[
-        new OA\Response(response: 200, description: '삭제 성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
-        new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
-        new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
-        new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+        responses: [
+            new OA\Response(response: 200, description: '삭제 성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
         ]
     )]
     public function destroy(
         string $tripId,
         string $dayNo,
         string $itemId
-    ): JsonResponse{
+    ): JsonResponse {
         // 본인 소유 trip 인지 확인
-        $trip = $this->tripService->getOwnedTripOrFail((int)$tripId);
+        $trip = $this->tripService->getOwnedTripOrFail((int) $tripId);
 
         // 일정 아이템 삭제
         $this->scheduleItemService->deleteScheduleItem(
             $trip,
-            (int)$dayNo,
-            (int)$itemId
+            (int) $dayNo,
+            (int) $itemId
         );
 
         // 성공응답 반환
@@ -355,10 +343,6 @@ class ScheduleItemController extends Controller
     /**
      * 6. 일정 아이템 순서 변경
      * - PATCH /v2/trips/{trip_id}/days/{day_no}/items/reorder
-     * @param ScheduleItemReorderRequest $request
-     * @param int $tripId
-     * @param int $dayNo
-     * @return JsonResponse
      */
     #[OA\Post(
         path: '/api/v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/reorder',
@@ -366,19 +350,19 @@ class ScheduleItemController extends Controller
         tags: ['ScheduleItems'],
         security: [['bearerAuth' => []]],
         parameters: [
-        new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
-        new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
+            new OA\Parameter(name: 'trip_day_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         requestBody: new OA\RequestBody(
-        required: true,
-        content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemReorderRequest')
+            required: true,
+            content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemReorderRequest')
         ),
         responses: [
-        new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayListResponse')),
-        new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
-        new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
-        new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
-        new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
+            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayListResponse')),
+            new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
+            new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
+            new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
+            new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
         ]
     )]
     public function reorder(
