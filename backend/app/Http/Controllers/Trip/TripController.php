@@ -49,18 +49,15 @@ class TripController extends Controller
     )]
     public function index(TripIndexRequest $request): JsonResponse
     {
-        // 쿼리 파라미터
-        $page = (int) $request->query('page', 1);
-        $size = (int) $request->query('size', 20);
-        $sort = $request->input('sort');
-        $regionId = $request->input('regionId');
+        // FormRequest에서 검증된 데이터 가져오기
+        $payload = $request->payload();
 
         // 페이지네이션 처리된 Trip 목록 조회
-        $paginatoredTrips = $this->tripService->paginateTrips(
-            $page,
-            $size,
-            $sort,
-            $regionId
+        $paginatoredTrips = $this->tripService->paginate(
+            $payload['page'],
+            $payload['size'],
+            $payload['sort'],
+        $payload['region_id']
         );
 
         // 응답 반환
@@ -104,10 +101,10 @@ class TripController extends Controller
     public function store(TripStoreRequest $request): JsonResponse
     {
         // FormRequest에서 검증된 데이터 가져오기
-        $payload = $request->validated();
+        $payload = $request->payload();
 
         // Trip 생성 서비스 호출
-        $trip = $this->tripService->createTrip($payload);
+        $trip = $this->tripService->store($payload);
 
         // 응답 반환
         return response()->json([
@@ -147,7 +144,7 @@ class TripController extends Controller
     public function show(int $trip): JsonResponse
     {
         // Trip 조회 서비스 호출
-        $tripModel = $this->tripService->getTrip($trip);
+        $tripModel = $this->tripService->show($trip);
 
         // 응답 반환
         return response()->json([
@@ -183,13 +180,13 @@ class TripController extends Controller
             new OA\Response(response: 422, ref: '#/components/responses/ValidationError'),
         ]
     )]
-    public function update(TripUpdateRequest $request, int $trip)
+    public function update(TripUpdateRequest $request, int $trip) : JsonResponse
     {
         // FormRequest에서 검증된 데이터 가져오기
-        $payload = $request->validated();
+        $payload = $request->payload();
 
         // Trip 업데이트 서비스 호출
-        $updatedTrip = $this->tripService->updateTrip($trip, $payload);
+        $updatedTrip = $this->tripService->update($trip, $payload);
 
         // 응답 반환
         return response()->json([
@@ -226,7 +223,7 @@ class TripController extends Controller
     public function destroy(int $trip): JsonResponse
     {
         // Trip 삭제 서비스 호출
-        $this->tripService->deleteTrip($trip);
+        $this->tripService->destroy($trip);
 
         // 응답 반환
         return response()->json([

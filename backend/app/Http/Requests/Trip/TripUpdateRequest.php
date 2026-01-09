@@ -1,33 +1,18 @@
 <?php
-
 namespace App\Http\Requests\Trip;
 
-use App\Models\Trip;
+use Illuminate\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 class TripUpdateRequest extends FormRequest
 {
     /**
-     * 일정 주인만 접근 허용
+     * 로그인 사용자 접근 허용
      */
     public function authorize(): bool
     {
-        // URL에서 가져온 trip로 user_id 비교
-        $tripId = $this->route('trip') ?? $this->route('trip_id');
-
-        if (! $tripId) {
-            return false;
-        }
-
-        $trip = Trip::find($tripId);
-
-        if (! $trip) {
-            return false;
-        }
-
-        // user_id와 로그인 사용자 일치일 경우 true
-        return (int) $this->user()->getKey() === (int) $trip->user_id;
+        return $this->user() !== null;
     }
 
     /**
@@ -41,10 +26,14 @@ class TripUpdateRequest extends FormRequest
             'title' => ['sometimes', 'string', 'min:1', 'max:100'],
             'region_id' => ['sometimes', 'integer', Rule::exists('regions', 'region_id')],
             'start_date' => ['sometimes', 'date_format:Y-m-d'],
-            'end_date' => ['sometimes', 'date_format:Y-m-d', 'after_or_equal:start_date'],
+            'end_date' => ['sometimes', 'date_format:Y-m-d'],
         ];
     }
 
+    /**
+     * 유효성검증 실패시 메시지
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -55,9 +44,30 @@ class TripUpdateRequest extends FormRequest
             'region_id.exists' => '선택한 지역이 존재하지 않습니다.',
 
             'start_date.date_format' => '여행 시작일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
-
             'end_date.date_format' => '여행 종료일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
-            'end_date.after_or_equal' => '여행 종료일은 시작일과 같거나 그 이후여야 합니다.',
         ];
+    }
+
+    public function withValidator(Validator $validator) : void
+    {
+        $validator->after(function ($validator) {
+            $start = $this->input('start_date');
+            $end = $this->input('end_date');
+
+            if ($start !== null && $end !== null && $end < $start) {
+                $validator->errors()->add('end_date', '여행 종료일은 시작일과 같거나 그 이후여야 합니다.');
+            }
+        });
+    }
+
+    /**
+     * @return array{title?:string, region_id?:int, start_date?:string, end_date?:string}
+     */
+    public function payload(): array
+    {
+        /** @var array{title?:string, region_id?:int, start_date?:string, end_date?:string} $data */
+        $data = $this->validated();
+
+        return $data;
     }
 }
