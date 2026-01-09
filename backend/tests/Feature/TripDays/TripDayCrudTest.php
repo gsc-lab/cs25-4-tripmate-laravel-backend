@@ -1,13 +1,12 @@
 <?php
-
 namespace Tests\Feature\TripDays;
 
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Models\User;
 use App\Models\Region;
-use App\Models\Trip;
 use App\Models\TripDay;
 
 class TripDayCrudTest extends TestCase
@@ -49,6 +48,11 @@ class TripDayCrudTest extends TestCase
         return (int) $res->json('data.trip_id');
     }
 
+    private function tripDayUsesSoftDeletes(): bool
+    {
+        return in_array(SoftDeletes::class, class_uses_recursive(TripDay::class), true);
+    }
+
     public function test_tripday_endpoints_require_auth(): void
     {
         $this->getJson('/api/v2/trips/1/days')->assertStatus(401);
@@ -64,9 +68,12 @@ class TripDayCrudTest extends TestCase
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        // 1) store (day 1)
+        $initialMaxDayNo = (int) (TripDay::where('trip_id', $tripId)->max('day_no') ?? 0);
+        $dayNo = $initialMaxDayNo + 1;
+
+        // 1) store
         $store = $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days", [
-            'day_no' => 1,
+            'day_no' => $dayNo,
             'memo' => '첫날 메모',
         ]);
 
@@ -74,59 +81,64 @@ class TripDayCrudTest extends TestCase
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
             ->assertJsonPath('message', 'Trip Day 생성에 성공했습니다')
-            ->assertJsonPath('data.day_no', 1);
+            ->assertJsonPath('data.day_no', $dayNo);
 
         $tripDayId = $store->json('data.trip_day_id');
         if (!$tripDayId) {
-            $tripDayId = TripDay::where('trip_id', $tripId)->where('day_no', 1)->value('trip_day_id');
+            $tripDayId = TripDay::where('trip_id', $tripId)->where('day_no', $dayNo)->value('trip_day_id');
         }
 
         $this->assertDatabaseHas('trip_days', [
             'trip_day_id' => $tripDayId,
             'trip_id' => $tripId,
-            'day_no' => 1,
+            'day_no' => $dayNo,
         ]);
 
         // 2) show
         $this->withHeaders($headers)
-            ->getJson("/api/v2/trips/{$tripId}/days/1")
+            ->getJson("/api/v2/trips/{$tripId}/days/{$dayNo}")
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
             ->assertJsonPath('message', 'Trip Day 단건 조회에 성공했습니다')
-            ->assertJsonPath('data.day_no', 1);
+            ->assertJsonPath('data.day_no', $dayNo);
 
         // 3) updateMemo
         $this->withHeaders($headers)
-            ->patchJson("/api/v2/trips/{$tripId}/days/1", [
+            ->patchJson("/api/v2/trips/{$tripId}/days/{$dayNo}", [
                 'memo' => '메모 수정됨',
             ])
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
             ->assertJsonPath('message', 'Trip Day 메모 수정에 성공했습니다')
-            ->assertJsonPath('data.day_no', 1)
+            ->assertJsonPath('data.day_no', $dayNo)
             ->assertJsonPath('data.memo', '메모 수정됨');
 
         $this->assertDatabaseHas('trip_days', [
             'trip_id' => $tripId,
-            'day_no' => 1,
+            'day_no' => $dayNo,
             'memo' => '메모 수정됨',
         ]);
 
         // 4) destroy
         $this->withHeaders($headers)
-            ->deleteJson("/api/v2/trips/{$tripId}/days/1")
+            ->deleteJson("/api/v2/trips/{$tripId}/days/{$dayNo}")
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
             ->assertJsonPath('message', 'Trip Day 삭제에 성공했습니다')
             ->assertJsonPath('data', null);
 
-        $this->assertDatabaseMissing('trip_days', [
-            'trip_id' => $tripId,
-            'day_no' => 1,
-        ]);
+        if ($this->tripDayUsesSoftDeletes()) {
+            $this->assertSoftDeleted('trip_days', [
+                'trip_day_id' => $tripDayId,
+            ]);
+        } else {
+            $this->assertDatabaseMissing('trip_days', [
+                'trip_day_id' => $tripDayId,
+            ]);
+        }
     }
 
     public function test_tripday_index_pagination_success(): void
@@ -134,17 +146,26 @@ class TripDayCrudTest extends TestCase
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        // day 1~5 생성
-        for ($d = 1; $d <= 5; $d++) {
+        $initialTotal = TripDay::where('trip_id', $tripId)->count();
+        $maxDayNo = (int) (TripDay::where('trip_id', $tripId)->max('day_no') ?? 0);
+
+        for ($i = 1; $i <= 5; $i++) {
+            $maxDayNo++;
+
             $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days", [
-                'day_no' => $d,
-                'memo' => "memo {$d}",
+                'day_no' => $maxDayNo,
+                'memo' => "memo {$i}",
             ])->assertStatus(201);
         }
 
-        // page=2 size=2 -> items 2개, total 5, last_page 3
+        $expectedTotal = $initialTotal + 5;
+
+        $page = 2;
+        $size = 2;
+        $expectedLastPage = (int) ceil($expectedTotal / $size);
+
         $res = $this->withHeaders($headers)
-            ->getJson("/api/v2/trips/{$tripId}/days?page=2&size=2");
+            ->getJson("/api/v2/trips/{$tripId}/days?page={$page}&size={$size}");
 
         $res->assertOk()
             ->assertJsonPath('success', true)
@@ -161,9 +182,9 @@ class TripDayCrudTest extends TestCase
         $items = $res->json('data.items');
         $this->assertCount(2, $items);
 
-        $res->assertJsonPath('data.pagination.page', 2)
-            ->assertJsonPath('data.pagination.size', 2)
-            ->assertJsonPath('data.pagination.total', 5)
-            ->assertJsonPath('data.pagination.last_page', 3);
+        $res->assertJsonPath('data.pagination.page', $page)
+            ->assertJsonPath('data.pagination.size', $size)
+            ->assertJsonPath('data.pagination.total', $expectedTotal)
+            ->assertJsonPath('data.pagination.last_page', $expectedLastPage);
     }
 }
