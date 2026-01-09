@@ -58,10 +58,8 @@ class TripDayReorderTest extends TestCase
             ->pluck('trip_day_id')
             ->all();
 
-        // 안전 체크(최소 3일)
         $this->assertCount(3, $ids);
 
-        // reverse reorder: [3,2,1] 순으로 day_no가 1,2,3으로 다시 매겨져야 함
         $payload = [
             'day_ids' => array_reverse($ids),
         ];
