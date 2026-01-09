@@ -50,11 +50,10 @@ class TripService
     /**
      * 내부 공통 메서드
      * - trip_id로 Trip 조회 후 현재 로그인한 사용자의 소유인지 확인
-     * - 소유자가 아니면 AuthorizationException 예외 발생
-     *
+     *  Trip/TripDay/ScheduleItem 컨트롤러에서 공통 사용
      * @throws AuthorizationException
      */
-    protected function getOwnedTripOrFail(int $tripId): Trip
+    public function getOwnedTripOrFail(int $tripId): Trip
     {
         // trip_id로 Trip 조회
         $trip = $this->tripRepository->findTripOrFail($tripId);
