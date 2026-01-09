@@ -4,6 +4,7 @@ namespace App\Http\Requests\TripDay;
 
 use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class TripDayStoreRequest extends FormRequest
 {
@@ -12,29 +13,30 @@ class TripDayStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // URL에서 가져온 trip_id로 user_id 비교
-        $tripId = $this->route('trip_id');
-        $trip = Trip::findOrFail($tripId);
-
-        // user_id와 로그인 사용자 일치일 경우 true
-        return (int) $this->user()->getKey() === (int) $trip->user_id;
+        return $this->user() !== null;
     }
 
     /**
      * 일차 생성 유효성검증
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, string>
      */
     public function rules(): array
     {
+        $tripId = $this->route('trip_id');
+        
         return [
-            'day_no' => ['required', 'integer', 'min:1'],
+            'day_no' => [
+                'required',
+                'integer',
+                'min:1',
+                Rule::unique('trip_days', 'day_no')->where('trip_id', $tripId),
+            ],
             'memo' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 
     /**
-     * @return array{day_no.integer: string, day_no.min: string, day_no.required: string, memo.max: string}
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -42,9 +44,27 @@ class TripDayStoreRequest extends FormRequest
             'day_no.required' => '일차(Day) 정보는 필수입니다.',
             'day_no.integer' => '일차는 숫자여야 합니다.',
             'day_no.min' => '일차는 1 이상이어야 합니다.',
+            'day_no.unique' => '해당 여행에 이미 같은 일차가 존재합니다.',
 
             'memo.string' => '메모는 문자열이어야 합니다.',
             'memo.max' => '메모는 최대 255자까지 입력 가능합니다.',
         ];
+    }
+
+    /**
+     * service에 전달할 정규화된 데이터
+     * @return array{day_no:int, memo:?string}
+     */
+    public function payload(): array
+    {
+        /** @var array{day_no:int, memo?:string} $data */
+        $data = $this->validated();
+
+        // 메모가 존재하면 양쪽 공백 제거
+        if (array_key_exists('memo', $data) && $data['memo'] !== null) {
+            $data['memo'] = trim($data['memo']);
+        }
+
+        return $data;
     }
 }
