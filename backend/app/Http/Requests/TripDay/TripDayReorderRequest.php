@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\TripDay;
 
 use App\Models\Trip;
@@ -13,18 +12,12 @@ class TripDayReorderRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // URL에서 가져온 trip_id로 user_id 비교
-        $tripId = $this->route('trip_id');
-        $trip = Trip::findOrFail($tripId);
-
-        // user_id와 로그인 사용자 일치일 경우 true
-        return (int) $this->user()->getKey() === (int) $trip->user_id;
+        return $this->user() !== null;
     }
 
     /**
      * 일차 재배치 유효성검증
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string
+     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -33,15 +26,17 @@ class TripDayReorderRequest extends FormRequest
 
         return [
             'day_ids' => ['required', 'array', 'min:1'],
-            'day_ids.*' => ['required', 'integer', 'distinct',
-                Rule::exists('trip_days', 'trip_day_id')
-                    ->where('trip_id', $tripId)],
+            'day_ids.*' => [
+                'required',
+                'integer',
+                'distinct',
+                Rule::exists('trip_days', 'trip_day_id')->where('trip_id', $tripId),
+            ],
         ];
     }
 
     /**
      * 유효성 검사 메시지
-     *
      * @return array<string, string>
      */
     public function messages(): array
@@ -55,6 +50,20 @@ class TripDayReorderRequest extends FormRequest
             'day_ids.*.integer' => '각 일차 ID 값은 숫자여야 합니다.',
             'day_ids.*.distinct' => 'day_ids 배열 안에 중복된 일차 ID가 존재합니다.',
             'day_ids.*.exists' => '존재하지 않는 일차이거나, 현재 여행에 속하지 않는 일차 ID입니다.',
+        ];
+    }
+
+    /**
+     * service에 전달할 정규화된 데이터
+     * @return array{day_ids:int[]}
+     */
+    public function payload(): array
+    {
+        /** @var array{day_ids:int[]} $data */
+        $data = $this->validated();
+
+        return [
+            'day_ids' => array_values(array_map('intval', $data['day_ids'])),
         ];
     }
 }

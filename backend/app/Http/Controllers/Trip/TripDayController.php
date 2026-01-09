@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Trip;
 
 use App\Http\Controllers\Controller;
@@ -50,7 +49,7 @@ class TripDayController extends Controller
             new OA\Parameter(name: 'size', in: 'query', required: false, schema: new OA\Schema(type: 'integer', minimum: 1, maximum: 100)),
         ],
         responses: [
-            new OA\Response(response: 200, description: '성공', content: new OA\JsonContent(ref: '#/components/schemas/TripDayListResponse')),
+            new OA\Response(response: 200, description: '성공'),
             new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
             new OA\Response(response: 404, ref: '#/components/responses/NotFound'),
@@ -63,15 +62,13 @@ class TripDayController extends Controller
         // 현재 로그인 사용자의 Trip인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
-        // 쿼리 파라미터에서 페이지네이션 정보 추출 및 기본값 설정
-        $page = (int) $request->query('page', 1);
-        $size = (int) $request->query('size', 20);
+        $payload = $request->payload();
 
         // 페이지네이션 조회
-        $paginatedTripDays = $this->tripDayService->paginateByTripDays(
-            $trip,
-            $page,
-            $size
+        $paginatedTripDays = $this->tripDayService->paginate(
+            $trip, 
+            $payload['page'], 
+            $payload['size']
         );
 
         // 성공응답 반환
@@ -123,16 +120,13 @@ class TripDayController extends Controller
         // 현재 로그인 사용자의 Trip인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
-        // 유효성 검사된 데이터 가져오기
-        $validated = $request->validated();
-        $dayNo = (int) $validated['day_no'];
-        $memo = $validated['memo'] ?? null;
+        $payload = $request->payload();
 
         // TripDay 생성
-        $tripDay = $this->tripDayService->createTripDay(
+        $tripDay = $this->tripDayService->store(
             $trip,
-            $dayNo,
-            $memo
+            $payload['day_no'],
+            $payload['memo']
         );
 
         // 성공응답 반환
@@ -172,10 +166,7 @@ class TripDayController extends Controller
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
         // TripDay 단건 조회
-        $tripDay = $this->tripDayService->getTripDay(
-            $trip,
-            $dayNo
-        );
+        $tripDay = $this->tripDayService->show($trip, $dayNo);
 
         // 성공응답 반환
         return response()->json([
@@ -219,22 +210,13 @@ class TripDayController extends Controller
         // 현재 로그인 사용자의 Trip인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
-        // 유효성 검사된 데이터 가져오기
-        $validated = $request->validated();
-        $memo = $validated['memo'] ?? null;
+        $payload = $request->payload();
 
         // TripDay 메모 수정
-        $this->tripDayService->updateTripDayMemo(
-            $trip,
-            $dayNo,
-            $memo
-        );
+        $this->tripDayService->update($trip, $dayNo, $payload['memo']);
 
-        // 수정 된 TripDay 다시 조회
-        $tripDay = $this->tripDayService->getTripDay(
-            $trip,
-            $dayNo
-        );
+        // 수정된 TripDay 다시 조회
+        $tripDay = $this->tripDayService->show($trip, $dayNo);
 
         // 성공응답 반환
         return response()->json([
@@ -273,10 +255,8 @@ class TripDayController extends Controller
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
 
         // TripDay 삭제
-        $this->tripDayService->deleteTripDay(
-            $trip,
-            $dayNo
-        );
+        $this->tripDayService->destroy($trip, $dayNo);
+
 
         // 성공응답 반환
         return response()->json([
@@ -286,41 +266,6 @@ class TripDayController extends Controller
             'data' => null,
         ]);
     }
-
-    // /**
-    //  * 6. TripDay 재정렬
-    //  * - POST /v2/trips/{trip_id}/days/reorder
-    //  * @param TripDayReorderRequest $request
-    //  * @param int $tripId
-    //  * @return JsonResponse
-    //  */
-    // public function reorder(
-    //     TripDayReorderRequest $request,
-    //     int $tripId
-    // ): JsonResponse {
-
-    //     // 현재 로그인 사용자의 Trip인지 확인
-    //     $trip = $this->tripService->getOwnedTripOrFail($tripId);
-
-    //     // 유효성 검사된 데이터 가져오기
-    //     $validated = $request->validated();
-    //     $newOrder = $validated['new_day_no'];
-    //     $oldOrder = $validated['old_day_no'];
-
-    //     // TripDay 재정렬
-    //     $this->tripDayService->reorderTripDay(
-    //         $trip,
-    //         $oldOrder,
-    //     );
-
-    //     // 성공응답 반환
-    //     return response()->json([
-    //         'success' => true,
-    //         'code' => 'SUCCESS',
-    //         'message' => 'Trip Day 재정렬에 성공했습니다',
-    //         'data' => null,
-    //     ]);
-    // }
 
     /**
      * 6. TripDay 전체 재배치
@@ -353,15 +298,15 @@ class TripDayController extends Controller
 
         // 현재 로그인 사용자의 Trip인지 확인
         $trip = $this->tripService->getOwnedTripOrFail($tripId);
+        
+        $payload = $request->payload();
 
-        // 유효성 검사된 데이터 가져오기
-        $validated = $request->validated();
-        $dayIds = $validated['day_ids'];
+        $this->tripDayService->reorder($trip, $payload['day_ids']);
 
         // TripDay 재배치
-        $this->tripDayService->reorderTripDay(
+        $this->tripDayService->reorder(
             $trip,
-            $dayIds
+            $payload['day_ids']
         );
 
         // 성공응답 반환

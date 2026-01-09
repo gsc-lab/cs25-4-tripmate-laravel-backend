@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests\TripDay;
 
 use App\Models\Trip;
@@ -12,17 +11,11 @@ class TripDayUpdateRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // URL에서 가져온 trip_id로 user_id 비교
-        $tripId = $this->route('trip_id');
-        $trip = Trip::findOrFail($tripId);
-
-        // user_id와 로그인 사용자 일치일 경우 true
-        return (int) $this->user()->getKey() === (int) $trip->user_id;
+        return $this->user() !== null;
     }
 
     /**
-     * 일차 수정 유효성검증
-     *
+     * 일차 수정(메모) 유효성검증
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -33,7 +26,7 @@ class TripDayUpdateRequest extends FormRequest
     }
 
     /**
-     * @return array{memo.max: string, memo.string: string}
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -41,5 +34,23 @@ class TripDayUpdateRequest extends FormRequest
             'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
             'memo.string' => '메모는 문자열이어야 합니다.',
         ];
+    }
+
+    /**
+     * service에 전달할 정규화된 데이터
+     * @return array{memo:?string}
+     */ 
+    public function payload(): array
+    {
+        /** @var array{memo?:string} $data */
+        $data = $this->validated();
+
+        $memo = $data['memo'] ?? null;
+
+        if ($memo !== null) {
+            $memo = trim($memo);
+        }
+
+        return ['memo' => $memo];
     }
 }

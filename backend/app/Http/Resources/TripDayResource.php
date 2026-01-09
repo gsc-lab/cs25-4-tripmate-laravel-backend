@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Http\Resources;
 
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\JsonResource; // 날짜 클래스
+use Illuminate\Http\Resources\Json\JsonResource;
 
 class TripDayResource extends JsonResource
 {
@@ -21,14 +19,17 @@ class TripDayResource extends JsonResource
             'day_no' => $this->day_no,
             'memo' => $this->memo,
 
-            // 해당 날짜를 반환할 경우
-            'date' => $this->whenLoaded('trip', function () {
-                // trip의 시작일 + (day_no - 1)일
-                $startDate = Carbon::parse($this->trip->start_date);
-
-                return $startDate->addDays($this->day_no - 1)->format('Y-m-d'); // startDate 객체와 더한 후 포맷
-            }),
-
+            // Trip이 로딩된 경우에만 날짜 계산
+            'date' => $this->whenLoaded(
+                'trip',
+                fn () => $this->trip?->start_date
+                    ? $this->trip->start_date
+                        ->copy()
+                        ->addDays($this->day_no - 1)
+                        ->format('Y-m-d')
+                    : null
+            ),
+            
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
