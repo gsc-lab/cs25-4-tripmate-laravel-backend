@@ -1,20 +1,21 @@
 <?php
 
-    namespace App\Http\Controllers\Place;
+namespace App\Http\Controllers\Place;
 
-    use App\Http\Controllers\Controller;
-    use App\Http\Requests\Place\PlaceAutoCompleteRequest;
-    use App\Http\Requests\Place\PlaceDetailRequest;
-    use App\Http\Requests\Place\PlaceGeocodeRequest;
-    use App\Http\Requests\Place\PlaceSearchRequest;
-    use App\Http\Requests\Place\PlaceStoreRequest;
-    use App\Http\Resources\ExternalPlaceResource;
-    use App\Http\Resources\PlaceResource;
-    use App\Services\Place\PlaceService;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Place\PlaceAutoCompleteRequest;
+use App\Http\Requests\Place\PlaceDetailRequest;
+use App\Http\Requests\Place\PlaceGeocodeRequest;
+use App\Http\Requests\Place\PlaceSearchRequest;
+use App\Http\Requests\Place\PlaceStoreRequest;
+use App\Http\Resources\ExternalPlaceResource;
+use App\Http\Resources\PlaceResource;
+use App\Services\Place\PlaceService;
 
 class PlaceController extends Controller
 {
     private PlaceService $service;
+
     public function __construct(PlaceService $service)
     {
         $this->service = $service;
@@ -22,7 +23,7 @@ class PlaceController extends Controller
 
     /**
      * 자동검색 완성
-     * @param PlaceAutoCompleteRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function autocomplete(PlaceAutoCompleteRequest $request)
@@ -33,124 +34,129 @@ class PlaceController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'=> $result['suggestions'] ?? []
+            'data' => $result['suggestions'] ?? [],
         ]);
     }
 
     /**
      * Google Place API 외부 장소 검색
-     * @param PlaceSearchRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function externalSearch(PlaceSearchRequest $request) {
+    public function externalSearch(PlaceSearchRequest $request)
+    {
         $data = $request->validated();
 
         // 장소 검색 데이터 받아오기
         $result = $this->service->search(
-            $data["place"],
-        $data["pageToken"] ?? null,
-             $data["sort"] ?? null);    
-    
+            $data['place'],
+            $data['pageToken'] ?? null,
+            $data['sort'] ?? null);
+
         // 데이터 처리
         $nextPageToken = $result['nextPageToken'] ?? null;
         $places = $result['places'] ?? [];
-    
+
         // 응답
         return response()->json([
             'success' => true,
-            'data'=> [
+            'data' => [
                 'meta' => [
-                    'next_page_token'=> $nextPageToken,
+                    'next_page_token' => $nextPageToken,
                 ],
-                'data' => ExternalPlaceResource::collection($places)
-            ]
+                'data' => ExternalPlaceResource::collection($places),
+            ],
         ]);
-    } 
+    }
 
     /**
      * place select 장소 단건 조회
-     * @param int $id
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getPlaceById(int $id) {
+    public function getPlaceById(int $id)
+    {
         $result = $this->service->find($id);
 
         return response()->json([
-            'success'=> true,
-            'data'=> $result
+            'success' => true,
+            'data' => $result,
         ]);
     }
 
     /**
      * reverseGeocode 좌표를 주소로 변환
-     * @param PlaceGeocodeRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function reverseGeocode(PlaceGeocodeRequest $request) {
+    public function reverseGeocode(PlaceGeocodeRequest $request)
+    {
         $data = $request->validated();
 
-        $result = $this->service->reverse($data["lat"], $data["lng"]);
+        $result = $this->service->reverse($data['lat'], $data['lng']);
 
         return response()->json([
-            "success"=> true,
-            "data"=> [
-                "address"=> $result
-            ]
+            'success' => true,
+            'data' => [
+                'address' => $result,
+            ],
         ]);
     }
 
     /**
      * placeGeocode 주소를 장소로 변환
-     * @param PlaceDetailRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function placeGeocode(PlaceDetailRequest $request) {
-        $result = $this->service->geocode($request->validated("place_id"));
+    public function placeGeocode(PlaceDetailRequest $request)
+    {
+        $result = $this->service->geocode($request->validated('place_id'));
 
         return response()->json([
-            "success"=> true,
-            "data" => ExternalPlaceResource::make($result)
+            'success' => true,
+            'data' => ExternalPlaceResource::make($result),
         ]);
     }
 
     /**
      * nearbyPlace 주변 장소 반환
-     * @param PlaceGeocodeRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function nearbyPlaces(PlaceGeocodeRequest $request) {
+    public function nearbyPlaces(PlaceGeocodeRequest $request)
+    {
         $data = $request->validated();
 
-        $result = $this->service->nearby($data["lat"], $data["lng"]);
-    
+        $result = $this->service->nearby($data['lat'], $data['lng']);
+
         // 빈 배열 에러 방지
         $places = $result['places'] ?? [];
 
         return response()->json([
-            'success'=> true,
-            'data'=> [
+            'success' => true,
+            'data' => [
                 'meta' => [
-                    "next_page_token" => null,
+                    'next_page_token' => null,
                 ],
-                "data" => ExternalPlaceResource::collection($places)
-            ]
+                'data' => ExternalPlaceResource::collection($places),
+            ],
         ]);
     }
 
     /**
      * create Place form External 외부 결과 저장
-     * @param PlaceStoreRequest $request
+     *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function createPlaceFromExternal(PlaceStoreRequest $request) {
+    public function createPlaceFromExternal(PlaceStoreRequest $request)
+    {
         $data = $request->validated();
 
         $result = $this->service->create($data);
 
         return response()->json([
-            "success"=> true,
-            "data"=> PlaceResource::make($result)
+            'success' => true,
+            'data' => PlaceResource::make($result),
         ]);
     }
-
 }

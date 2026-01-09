@@ -18,9 +18,9 @@ class UserFactory extends Factory
         $email = fake()->unique()->safeEmail();
 
         return [
-            'email_norm'    => strtolower(trim($email)),
+            'email_norm' => strtolower(trim($email)),
             'password_hash' => Hash::make('password1234!'), // 테스트 기본 비번
-            'name'          => fake()->name(),
+            'name' => fake()->name(),
         ];
     }
 }

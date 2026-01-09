@@ -1,12 +1,13 @@
 <?php
+
 namespace Tests\Feature\TripDays;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use App\Models\Region;
 use App\Models\TripDay;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class TripDayReorderTest extends TestCase
 {

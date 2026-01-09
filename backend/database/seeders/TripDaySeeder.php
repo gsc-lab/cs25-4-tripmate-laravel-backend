@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use App\Models\Trip;     
-use App\Models\TripDay;  
+use App\Models\Trip;
+use App\Models\TripDay;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TripDaySeeder extends Seeder
 {
@@ -20,14 +20,14 @@ class TripDaySeeder extends Seeder
             }
 
             $start = Carbon::parse($trip->start_date);
-            $end   = Carbon::parse($trip->end_date);
-            $days  = $start->diffInDays($end) + 1;
+            $end = Carbon::parse($trip->end_date);
+            $days = $start->diffInDays($end) + 1;
 
             for ($i = 1; $i <= $days; $i++) {
                 TripDay::updateOrCreate(
                     [
                         'trip_id' => $trip->trip_id,
-                        'day_no'  => $i,
+                        'day_no' => $i,
                     ],
                     [
                         'memo' => "{$trip->title} - {$i}일차",

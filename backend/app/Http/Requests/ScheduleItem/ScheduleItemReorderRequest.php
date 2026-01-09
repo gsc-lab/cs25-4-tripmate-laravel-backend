@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\ScheduleItem;
 
+use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -14,14 +15,15 @@ class ScheduleItemReorderRequest extends FormRequest
     {
         // URL에서 가져온 trip_id로 user_id 비교
         $tripId = $this->route('trip_id');
-        $trip = \App\Models\Trip::findOrFail($tripId);
+        $trip = Trip::findOrFail($tripId);
 
         // user_id와 로그인 사용자 일치일 경우 true
-        return $this->user()->id === $trip->user_id;
+        return (int) $this->user()->getKey() === (int) $trip->user_id;
     }
 
     /**
      * 일정 아이템 순서 재배치 유효성검증
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -36,7 +38,7 @@ class ScheduleItemReorderRequest extends FormRequest
         // ];
 
         // return [
-        //     // 단일 일정 아이템 재배치 
+        //     // 단일 일정 아이템 재배치
         //     'item_id' => [
         //         'required',
         //         'integer',
@@ -115,21 +117,21 @@ class ScheduleItemReorderRequest extends FormRequest
 
         return [
             'orders.required' => '재배치할 순서 정보(orders)는 필수입니다.',
-            'orders.array'    => 'orders 필드는 배열 형식이어야 합니다.',
-            'orders.min'      => '최소 1개 이상의 재배치 정보가 필요합니다.',
+            'orders.array' => 'orders 필드는 배열 형식이어야 합니다.',
+            'orders.min' => '최소 1개 이상의 재배치 정보가 필요합니다.',
 
             'orders.*.trip_day_id.required' => '각 항목의 trip_day_id 값은 필수입니다.',
-            'orders.*.trip_day_id.integer'  => 'trip_day_id 값은 숫자여야 합니다.',
-            'orders.*.trip_day_id.exists'   => '존재하지 않는 Trip Day ID가 포함되어 있습니다.',
+            'orders.*.trip_day_id.integer' => 'trip_day_id 값은 숫자여야 합니다.',
+            'orders.*.trip_day_id.exists' => '존재하지 않는 Trip Day ID가 포함되어 있습니다.',
 
             'orders.*.item_ids.required' => '각 trip_day_id에 대해 재배치할 item_ids 배열이 필요합니다.',
-            'orders.*.item_ids.array'    => 'item_ids는 배열 형식이어야 합니다.',
-            'orders.*.item_ids.min'      => '각 Trip Day에는 최소 1개 이상의 일정 아이템이 포함되어야 합니다.',
+            'orders.*.item_ids.array' => 'item_ids는 배열 형식이어야 합니다.',
+            'orders.*.item_ids.min' => '각 Trip Day에는 최소 1개 이상의 일정 아이템이 포함되어야 합니다.',
 
             'orders.*.item_ids.*.required' => '일정 아이템 ID는 필수입니다.',
-            'orders.*.item_ids.*.integer'  => '일정 아이템 ID는 숫자여야 합니다.',
+            'orders.*.item_ids.*.integer' => '일정 아이템 ID는 숫자여야 합니다.',
             'orders.*.item_ids.*.distinct' => '동일한 일정 아이템 ID를 중복해서 보낼 수 없습니다.',
-            'orders.*.item_ids.*.exists'   => '존재하지 않는 일정 아이템 ID가 포함되어 있습니다.',
+            'orders.*.item_ids.*.exists' => '존재하지 않는 일정 아이템 ID가 포함되어 있습니다.',
         ];
     }
 }

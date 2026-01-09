@@ -1,0 +1,1219 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Http\\Controllers\\Region\\RegionController\:\:listRegions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Region/RegionController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$dayNo with type int is incompatible with native type string\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Trip/ScheduleItemController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$itemId with type int is incompatible with native type string\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Trip/ScheduleItemController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$tripId with type int is incompatible with native type string\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Trip/ScheduleItemController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Trip\\TripController\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Controllers/Trip/TripController.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$tripId$#'
+			identifier: parameter.notFound
+			count: 2
+			path: app/Http/Controllers/Trip/TripController.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\Http\\Requests\\TripDay\\TripDayIndexRequest is incompatible with native type Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Http/Controllers/Trip/TripDayController.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\AuthLoginRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/AuthLoginRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\AuthRegisterRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/AuthRegisterRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{email\.email\: string, email\.max\: string, email\.required\: string, email\.unique\: string, nickname\.max\: string, nickname\.required\: string, nickname\.string\: string, password\.\*\: string, password\.required\: string\}\)\: Unexpected token "\.email\:", expected ''\}'' at offset 74 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Auth/AuthRegisterRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Auth\\AuthVerificationRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Auth/AuthVerificationRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{password\.current_password\: string, password\.required\: string\}\)\: Unexpected token "\.current_password\:", expected ''\}'' at offset 77 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Auth/AuthVerificationRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceAutoCompleteRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceAutoCompleteRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceDetailRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceDetailRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceGeocodeRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceGeocodeRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceNearbyRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceNearbyRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceSearchRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceSearchRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{pageToken\.integer\: string, place\.string\: string, sort\.string\: string\}\)\: Unexpected token "\.integer\:", expected ''\}'' at offset 72 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Place/PlaceSearchRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Place\\PlaceStoreRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Place/PlaceStoreRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{address\.required\: string, category\.required\: string, category\.string\: string, lat\.between\: string, lat\.numeric\: string, lat\.required\: string, lng\.between\: string, lng\.numeric\: string, lng\.required\: string, name\.required\: string, name\.string\: string\}\)\: Unexpected token "\.required\:", expected ''\}'' at offset 32 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Place/PlaceStoreRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Region\\RegionStoreRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Region/RegionStoreRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{country\.string\: string, query\.string\: string\}\)\: Unexpected token "\.string\:", expected ''\}'' at offset 32 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Region/RegionStoreRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ScheduleItem\\ScheduleItemIndexRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemIndexRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{page\.integer\: string, size\.integer\: string, size\.max\: string, sort\.string\: string\}\)\: Unexpected token "\.integer\:", expected ''\}'' at offset 29 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemIndexRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ScheduleItem\\ScheduleItemReorderRequest\:\:authorize\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemReorderRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ScheduleItem\\ScheduleItemReorderRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemReorderRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{orders\.\*\.item_id\.distinct\: string, orders\.\*\.item_id\.exists\: string, orders\.\*\.new_seq_no\.min\: string, orders\.\*\.new_seq_no\.required\: string, orders\.min\: string, orders\.required\: string\}\)\: Unexpected token "\.\*\.item_id\.distinct\:", expected ''\}'' at offset 31 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemReorderRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ScheduleItem\\ScheduleItemStoreRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemStoreRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{place_id\.exists\: string, place_id\.integer\: string, place_id\.required\: string, seq_no\.integer\: string, visit_time\.date_format\: string\}\)\: Unexpected token "\.exists\:", expected ''\}'' at offset 33 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemStoreRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\ScheduleItem\\ScheduleItemUpdateRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemUpdateRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{memo\.max\: string, memo\.string\: string, place_id\.exists\: string, place_id\.integer\: string, place_id\.min\: string, seq_no\.integer\: string, seq_no\.min\: string, visit_time\.date_format\: string\}\)\: Unexpected token "\.max\:", expected ''\}'' at offset 29 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/ScheduleItem/ScheduleItemUpdateRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Trip\\TripIndexRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Trip/TripIndexRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{page\.integer\: string, size\.integer\: string, size\.max\: string, sort\.string\: string\}\)\: Unexpected token "\.integer\:", expected ''\}'' at offset 29 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/Trip/TripIndexRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Trip\\TripStoreRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Trip/TripStoreRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\Trip\\TripUpdateRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/Trip/TripUpdateRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\TripDay\\TripDayIndexRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayIndexRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{page\.integer\: string, size\.integer\: string, size\.max\: string, sort\.string\: string\}\)\: Unexpected token "\.integer\:", expected ''\}'' at offset 29 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayIndexRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\TripDay\\TripDayReorderRequest\:\:rules\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayReorderRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\<string, \\Illuminate\\Contracts\\Validation\\ValidationRule\|array\<mixed\>\|string\)\: Unexpected token "\*/", expected ''\>'' at offset 153 on line 5$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayReorderRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\TripDay\\TripDayStoreRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayStoreRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{day_no\.integer\: string, day_no\.min\: string, day_no\.required\: string, memo\.max\: string\}\)\: Unexpected token "\.integer\:", expected ''\}'' at offset 31 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayStoreRequest.php
+
+		-
+			message: '#^Method App\\Http\\Requests\\TripDay\\TripDayUpdateRequest\:\:messages\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayUpdateRequest.php
+
+		-
+			message: '#^PHPDoc tag @return has invalid value \(array\{memo\.max\: string, memo\.string\: string\}\)\: Unexpected token "\.max\:", expected ''\}'' at offset 29 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Requests/TripDay/TripDayUpdateRequest.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$address\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$category\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$category_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$external_ref\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$lat\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$lng\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\PlaceResource\:\:\$place_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/PlaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RegionResource\:\:\$country_code\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RegionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RegionResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RegionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\RegionResource\:\:\$region_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/RegionResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$memo\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$place_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$schedule_item_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$seq_no\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$trip_day_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\ScheduleItemResource\:\:\$visit_time\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/ScheduleItemResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$day_no\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$memo\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$trip\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$trip_day_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$trip_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripDayResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripDayResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$day_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$region\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$region_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$title\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$trip_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\TripResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/TripResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$email_norm\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\UserResource\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/UserResource.php
+
+		-
+			message: '#^Class App\\Models\\Place uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^Method App\\Models\\Place\:\:category\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^Method App\\Models\\Place\:\:scheduleItems\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Place\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Place\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^Property App\\Models\\Place\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^Property App\\Models\\Place\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Place.php
+
+		-
+			message: '#^Class App\\Models\\PlaceCategory uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^Method App\\Models\\PlaceCategory\:\:places\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\PlaceCategory\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\PlaceCategory\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^Property App\\Models\\PlaceCategory\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^Property App\\Models\\PlaceCategory\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/PlaceCategory.php
+
+		-
+			message: '#^Class App\\Models\\Region uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^Method App\\Models\\Region\:\:trips\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Region\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Region\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^Property App\\Models\\Region\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^Property App\\Models\\Region\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Region.php
+
+		-
+			message: '#^Class App\\Models\\ScheduleItem uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^Method App\\Models\\ScheduleItem\:\:place\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^Method App\\Models\\ScheduleItem\:\:tripDay\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\ScheduleItem\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\ScheduleItem\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^Property App\\Models\\ScheduleItem\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^Property App\\Models\\ScheduleItem\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/ScheduleItem.php
+
+		-
+			message: '#^Class App\\Models\\Trip uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Method App\\Models\\Trip\:\:region\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Method App\\Models\\Trip\:\:scheduleItems\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Method App\\Models\\Trip\:\:tripDays\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Method App\\Models\\Trip\:\:user\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Trip\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Trip\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Property App\\Models\\Trip\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Property App\\Models\\Trip\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/Trip.php
+
+		-
+			message: '#^Class App\\Models\\TripDay uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^Method App\\Models\\TripDay\:\:scheduleItems\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^Method App\\Models\\TripDay\:\:trip\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\TripDay\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\TripDay\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^Property App\\Models\\TripDay\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^Property App\\Models\\TripDay\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/TripDay.php
+
+		-
+			message: '#^Class App\\Models\\User uses generic trait Illuminate\\Database\\Eloquent\\Factories\\HasFactory but does not specify its types\: TFactory$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Models\\User\:\:trips\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$guarded is not covariant with PHPDoc type array\<string\>\|bool of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$guarded\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Property App\\Models\\User\:\:\$casts type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Property App\\Models\\User\:\:\$guarded type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Property App\\Models\\User\:\:\$hidden type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Repositories\\Auth\\AuthRepository\:\:findUserEmail\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Repositories/Auth/AuthRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Auth\\UserRepository\:\:__construct\(\) with return type void returns null but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Repositories/Auth/UserRepository.php
+
+		-
+			message: '#^Result of method App\\Repositories\\BaseRepository\:\:__construct\(\) \(void\) is used\.$#'
+			identifier: staticMethod.void
+			count: 1
+			path: app/Repositories/Auth/UserRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:all\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:all\(\) return type with generic class Illuminate\\Database\\Eloquent\\Collection does not specify its types\: TKey, TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:findById\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:findOrFail\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:paginate\(\) has parameter \$columns with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:paginate\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BaseRepository\:\:updateById\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/BaseRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Place\\PlaceRepository\:\:update\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Repositories/Place/PlaceRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Place\\PlaceRepository\:\:update\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/Place/PlaceRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Region\\RegionRepository\:\:findRegions\(\) should return Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Region\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Region/RegionRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Region\\RegionRepository\:\:selectRegions\(\) should return Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\Region\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Region/RegionRepository.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ScheduleItem\:\:\$place\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$schedule_item_id\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:findByTripDayIdAndSeqNo\(\) should return App\\Models\\ScheduleItem\|null but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:getByItemIds\(\) should return Illuminate\\Database\\Eloquent\\Collection\<int, App\\Models\\ScheduleItem\> but returns Illuminate\\Database\\Eloquent\\Collection\<int, Illuminate\\Database\\Eloquent\\Model\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:getByTripDayId\(\) return type with generic class Illuminate\\Database\\Eloquent\\Collection does not specify its types\: TKey, TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:getTripDayIdsByItemIds\(\) has parameter \$itemIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:getlatlngFromPlaceId\(\) should return array\<float\> but returns list\<array\<string, mixed\>\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\ScheduleItemRepository\:\:paginateSchedulers\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(int\[\]   // \$itemIds\)\: Unexpected token "// \$itemIds", expected variable at offset 98 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$deletedSeqNo$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Relation ''place'' is not found in App\\Models\\ScheduleItem model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/Trip/ScheduleItemRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripDayRepository\:\:findByTripAndDayNo\(\) should return App\\Models\\TripDay\|null but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/TripDayRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripDayRepository\:\:getByTripId\(\) return type with generic class Illuminate\\Database\\Eloquent\\Collection does not specify its types\: TKey, TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/Trip/TripDayRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripDayRepository\:\:paginateByTripDay\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/Trip/TripDayRepository.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$deleteDayNo$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Repositories/Trip/TripDayRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripRepository\:\:createTrip\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/Trip/TripRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripRepository\:\:findTripOrFail\(\) should return App\\Models\\Trip but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/TripRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripRepository\:\:paginateTrips\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Repositories/Trip/TripRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripRepository\:\:updateTrip\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Repositories/Trip/TripRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\Trip\\TripRepository\:\:updateTrip\(\) should return App\\Models\\Trip but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/Trip/TripRepository.php
+
+		-
+			message: '#^Call to method currentAccessToken\(\) on an unknown class App\\Services\\Auth\\App\\Models\\User\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Method App\\Services\\Auth\\AuthService\:\:registerUser\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$data$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^PHPDoc tag @var contains unknown class App\\Services\\Auth\\App\\Models\\User\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between App\\Services\\Auth\\App\\Models\\User and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: app/Services/Auth/AuthService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$password_hash\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Auth/UserService.php
+
+		-
+			message: '#^Method App\\Services\\Auth\\UserService\:\:currentUser\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Auth/UserService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:autoPlace\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:create\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:create\(\) has parameter \$data with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:geocode\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:getApiKey\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:getHeaders\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:nearby\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:reverse\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Place\\PlaceService\:\:search\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$data$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Services/Place/PlaceService.php
+
+		-
+			message: '#^Method App\\Services\\Region\\RegionService\:\:regions\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Region/RegionService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\ScheduleItem\:\:\$tripDay\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:calculateRouteDistances\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:calculateRouteDistances\(\) has parameter \$latlng with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:calculateRouteDistancesByDistance\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 2
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:createScheduleItem\(\) should return App\\Models\\ScheduleItem but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:listScheduleItems\(\) return type with generic class Illuminate\\Database\\Eloquent\\Collection does not specify its types\: TKey, TModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:paginateScheduleItems\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\ScheduleItemService\:\:reorderScheduleItems\(\) has parameter \$orders with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Trip/ScheduleItemService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripDayService\:\:createTripDay\(\) should return App\\Models\\TripDay but returns Illuminate\\Database\\Eloquent\\Model\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Trip/TripDayService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripDayService\:\:paginateByTripDays\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: app/Services/Trip/TripDayService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripDayService\:\:reorderTripDay\(\) has parameter \$dayIds with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Trip/TripDayService.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$DayIds$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Services/Trip/TripDayService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$end_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$start_date\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$trip_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripService\:\:createTrip\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripService\:\:createTrip\(\) should return App\\Models\\Trip but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripService\:\:paginateTrips\(\) return type with generic interface Illuminate\\Contracts\\Pagination\\LengthAwarePaginator does not specify its types\: TKey, TValue$#'
+			identifier: missingType.generics
+			count: 1
+			path: app/Services/Trip/TripService.php
+
+		-
+			message: '#^Method App\\Services\\Trip\\TripService\:\:updateTrip\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: app/Services/Trip/TripService.php

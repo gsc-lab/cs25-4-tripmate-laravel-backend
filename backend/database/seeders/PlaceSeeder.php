@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Place;
+use App\Models\PlaceCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
-use App\Models\Place;          
-use App\Models\PlaceCategory;  
 
 class PlaceSeeder extends Seeder
 {
@@ -17,7 +17,7 @@ class PlaceSeeder extends Seeder
         foreach ($places as $placeData) {
             $category = PlaceCategory::where('code', $placeData['category_code'])->first();
 
-            if (!$category) {
+            if (! $category) {
                 // 해당 카테고리가 없으면 건너뜀
                 continue;
             }
@@ -25,14 +25,14 @@ class PlaceSeeder extends Seeder
             Place::updateOrCreate(
                 [
                     'external_provider' => $placeData['external_provider'],
-                    'external_ref'      => $placeData['external_ref'],
+                    'external_ref' => $placeData['external_ref'],
                 ],
                 [
                     'category_id' => $category->category_id,
-                    'name'        => $placeData['name'],
-                    'address'     => $placeData['address'],
-                    'lat'         => $placeData['lat'] ?? null,
-                    'lng'         => $placeData['lng'] ?? null,
+                    'name' => $placeData['name'],
+                    'address' => $placeData['address'],
+                    'lat' => $placeData['lat'] ?? null,
+                    'lng' => $placeData['lng'] ?? null,
                 ]
             );
         }

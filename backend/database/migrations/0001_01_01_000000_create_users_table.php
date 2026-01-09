@@ -13,16 +13,16 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->bigIncrements('user_id');
-            
+
             $table->string('email_norm', 255)->unique()
-                    ->comment('정규화 이메일(소문자/trim)');
+                ->comment('정규화 이메일(소문자/trim)');
 
             $table->string('password_hash', 255)
-                    ->comment('비밀번호 해시값');
+                ->comment('비밀번호 해시값');
 
             $table->string('name', 50)
-                    ->comment('표시용 이름(nickname)');
-                    
+                ->comment('표시용 이름(nickname)');
+
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrentOnUpdate();
         });

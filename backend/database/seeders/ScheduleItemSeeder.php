@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
+use App\Models\Place;
+use App\Models\ScheduleItem;
+use App\Models\TripDay;
 use Illuminate\Database\Seeder;
-use App\Models\TripDay;      
-use App\Models\ScheduleItem; 
-use App\Models\Place;        
 
 class ScheduleItemSeeder extends Seeder
 {
     public function run(): void
     {
         $tripDays = TripDay::orderBy('trip_day_id')->get();
-        $places   = Place::orderBy('place_id')->get();
+        $places = Place::orderBy('place_id')->get();
 
         if ($tripDays->isEmpty()) {
             return;
@@ -38,17 +38,17 @@ class ScheduleItemSeeder extends Seeder
 
                 // visit_time
                 $visitTimes = ['09:00:00', '13:00:00', '19:00:00'];
-                $visitTime  = $visitTimes[($seq - 1) % count($visitTimes)];
+                $visitTime = $visitTimes[($seq - 1) % count($visitTimes)];
 
                 ScheduleItem::updateOrCreate(
                     [
                         'trip_day_id' => $tripDay->trip_day_id,
-                        'seq_no'      => $seq,
+                        'seq_no' => $seq,
                     ],
                     [
-                        'place_id'   => $placeId,
+                        'place_id' => $placeId,
                         'visit_time' => $visitTime,
-                        'memo'       => "{$tripDay->day_no}일차 - 일정 {$seq}",
+                        'memo' => "{$tripDay->day_no}일차 - 일정 {$seq}",
                     ]
                 );
             }

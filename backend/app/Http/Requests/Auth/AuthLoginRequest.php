@@ -17,13 +17,14 @@ class AuthLoginRequest extends FormRequest
     /**
      * 로그인 유효성 검증
      * - email, password 검증
+     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            "email"=> ['required', 'email', 'max:255'],
-            'password'=> ['required', 'string'] 
+            'email' => ['required', 'email', 'max:255'],
+            'password' => ['required', 'string'],
         ];
     }
 
@@ -34,10 +35,10 @@ class AuthLoginRequest extends FormRequest
     {
         return [
             'email.required' => '이메일을 입력해주세요.',
-            'email.email'    => '올바른 이메일 형식이 아닙니다.',
-            'email.max'      => '이메일은 255자를 초과할 수 없습니다.',
+            'email.email' => '올바른 이메일 형식이 아닙니다.',
+            'email.max' => '이메일은 255자를 초과할 수 없습니다.',
             'password.required' => '비밀번호를 입력해주세요.',
-            'password.string'   => '비밀번호는 문자열이어야 합니다.'
+            'password.string' => '비밀번호는 문자열이어야 합니다.',
         ];
     }
 }

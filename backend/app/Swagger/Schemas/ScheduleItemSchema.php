@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Swagger\Schemas;
 
 use OpenApi\Attributes as OA;

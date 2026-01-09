@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Auth;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class LoginTest extends TestCase
 {
@@ -32,7 +32,7 @@ class LoginTest extends TestCase
                 'success',
                 'code',
                 'message',
-                'data' => ['access_token', 'token_type', 'expires_in']
+                'data' => ['access_token', 'token_type', 'expires_in'],
             ]);
 
         $this->assertNotEmpty($res->json('data.access_token'));

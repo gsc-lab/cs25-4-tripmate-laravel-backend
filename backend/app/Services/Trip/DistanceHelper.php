@@ -6,10 +6,11 @@ class DistanceHelper
 {
     /**
      * 두 지점(위도, 경도) 간의 직선 거리 계산 (Haversine Formula)
-     * @param float $lat1 출발지 위도
-     * @param float $lng1 출발지 경도
-     * @param float $lat2 도착지 위도
-     * @param float $lng2 도착지 경도
+     *
+     * @param  float  $lat1  출발지 위도
+     * @param  float  $lng1  출발지 경도
+     * @param  float  $lat2  도착지 위도
+     * @param  float  $lng2  도착지 경도
      * @return float 거리 (km 단위, 소수점 2자리 반올림)
      */
     public static function calculate($lat1, $lng1, $lat2, $lng2): float
@@ -38,7 +39,7 @@ class DistanceHelper
         // 반지름(R) x 각도(c) = 호의 길이(거리)
         $distance = $earthRadius * $c;
 
-        // 7. 소수점 2자리 반올림 
+        // 7. 소수점 2자리 반올림
         return round($distance, 2);
     }
 }

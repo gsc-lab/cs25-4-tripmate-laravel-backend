@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User; 
 
 class UserSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
                 ['email_norm' => $user['email_norm']],
                 [
                     'password_hash' => Hash::make($user['password']),
-                    'name'          => $user['name'] ?? null,
+                    'name' => $user['name'] ?? null,
                 ]
             );
         }

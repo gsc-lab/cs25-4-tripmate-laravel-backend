@@ -2,10 +2,10 @@
 
 namespace Tests\Feature\Users;
 
-use Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Tests\TestCase;
 
 class MeTest extends TestCase
 {
@@ -38,7 +38,7 @@ class MeTest extends TestCase
             ->assertJsonPath('success', true)
             ->assertJsonStructure([
                 'success', 'code', 'message',
-                'data' => ['user_id', 'email', 'nickname']
+                'data' => ['user_id', 'email', 'nickname'],
             ])
             ->assertJsonPath('data.email', 'me@example.com')
             ->assertJsonPath('data.nickname', '내정보');
