@@ -20,10 +20,14 @@ class TripRepository extends BaseRepository
 
     /**
      * 1. Trip 생성
+     * @param array{title:string, region_id:int, start_date:string, end_date:string, user_id:int} $data
      */
     public function createTrip(array $data): Model
     {
-        return $this->create($data);
+        /** @var Trip $trip */
+        $trip = $this->create($data);
+
+        return $trip;
     }
 
     /**
@@ -78,6 +82,7 @@ class TripRepository extends BaseRepository
      */
     public function findTripOrFail(int $tripId): Trip
     {
+        /** @var Trip $trip */
         $trip = $this->findOrFail($tripId);
 
         return $trip;
@@ -87,13 +92,12 @@ class TripRepository extends BaseRepository
      * 4. PK(trip_id) 기준 Trip 부분 업데이트
      * - 없으면 예외 발생 (ModelNotFoundException)
      * - 있으면 해당 레코드 업데이트 후 반환
-     *
+     * @param array{title?:string, region_id?:int, start_date?:string, end_date?:string} $data
      * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public function updateTrip(
-        int $tripId,
-        array $data
-    ): Trip {
+    public function updateTrip(int $tripId, array $data): Trip 
+    {
+        /** @var Trip $trip */
         $trip = $this->updateById($tripId, $data);
 
         return $trip;

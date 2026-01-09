@@ -12,7 +12,7 @@ class TripStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -31,6 +31,10 @@ class TripStoreRequest extends FormRequest
         ];
     }
 
+    /**
+     * 유효성검증 실패시 메시지
+     * @return array<string, string>
+     */
     public function messages(): array
     {
         return [
@@ -49,5 +53,21 @@ class TripStoreRequest extends FormRequest
             'end_date.date_format' => '여행 종료일 형식이 올바르지 않습니다. (예: YYYY-MM-DD)',
             'end_date.after_or_equal' => '여행 종료일은 시작일과 같거나 그 이후여야 합니다.',
         ];
+    }
+
+    /**
+     * service layer 에 전달할 정규환된 데이터
+     * @return array{title:string, region_id:int, start_date:string, end_date:string}
+     */
+    public function payload(): array
+    {
+        /**
+         * @var array{title:string, region_id:int, start_date:string, end_date:string} $data 
+        */
+        $data = $this->validated();
+
+        $data['title'] = trim($data['title']);
+
+        return $data;
     }
 }
