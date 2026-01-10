@@ -199,4 +199,17 @@ class TripDayRepository extends BaseRepository
             ->whereIn('trip_day_id', $tripDayIds)
             ->count();
     }
+
+    /**
+    * 12. Trip + day_no로 trip_day_id 조회
+    * - 없으면 null 반환
+    */
+    public function getTripDayId(int $tripId, int $dayNo): ?int
+    {
+        return $this->model
+            ->newQuery()
+            ->where('trip_id', $tripId)
+            ->where('day_no', $dayNo)
+            ->value('trip_day_id');
+    }
 }
