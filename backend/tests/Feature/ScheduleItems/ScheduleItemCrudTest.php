@@ -84,34 +84,37 @@ class ScheduleItemCrudTest extends TestCase
 
     public function test_scheduleitem_endpoints_require_auth(): void
     {
-        $this->getJson('/api/v2/trips/1/days/1/items')->assertStatus(401);
+        $this->getJson('/api/v2/trips/1/days/1/schedule-items')->assertStatus(401);
 
-        $this->postJson('/api/v2/trips/1/days/1/items', [
+        $this->postJson('/api/v2/trips/1/days/1/schedule-items', [
             'place_id' => 1,
             'seq_no' => 1,
         ])->assertStatus(401);
 
-        $this->getJson('/api/v2/trips/1/days/1/items/1')->assertStatus(401);
-        $this->patchJson('/api/v2/trips/1/days/1/items/1', ['memo' => 'x'])->assertStatus(401);
-        $this->deleteJson('/api/v2/trips/1/days/1/items/1')->assertStatus(401);
+        $this->getJson('/api/v2/trips/1/days/1/schedule-items/1')->assertStatus(401);
 
-        $this->putJson('/api/v2/trips/1/days/1/items/reorder', [
+        $this->patchJson('/api/v2/trips/1/days/1/schedule-items/1', ['memo' => 'x'])->assertStatus(401);
+        $this->putJson('/api/v2/trips/1/days/1/schedule-items/1', ['memo' => null, 'visit_time' => null])->assertStatus(401);
+
+        $this->deleteJson('/api/v2/trips/1/days/1/schedule-items/1')->assertStatus(401);
+
+        $this->postJson('/api/v2/trips/1/days/1/schedule-items/reorder', [
             'orders' => [
                 ['trip_day_id' => 1, 'item_ids' => [1]],
             ],
         ])->assertStatus(401);
     }
 
-    public function test_scheduleitem_store_show_update_destroy_success(): void
+    public function test_scheduleitem_store_show_patch_put_destroy_success(): void
     {
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        $dayNo = 1;
-        $tripDayId = $this->getTripDayId($tripId, $dayNo);
+        $tripDayId = $this->getTripDayId($tripId, 1);
         $placeId = $this->createPlace();
 
-        $store = $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items", [
+        // store
+        $store = $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items", [
             'place_id' => $placeId,
             'seq_no' => 1,
             'visit_time' => '10:30',
@@ -125,12 +128,7 @@ class ScheduleItemCrudTest extends TestCase
             ->assertJsonPath('data.seq_no', 1)
             ->assertJsonPath('data.place_id', $placeId);
 
-        $scheduleItemId = $store->json('data.schedule_item_id');
-        if (! $scheduleItemId) {
-            $scheduleItemId = ScheduleItem::where('trip_day_id', $tripDayId)
-                ->where('seq_no', 1)
-                ->value('schedule_item_id');
-        }
+        $scheduleItemId = (int) $store->json('data.schedule_item_id');
         $this->assertNotEmpty($scheduleItemId);
 
         $this->assertDatabaseHas('schedule_items', [
@@ -142,35 +140,58 @@ class ScheduleItemCrudTest extends TestCase
             'visit_time' => '10:30:00',
         ]);
 
+        // show (PK 기준)
         $this->withHeaders($headers)
-            ->getJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items/1")
+            ->getJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items/{$scheduleItemId}")
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
             ->assertJsonPath('message', '일정 아이템 단건 조회에 성공했습니다')
+            ->assertJsonPath('data.schedule_item_id', $scheduleItemId)
             ->assertJsonPath('data.seq_no', 1);
 
+        // PATCH: 전달된 값만 업데이트
         $this->withHeaders($headers)
-            ->patchJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items/1", [
-                'visit_time' => '11:40',
-                'memo' => '메모 수정됨',
+            ->patchJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items/{$scheduleItemId}", [
+                'memo' => '메모만 수정',
             ])
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
-            ->assertJsonPath('message', '일정 아이템 수정에 성공했습니다')
-            ->assertJsonPath('data.seq_no', 1)
-            ->assertJsonPath('data.memo', '메모 수정됨');
+            ->assertJsonPath('message', '일정 아이템 부분 수정에 성공했습니다')
+            ->assertJsonPath('data.memo', '메모만 수정');
 
+        // visit_time은 유지되어야 함 
         $this->assertDatabaseHas('schedule_items', [
+            'schedule_item_id' => $scheduleItemId,
             'trip_day_id' => $tripDayId,
             'seq_no' => 1,
-            'memo' => '메모 수정됨',
+            'memo' => '메모만 수정',
+            'visit_time' => '10:30:00',
+        ]);
+
+        // PUT: 전체 덮어쓰기 (nullable 가능)
+        $this->withHeaders($headers)
+            ->putJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items/{$scheduleItemId}", [
+                'visit_time' => '11:40',
+                'memo' => null,
+            ])
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath('code', 'SUCCESS')
+            ->assertJsonPath('message', '일정 아이템 전체 수정에 성공했습니다');
+
+        $this->assertDatabaseHas('schedule_items', [
+            'schedule_item_id' => $scheduleItemId,
+            'trip_day_id' => $tripDayId,
+            'seq_no' => 1,
+            'memo' => null,
             'visit_time' => '11:40:00',
         ]);
 
+        // destroy (PK 기준)
         $this->withHeaders($headers)
-            ->deleteJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items/1")
+            ->deleteJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items/{$scheduleItemId}")
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
@@ -178,8 +199,7 @@ class ScheduleItemCrudTest extends TestCase
             ->assertJsonPath('data', null);
 
         $this->assertDatabaseMissing('schedule_items', [
-            'trip_day_id' => $tripDayId,
-            'seq_no' => 1,
+            'schedule_item_id' => $scheduleItemId,
         ]);
     }
 
@@ -188,14 +208,13 @@ class ScheduleItemCrudTest extends TestCase
         $headers = $this->authHeaders();
         $tripId = $this->createTrip($headers);
 
-        $dayNo = 1;
-        $tripDayId = $this->getTripDayId($tripId, $dayNo);
+        $tripDayId = $this->getTripDayId($tripId, 1);
         $placeId = $this->createPlace();
 
         $initialTotal = ScheduleItem::where('trip_day_id', $tripDayId)->count();
 
         for ($seq = 1; $seq <= 5; $seq++) {
-            $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items", [
+            $this->withHeaders($headers)->postJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items", [
                 'place_id' => $placeId,
                 'seq_no' => $seq,
                 'visit_time' => '10:00',
@@ -206,12 +225,12 @@ class ScheduleItemCrudTest extends TestCase
         $expectedTotal = $initialTotal + 5;
 
         $res = $this->withHeaders($headers)
-            ->getJson("/api/v2/trips/{$tripId}/days/{$dayNo}/items?page=2&size=2");
+            ->getJson("/api/v2/trips/{$tripId}/days/{$tripDayId}/schedule-items?page=2&size=2");
 
         $res->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('code', 'SUCCESS')
-            ->assertJsonPath('message', '일정 아이템 목록 조회 성공했습니다')
+            ->assertJsonPath('message', '일정 아이템 목록 조회에 성공했습니다')
             ->assertJsonStructure([
                 'success',
                 'code',
@@ -219,7 +238,7 @@ class ScheduleItemCrudTest extends TestCase
                 'data' => [
                     'items',
                     'pagination' => ['page', 'size', 'total', 'last_page'],
-                    'detale',
+                    'detail',
                     'latlng',
                 ],
             ]);

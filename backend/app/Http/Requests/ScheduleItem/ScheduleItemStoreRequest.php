@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\ScheduleItem;
 
-use App\Models\Trip;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -13,17 +12,11 @@ class ScheduleItemStoreRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        // URL에서 가져온 trip_id로 user_id 비교
-        $tripId = $this->route('trip_id');
-        $trip = Trip::findOrFail($tripId);
-
-        // user_id와 로그인 사용자 일치일 경우 true
-        return (int) $this->user()->getKey() === (int) $trip->user_id;
+        return $this->user() !== null;
     }
 
     /**
      * 일정 아이템 추가
-     *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
@@ -37,7 +30,7 @@ class ScheduleItemStoreRequest extends FormRequest
     }
 
     /**
-     * @return array{place_id.exists: string, place_id.integer: string, place_id.required: string, seq_no.integer: string, visit_time.date_format: string}
+     * @return array<string, string>
      */
     public function messages(): array
     {
@@ -51,10 +44,31 @@ class ScheduleItemStoreRequest extends FormRequest
             'seq_no.integer' => '순서는 숫자여야 합니다.',
             'seq_no.min' => '순서는 1 이상이어야 합니다.',
 
-            'visit_time.date_format' => '방문 시간 형식이 올바르지 않습니다. (예: YYYY-MM-DD HH:MM)',
+            'visit_time.date_format' => '방문 시간 형식이 올바르지 않습니다. (예: HH:MM)',
 
             'memo.max' => '메모의 최대 글자 수는 255자 입니다.',
             'memo.string' => '메모는 문자열이어야 합니다.',
+        ];
+    }
+
+    /**
+     * @return array{place_id:int, seq_no:int, visit_time:?string, memo:?string}
+     */
+    public function payload(): array
+    {
+        /** @var array{place_id:int, seq_no:int, visit_time?:string, memo?:string} $data */
+        $data = $this->validated();
+
+        $memo = $data['memo'] ?? null;
+        if ($memo !== null) {
+            $memo = trim($memo);
+        }
+
+        return [
+            'place_id' => $data['place_id'],
+            'seq_no' => $data['seq_no'],
+            'visit_time' => $data['visit_time'] ?? null,
+            'memo' => $memo,
         ];
     }
 }

@@ -18,11 +18,12 @@ class ScheduleItemResource extends JsonResource
             'schedule_item_id' => $this->schedule_item_id,
             'trip_day_id' => $this->trip_day_id,
             'seq_no' => $this->seq_no,
-            'visit_time' => $this->visit_time,
+            'visit_time' => $this->string,
             'memo' => $this->memo,
             'place_id' => $this->place_id,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+
+            'created_at' => optional($this->created_at)?->toISOString(),
+            'updated_at' => optional($this->updated_at)?->toISOString(),
         ];
     }
 }

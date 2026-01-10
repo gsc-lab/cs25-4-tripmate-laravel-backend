@@ -25,7 +25,7 @@ class ScheduleItemRepository extends BaseRepository
     /**
      * 1. 특정 TripDay의 ScheduleItem 목록 조회 (페이지네이션)
      */
-    public function paginateSchedulers(
+    public function paginateByTripDayId(
         int $tripDayId,
         int $page,
         int $size
@@ -38,19 +38,7 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
-     * 2. 특정 TripDay의 ScheduleItem 목록 조회 (페이지네이션 없음)
-     */
-    public function getByTripDayId(int $tripDayId): Collection
-    {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->orderBy('seq_no', 'asc')
-            ->get();
-    }
-
-    /**
-     * 해당 TripDay 안에 seq_no가 이미 존재하는지 확인
+     * 2. 해당 TripDay 안에 seq_no가 이미 존재하는지 확인
      */
     public function existsSeqNo(int $tripDayId, int $seqNo): bool
     {
@@ -63,7 +51,6 @@ class ScheduleItemRepository extends BaseRepository
 
     /**
      * 3. 특정 TripDay에서 가장 큰 seq_no 조회
-     * - 아무것도 없으면 0 반환
      */
     public function getMaxSeqNo(int $tripDayId): int
     {
@@ -89,10 +76,8 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
-     * 5. 특정 seq_no ScheduleItem 삭제 후 뒤에 item 모두 -1 처리
-     *
-     * @param  int  $deletedSeqNo  // 삭제된 seq_no
-     * @return int // 영향을 받은 행 수
+     * 5. 삭제 후 seq_no 정리
+     * - seq_no > deletedSeqNo → -1
      */
     public function decrementSeqNos(
         int $tripDayId,
@@ -105,174 +90,21 @@ class ScheduleItemRepository extends BaseRepository
             ->decrement('seq_no');
     }
 
-    /**
-     * 6. scheduleItem 단건 조회
-     */
-    public function findByTripDayIdAndSeqNo(
-        int $tripDayId,
-        int $seqNo
-    ): ?ScheduleItem {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $seqNo)
-            ->first();
-    }
 
     /**
-     * 7. schedule_item_id 조회
+     * 6. schedule_item_id 목록으로 조회
+     * @param int[] $itemIds
      */
-    public function getScheduleItemId(
-        int $tripDayId,
-        int $seqNo
-    ): ?int {
-        $row = $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $seqNo)
-            ->first();
-
-        return $row?->schedule_item_id;
-    }
-
-    /**
-     * 8. memo 수정
-     *
-     * @return int 영향을 받은 행 수
-     */
-    public function updateMemo(
-        int $tripDayId,
-        int $seqNo,
-        ?string $memo
-    ): int {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $seqNo)
-            ->update(['memo' => $memo]);
-    }
-
-    /**
-     * 9. 방문시간 수정
-     *
-     * @param  string|null  $visitTime
-     * @return int 영향을 받은 행 수
-     */
-    public function updateVisitTime(
-        int $tripDayId,
-        int $seqNo,
-        $visitTime
-    ): int {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $seqNo)
-            ->update(['visit_time' => $visitTime]);
-    }
-
-    /**
-     * 10. 해당 TripDay의 ScheduleItem 개수 조회
-     */
-    public function countByTripDayId(int $tripDayId): int
+    public function getByItemIds(array $itemIds): Collection
     {
         return $this->model
             ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->count();
+            ->whereIn('schedule_item_id', $itemIds)
+            ->get();
     }
 
     /**
-     * 11. 단일 ScheduleItem의 seq_no 업데이트
-     *
-     * @param  int  $oldSeqNo  // 기존 seq_no
-     * @param  int  $newSeqNo  // 새로운 seq_no
-     * @return int // 업데이트 된 row 수
-     */
-    public function updateSeqNo(
-        int $tripDayId,
-        int $oldSeqNo,
-        int $newSeqNo
-    ): int {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $oldSeqNo)
-            ->update(['seq_no' => $newSeqNo]);
-    }
-
-    /**
-     * 12. 메모 + 방문시간 동시 수정
-     *
-     * @return int 영향을 받은 행 수
-     */
-    public function updateMemoAndVisitTime(
-        int $tripDayId,
-        int $seqNo,
-        ?string $memo,
-        ?string $visitTime
-    ): int {
-        $data = [];
-
-        // 수정할 값이 null이 아닐 때만 배열에 추가
-        if (! is_null($memo)) {
-            $data['memo'] = $memo;
-        }
-        if (! is_null($visitTime)) {
-            $data['visit_time'] = $visitTime;
-        }
-
-        // 수정 할 데이터가 없으면 0 반환
-        if (empty($data)) {
-            return 0;
-        }
-
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', $seqNo)
-            ->update($data);
-    }
-
-    /**
-     * @deprecated 재배치 정책 변경으로 사용되지 않는 메서드 입니다
-     * 13. 재배치(아래로 이동)용 메서드
-     * - oldSeqNo < newSeqNo 인 경우
-     * - (oldSeqNo, newSeqNo] 구간의 항목들을 seq_no - 1
-     */
-    public function decrementSeqRange(
-        int $tripDayId,
-        int $oldSeqNo,
-        int $newSeqNo
-    ): int {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', '>', $oldSeqNo)
-            ->where('seq_no', '<=', $newSeqNo)
-            ->decrement('seq_no');
-    }
-
-    /**
-     * @deprecated 재배치 정책 변경으로 사용되지 않는 메서드 입니다
-     * 14. 재배치(위로 이동)용 메서드
-     * - oldSeqNo > newSeqNo 인 경우
-     * - [newSeqNo, oldSeqNo) 구간의 항목들을 seq_no + 1
-     */
-    public function incrementSeqRange(
-        int $tripDayId,
-        int $oldSeqNo,
-        int $newSeqNo
-    ): int {
-        return $this->model
-            ->newQuery()
-            ->where('trip_day_id', $tripDayId)
-            ->where('seq_no', '>=', $newSeqNo)
-            ->where('seq_no', '<', $oldSeqNo)
-            ->increment('seq_no');
-    }
-
-    /**
-     * latlng를 가져오는 헬퍼 메서드
+     * 7. latlng를 가져오는 헬퍼 메서드
      * - lat와 lng를 한 쌍으로 반환
      *
      * @param  mixed  $tripDayId
@@ -297,44 +129,10 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
-     * 15. 특정 schedule_item_id 목록으로 ScheduleItem들 조회
-     *
-     * @param  int[]  $itemIds
-     * @return Collection|ScheduleItem[]
-     */
-    public function getByItemIds(array $itemIds): Collection
-    {
-        return $this->model
-            ->newQuery()
-            ->whereIn('schedule_item_id', $itemIds)
-            ->get();
-    }
-
-    /**
-     * 16. 특정 itemId가 원래 속해있던 tripDayId 조회
-     *
-     * @param int[]   // $itemIds
-     * @return int[] // tripDayId 배열 반환
-     */
-    public function getTripDayIdsByItemIds(array $itemIds): array
-    {
-        // 중복 제거 후 trip_day_id 배열 반환
-        return $this->model
-            ->newQuery()
-            ->whereIn('schedule_item_id', $itemIds)
-            ->distinct()
-            ->pluck('trip_day_id')
-            ->toArray();
-    }
-
-    /**
-     * 17. 특정 TripDay에 모든 seq_no 임시 큰 겂으로 변경
+     * 8. 재배치 전 충돌 방지용 seq_no 임시 이동
      * - 재배치 작업 전 충돌 방지용
      * - +1000 씩 증가
-     *
-     * @param  int[]  $tripDayIds
-     * @param  int  $offset  // 기본 1000
-     * @return int // 영향을 받은 row 수
+     * @param int[] $tripDayIds
      */
     public function tempShiftSeqNos(
         array $tripDayIds,
@@ -348,14 +146,12 @@ class ScheduleItemRepository extends BaseRepository
             ->newQuery()
             ->whereIn('trip_day_id', $tripDayIds)
             ->update([
-                'seq_no' => DB::raw("seq_no + {$offset}"),
+                'seq_no' => DB::raw('seq_no + ' . $offset),
             ]);
     }
 
     /**
-     * 18. 특정 tripDay의 schedule_item_id 순서대로 재배치
-     * - seq_no를 재설정
-     *
+     * 9. 특정 TripDay에 item_ids 순서대로 seq_no 재배치
      * @param  int[]  $itemIds  // 재배치할 schedule_item_id 배열
      */
     public function reorderSeqNosByItemIds(
@@ -374,7 +170,7 @@ class ScheduleItemRepository extends BaseRepository
     }
 
     /**
-     * 19. 특정 tripDay에 남아있는 아이템 seq_no 재정렬
+     * 10. 특정 tripDay에 남아있는 아이템 seq_no 재정렬
      */
     public function normalizeSeqNosForTripDay(int $tripDayId): void
     {
