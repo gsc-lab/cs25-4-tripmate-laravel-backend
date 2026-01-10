@@ -288,7 +288,11 @@ class ScheduleItemController extends Controller
             new OA\Parameter(name: 'schedule_item_id', in: 'path', required: true, schema: new OA\Schema(type: 'integer')),
         ],
         responses: [
-            new OA\Response(response: 200, description: '삭제 성공', content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemSingleResponse')),
+            new OA\Response(
+                response: 200,
+                description: '삭제 성공',
+                content: new OA\JsonContent(ref: '#/components/schemas/ScheduleItemNullDataResponse')
+            ),
             new OA\Response(response: 401, ref: '#/components/responses/Unauthorized'),
             new OA\Response(response: 403, ref: '#/components/responses/Forbidden'),
             new OA\Response(response: 404, ref: '#/components/responses/NotFound'),

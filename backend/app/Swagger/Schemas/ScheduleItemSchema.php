@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Swagger\Schemas;
 
 use OpenApi\Attributes as OA;
@@ -11,7 +10,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'schedule_item_id', type: 'integer', example: 101),
         new OA\Property(property: 'trip_day_id', type: 'integer', example: 11),
         new OA\Property(property: 'seq_no', type: 'integer', example: 1),
-        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 10:30'),
+        new OA\Property(property: 'visit_time', type: 'string', format: 'date-time', nullable: true, example: '12:00'),
         new OA\Property(property: 'memo', type: 'string', nullable: true, example: '점심 예약'),
         new OA\Property(property: 'place_id', type: 'integer', example: 55),
         new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
@@ -70,8 +69,9 @@ class RouteDistanceDetailSchema {}
         new OA\Property(property: 'items', type: 'array', items: new OA\Items(ref: '#/components/schemas/ScheduleItem')),
         new OA\Property(property: 'pagination', ref: '#/components/schemas/ScheduleItemPagination'),
 
-        // 컨트롤러가 실제로 내려주는 키 그대로
-        new OA\Property(property: 'detale', ref: '#/components/schemas/RouteDistanceDetail'),
+        new OA\Property(property: 'detail', ref: '#/components/schemas/RouteDistanceDetail'),
+
+        // latlng는 배열
         new OA\Property(property: 'latlng', type: 'array', items: new OA\Items(ref: '#/components/schemas/LatLng')),
     ]
 )]
@@ -83,7 +83,7 @@ class ScheduleItemListDataSchema {}
     properties: [
         new OA\Property(property: 'success', type: 'boolean', example: true),
         new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
-        new OA\Property(property: 'message', type: 'string', example: '일정 아이템 목록 조회 성공했습니다'),
+        new OA\Property(property: 'message', type: 'string', example: '일정 아이템 목록 조회에 성공했습니다'),
         new OA\Property(property: 'data', ref: '#/components/schemas/ScheduleItemListData'),
     ]
 )]
@@ -100,31 +100,44 @@ class ScheduleItemListResponseSchema {}
     ]
 )]
 class ScheduleItemSingleResponseSchema {}
-
 #[OA\Schema(
     schema: 'ScheduleItemCreateRequest',
     type: 'object',
-    required: ['place_id', 'seq_no'],
+    required: ['place_id'],
     properties: [
         new OA\Property(property: 'place_id', type: 'integer', minimum: 1, example: 55),
-        new OA\Property(property: 'seq_no', type: 'integer', minimum: 1, example: 1),
-        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 10:30'),
+        new OA\Property(property: 'seq_no', type: 'integer', minimum: 1, nullable: true, example: 1),
+        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 10:30:00'),
         new OA\Property(property: 'memo', type: 'string', nullable: true, maxLength: 255, example: '메모'),
     ]
 )]
 class ScheduleItemCreateRequestSchema {}
 
 #[OA\Schema(
-    schema: 'ScheduleItemUpdateRequest',
+    schema: 'ScheduleItemPatchRequest',
     type: 'object',
     properties: [
-        new OA\Property(property: 'place_id', type: 'integer', minimum: 1, nullable: true),
-        new OA\Property(property: 'seq_no', type: 'integer', minimum: 1, nullable: true),
-        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 11:00'),
+        new OA\Property(property: 'place_id', type: 'integer', minimum: 1, nullable: true, example: 55),
+        new OA\Property(property: 'seq_no', type: 'integer', minimum: 1, nullable: true, example: 1),
+        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 11:00:00'),
         new OA\Property(property: 'memo', type: 'string', nullable: true, maxLength: 255, example: '수정 메모'),
     ]
 )]
-class ScheduleItemUpdateRequestSchema {}
+class ScheduleItemPatchRequestSchema {}
+
+#[OA\Schema(
+    schema: 'ScheduleItemPutRequest',
+    type: 'object',
+    required: ['place_id', 'seq_no'],
+    properties: [
+        new OA\Property(property: 'place_id', type: 'integer', minimum: 1, example: 55),
+        new OA\Property(property: 'seq_no', type: 'integer', minimum: 1, example: 1),
+        new OA\Property(property: 'visit_time', type: 'string', nullable: true, example: '2026-01-07 11:00:00'),
+        new OA\Property(property: 'memo', type: 'string', nullable: true, maxLength: 255, example: '수정 메모'),
+    ]
+)]
+class ScheduleItemPutRequestSchema {}
+
 
 #[OA\Schema(
     schema: 'ScheduleItemReorderRequest',
@@ -137,6 +150,7 @@ class ScheduleItemUpdateRequestSchema {}
             minItems: 1,
             items: new OA\Items(
                 type: 'object',
+                required: ['trip_day_id', 'item_ids'],
                 properties: [
                     new OA\Property(property: 'trip_day_id', type: 'integer', example: 11),
                     new OA\Property(
@@ -160,7 +174,7 @@ class ScheduleItemReorderRequestSchema {}
     properties: [
         new OA\Property(property: 'success', type: 'boolean', example: true),
         new OA\Property(property: 'code', type: 'string', example: 'SUCCESS'),
-        new OA\Property(property: 'message', type: 'string', example: 'ScheduleItem 삭제에 성공했습니다'),
+        new OA\Property(property: 'message', type: 'string', example: '일정 아이템 삭제에 성공했습니다'),
         new OA\Property(property: 'data', nullable: true, example: null),
     ]
 )]
