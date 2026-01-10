@@ -61,19 +61,22 @@ Route::prefix('v2')->group(function () {
 
         /**
          * Schedule Items
-         * GET    /v2/trips/{trip_id}/days/{day_no}/items                  목록
-         * POST   /v2/trips/{trip_id}/days/{day_no}/items                  생성
-         * GET    /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         단건 조회
-         * PATCH  /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         수정(visit_time/memo)
-         * DELETE /v2/trips/{trip_id}/days/{day_no}/items/{seq_no}         삭제
-         * PUT   /v2/trips/{trip_id}/days/{day_no}/items/reorder          순서 변경
+         * GET    /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items                       목록
+         * POST   /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items                       생성
+         * GET    /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}    단건 조회
+         * PATCH  /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}    부분 수정
+         * PUT    /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}    전체 수정
+         * DELETE /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}    삭제
+         * POST   /v2/trips/{trip_id}/days/{trip_day_id}/schedule-items/reorder               재배치
          */
-        Route::get('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'index']);
-        Route::post('/trips/{trip_id}/days/{day_no}/items', [ScheduleItemController::class, 'store']);
-        Route::get('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'show']);
-        Route::patch('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'update']);
-        Route::delete('/trips/{trip_id}/days/{day_no}/items/{seq_no}', [ScheduleItemController::class, 'destroy']);
-        Route::put('/trips/{trip_id}/days/{day_no}/items/reorder', [ScheduleItemController::class, 'reorder']);
+        Route::get('/trips/{trip_id}/days/{trip_day_id}/schedule-items', [ScheduleItemController::class, 'index']);
+        Route::post('/trips/{trip_id}/days/{trip_day_id}/schedule-items', [ScheduleItemController::class, 'store']);
+        Route::get('/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}', [ScheduleItemController::class, 'show']);
+        Route::patch('/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}', [ScheduleItemController::class, 'patch']);
+        Route::put('/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}', [ScheduleItemController::class, 'put']);
+        Route::delete('/trips/{trip_id}/days/{trip_day_id}/schedule-items/{schedule_item_id}', [ScheduleItemController::class, 'destroy']);
+        Route::post('/trips/{trip_id}/days/{trip_day_id}/schedule-items/reorder', [ScheduleItemController::class, 'reorder']);
+
 
         /**
          * Places
