@@ -11,7 +11,7 @@ use App\Http\Requests\Place\PlaceStoreRequest;
 use App\Http\Resources\ExternalPlaceResource;
 use App\Http\Resources\PlaceResource;
 use App\Services\Place\PlaceService;
-use OpenApi\Attributes as OA; // ★ 필수 Import
+use OpenApi\Attributes as OA; 
 
 #[OA\Tag(name: 'Place', description: '장소 검색 및 관리 API')]
 class PlaceController extends Controller

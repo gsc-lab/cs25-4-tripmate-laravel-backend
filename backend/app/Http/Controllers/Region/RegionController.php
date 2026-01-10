@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Region\RegionStoreRequest;
 use App\Http\Resources\RegionResource;
 use App\Services\Region\RegionService;
-use OpenApi\Attributes as OA; // ★ 필수 Import
+use OpenApi\Attributes as OA; 
 
 #[OA\Tag(name: 'Regions', description: '지역 정보 및 검색')]
 class RegionController extends Controller
