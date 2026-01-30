@@ -1,4 +1,4 @@
-###TripMate Backend API
+# TripMate Backend API
 
 Laravel基盤の旅行計画管理RESTful APIサーバー
 📋 プロジェクト概要
