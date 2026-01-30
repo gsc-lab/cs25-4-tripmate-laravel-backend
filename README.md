@@ -1,4 +1,5 @@
-TripMate Backend API
+###TripMate Backend API
+
 Laravel基盤の旅行計画管理RESTful APIサーバー
 📋 プロジェクト概要
 TripMateは、ユーザーが旅行日程を体系的に計画・管理できるよう支援するバックエンドAPIサービスです。旅行計画の作成、日程管理、場所検索およびスケジューリング機能を提供します。
